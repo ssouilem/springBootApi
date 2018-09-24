@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.services.direct.entity.User;
+import com.services.direct.bean.User;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
 

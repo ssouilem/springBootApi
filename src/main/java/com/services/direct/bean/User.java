@@ -1,4 +1,4 @@
-package com.services.direct.entity;
+package com.services.direct.bean;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

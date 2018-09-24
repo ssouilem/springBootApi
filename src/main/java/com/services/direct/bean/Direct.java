@@ -1,4 +1,4 @@
-package com.services.direct.entity;
+package com.services.direct.bean;
 
 
 import javax.persistence.Entity;

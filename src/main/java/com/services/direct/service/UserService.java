@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.services.direct.entity.User;
+import com.services.direct.bean.User;
 import com.services.direct.repo.UserRepository;
 
 import lombok.extern.slf4j.Slf4j;
