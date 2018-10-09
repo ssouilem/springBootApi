@@ -3,6 +3,7 @@ package com.services.direct.bean;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -17,17 +18,17 @@ import org.hibernate.annotations.Proxy;
 import org.springframework.lang.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.services.direct.utility.ContractType;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 //@JsonInclude(JsonInclude.Include.NON_EMPTY)
-@Proxy (lazy = false)
+// @Proxy (lazy = false)
 @JsonIdentityInfo(
 		  generator = ObjectIdGenerators.PropertyGenerator.class, 
 		  property = "id")
@@ -43,10 +44,10 @@ public class Contract {
 	
 	@Nullable
 	@OneToMany(fetch=FetchType.EAGER,
-			// cascade={CascadeType.PERSIST, CascadeType.MERGE},
+			//cascade={CascadeType.PERSIST, CascadeType.MERGE},
 			mappedBy="contract")
 	@JsonInclude(value=Include.NON_EMPTY, content=Include.NON_NULL)
-	@JsonManagedReference
+	// @JsonManagedReference
 	private List<Reduction> reductions = new ArrayList<Reduction>();
 	
 	@Column(name="ctr_type")
@@ -57,7 +58,7 @@ public class Contract {
 	@OneToMany(fetch=FetchType.LAZY,
 			mappedBy="contract")
 	@JsonInclude(value=Include.NON_EMPTY, content=Include.NON_NULL)
-	//@JsonManagedReference
+	@JsonIgnore
 	private List<Company> companies = new ArrayList<Company>();
 	
 	

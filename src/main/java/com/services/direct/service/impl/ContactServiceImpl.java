@@ -55,6 +55,7 @@ public class ContactServiceImpl implements ContactService {
 	}
 
 	@Override
+	@Transactional
 	public Contact addContact(ContactInputDto contactDto) throws BusinessException {
 
 		// Convert Dto to @Entity Contact
@@ -65,7 +66,7 @@ public class ContactServiceImpl implements ContactService {
 
 		// Recuperation de la company
 		Integer companyId = contactDto.getCompany();
-		Company company = companyRepository.getOne(companyId);
+		Company company = companyRepository.getCompanyById(companyId);
 
 		// add company to contact
 		if (company != null) {

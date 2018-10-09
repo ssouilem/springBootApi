@@ -15,7 +15,8 @@ import com.services.direct.repo.ContractRepository;
 import com.services.direct.service.CompanyService;
 import com.services.direct.utility.ResourceNotFoundException;
 
-@Service
+@Service("companyService")
+@Transactional
 public class CompanyServiceImpl implements CompanyService {
 	
 	private static Logger log = LoggerFactory.getLogger(CompanyServiceImpl.class);
@@ -32,11 +33,13 @@ public class CompanyServiceImpl implements CompanyService {
 	}
 	
 	@Override
+	@Transactional
 	public Company getCompanyId(Integer companyId) {
-		return companyRepository.getOne(companyId);
+		return companyRepository.getCompanyById(companyId);
 	}
 
 	@Override
+	@Transactional
 	public void addCompany(Company company) {
 		this.companyRepository.save(company);
 

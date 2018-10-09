@@ -215,12 +215,12 @@ public class EntityDTOMapper {
 	}
 
 	public List<Reduction> reductionDtotoReductions(List<ReductionDto> reductionDtoList) {
-		modelMapper.addMappings(new PropertyMap<ReductionDto, Reduction>() {
-			protected void configure() {
-				skip().setId(0);
-
-			}
-		});
+//		modelMapper.addMappings(new PropertyMap<ReductionDto, Reduction>() {
+//			protected void configure() {
+//				skip().setId(0);
+//
+//			}
+//		});
 		// modelMapper.createTypeMap(ReductionDto.class, Reduction.class)
 		// .addMapping(ReductionDto::getProductId, Reduction::setProduct)
 		// .addMapping(ReductionDto::getContractId, Reduction::setContract);

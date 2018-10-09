@@ -68,8 +68,7 @@ public class Product {
 
 	@Nullable
 	@JsonInclude(Include.NON_NULL)
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "product")
-	@JsonManagedReference
+	@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "product")
 	private List<Reduction> reductions;
 
 	@JsonIgnore

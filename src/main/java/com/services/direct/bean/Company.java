@@ -57,10 +57,9 @@ public class Company {
 	@Column(name="cmp_tva_number")
 	private String tvaNumber;
 
-	@JsonIgnore
 	@JsonInclude(Include.NON_NULL)
 	@OneToOne(fetch=FetchType.EAGER, 
-			cascade =  CascadeType.ALL,
+			//cascade =  CascadeType.ALL,
 			mappedBy="company")
 	private Contact contact;
 	

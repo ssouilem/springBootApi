@@ -35,6 +35,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
+	@Transactional
 	public Product getProductById(Integer productId) throws FileNotFoundException {
 		log.info(" getProductById : " + productId);
 		Product product = productRepository.getOne(productId);

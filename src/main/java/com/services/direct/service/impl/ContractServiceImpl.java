@@ -53,7 +53,7 @@ public class ContractServiceImpl implements ContractService {
 
 	
 	@Override
-	//@Transactional(noRollbackFor = Exception.class)
+	@Transactional
 	public Contract createContract(ContractInputDto contractDto) throws BusinessException {
 
 		Contract contract = entityDTOMapper.contractDtotoContract(contractDto);
@@ -67,7 +67,9 @@ public class ContractServiceImpl implements ContractService {
 				contractDto.getReductions().forEach(reduction -> {
 					log.info(" ****** ADD product : " + reduction.getProductId());
 				});
+				
 				List<Reduction> reductions = entityDTOMapper.reductionDtotoReductions(contractDto.getReductions());
+				//contract.setReductions(reductions);
 				
 				// Save Contract 
 				contractRepository.save(contract);
@@ -131,10 +133,11 @@ public class ContractServiceImpl implements ContractService {
 	}
 
 	@Override
+	@Transactional
 	public Reduction addReductionByProduct(Integer contractId, ReductionDto reductionDto) {
 			Reduction reduction = entityDTOMapper.reductionDtotoReduction(reductionDto);
 			if (reduction != null) {
-				Contract contract = this.contractRepository.getOne(contractId);
+				Contract contract = this.contractRepository.getContractId(contractId);
 				if (contract != null) {
 					reduction.setContract(contract);
 					log.info(" ****** Entity reduction ID {} : contractId {}" , reduction.getId() ,  reduction.getContract().getId());
