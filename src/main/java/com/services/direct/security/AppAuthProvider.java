@@ -10,6 +10,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.services.direct.service.UserService;
 
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class AppAuthProvider extends DaoAuthenticationProvider {
 	
 	@Autowired
@@ -21,6 +25,8 @@ public class AppAuthProvider extends DaoAuthenticationProvider {
 		
 		String name = auth.getName();
 		String password = auth.getCredentials().toString();
+		
+		// log.info("testing logging with lombok"+ name + " " + password);
 	
 		UserDetails user = userDetailsService.loadUserByUsername(name);
 

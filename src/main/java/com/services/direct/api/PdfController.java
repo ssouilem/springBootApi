@@ -18,7 +18,9 @@ import com.services.direct.service.ICityService;
 import com.services.direct.utility.GeneratePdfReport;
 
 @RestController
+@RequestMapping("/invoice")
 public class PdfController {
+	
 	@Autowired
 	ICityService cityService;
 

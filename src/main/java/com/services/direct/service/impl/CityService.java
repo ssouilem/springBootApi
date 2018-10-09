@@ -1,4 +1,4 @@
-package com.services.direct.service;
+package com.services.direct.service.impl;
 
 import java.util.List;
 
@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.services.direct.bean.City;
 import com.services.direct.repo.CityRepository;
+import com.services.direct.service.ICityService;
 
 @Service
 public class CityService implements ICityService {

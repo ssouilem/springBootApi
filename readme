@@ -1,1 +1,10 @@
 creation pdf : https://github.com/rahulmoundekar/spring-boot-itext-pdf/tree/master/spring-boot-itext-pdf
+
+creation contrat _> previllege ...
+ajouter le produit
+configuration de reduction par societe*
+creation d'une facture a ptir d'une liste de bordereau
+bordereau de retour -> editer un avoir comptabilite
+
+
+creation d'une table de jointure CONTRACT_PRODUCT

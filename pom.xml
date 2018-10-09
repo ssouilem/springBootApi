@@ -19,13 +19,6 @@
 		<version>2.0.5.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -60,11 +53,13 @@
     		<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+		
 		<!-- traitement pdf itext -->
 		<dependency>
 			<groupId>com.lowagie</groupId>
@@ -72,6 +67,31 @@
 			<version>4.2.2</version>
 		</dependency>
 		
+		<!-- Swagger -->
+		<dependency>
+		    <groupId>io.springfox</groupId>
+		    <artifactId>springfox-swagger2</artifactId>
+		    <version>2.8.0</version>
+		    <exclusions>
+				 <exclusion>
+					 <groupId>org.mapstruct</groupId>
+					  <artifactId>mapstruct</artifactId>
+				 </exclusion>
+			</exclusions>
+		    <scope>compile</scope>
+		</dependency>
+		
+		<dependency>
+		    <groupId>io.springfox</groupId>
+		    <artifactId>springfox-swagger-ui</artifactId>
+		    <version>2.8.0</version>
+		    <scope>compile</scope>
+		</dependency>
+		<dependency>        
+		    <groupId>org.modelmapper</groupId>    
+		    <artifactId>modelmapper</artifactId>    
+		    <version>1.1.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -79,6 +99,21 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<!-- <executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions> -->
+				<!-- <configuration>
+					<defaultOutputDirectory>
+						${project.build.directory}/generated-sources
+					</defaultOutputDirectory>
+					<processors>
+						<processor>org.mapstruct.ap.MappingProcessor</processor>
+					</processors>
+				</configuration> -->
 			</plugin>
 		</plugins>
 	</build>
