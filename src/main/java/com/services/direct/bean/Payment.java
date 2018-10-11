@@ -11,10 +11,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.services.direct.utility.BankListEnum;
 import com.services.direct.utility.PaymentType;
 
 @Entity
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class Payment {
 
 	
@@ -34,8 +36,8 @@ public class Payment {
 	@Column(name="pay_bank")
 	private BankListEnum bank;
 	
-	@JoinColumn(name = "py_inv_id", nullable = false)
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@ManyToOne
+	@JoinColumn(name = "pay_inv_id", nullable = false)
 	private Invoice invoice;
 
 	public Integer getId() {

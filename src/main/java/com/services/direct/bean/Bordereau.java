@@ -21,6 +21,7 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.Proxy;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -31,7 +32,7 @@ import com.services.direct.utility.BrType;
 
 @Entity
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-@Proxy (lazy = false)
+//@Proxy (lazy = false)
 @JsonIdentityInfo(
 		  generator = ObjectIdGenerators.PropertyGenerator.class, 
 		  property = "id")
@@ -58,6 +59,9 @@ public class Bordereau {
 	@Temporal(TemporalType.DATE)
     @Column(name = "br_treatment_date")
 	@DateTimeFormat(pattern = "dd-MM-yyyy")
+	@JsonFormat(
+		      shape = JsonFormat.Shape.STRING,
+		      pattern = "YYYY-MM-dd")
     private Date treatmentDate;
 	
 	@Column(name = "br_created_author")
@@ -78,7 +82,7 @@ public class Bordereau {
 	private List<BordereauDetail> bordereauDetails = new ArrayList<BordereauDetail>();
 	
 	@Column(name = "br_subtotal")
-	private Double subTotal;
+	private Double subTotal = 0.0;
 
 	public Integer getId() {
 		return id;

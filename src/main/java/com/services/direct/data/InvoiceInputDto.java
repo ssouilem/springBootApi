@@ -1,12 +1,15 @@
 package com.services.direct.data;
 
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -16,25 +19,26 @@ import lombok.Data;
 @Data
 public class InvoiceInputDto {
 	
-	@NotEmpty
+	@NotNull(message = "Invoice number is required.")
     private String number;
 	
 	@NotEmpty
     private Double amount;
 	
-	@JsonFormat(pattern = "YYYY-MM-dd")
-	private Date issueDate;
-	
-	@Nullable
-	@JsonFormat(pattern = "YYYY-MM-dd")
-	private Date returnDate;
+	@JsonFormat(
+		      shape = JsonFormat.Shape.STRING,
+		      pattern = "YYYY-MM-dd")
+		@DateTimeFormat(pattern = "YYYY-MM-dd")
+	private String issueDate;
 	
 	@Nullable
 	private String createdAuthor;
 	
-	@NotNull
+	@NotNull(message = "campany ID is required.")
 	private Integer company;
 	
+	@NotNull(message = "bordereauList is required.")
+	@NotEmpty(message = "bordereauList not empty")
 	private List<Integer> bordereaux;
 	
 	private Boolean payDown;
@@ -55,20 +59,17 @@ public class InvoiceInputDto {
 		this.amount = amount;
 	}
 
-	public Date getIssueDate() {
+	public String getIssueDate() {
 		return this.issueDate;
 	}
+	
+	public String getIssueDateStr() {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		return df.format(issueDate);
+	}
 
-	public void setIssueDate(Date issueDate) {
+	public void setIssueDate(String issueDate) {
 		this.issueDate = issueDate;
-	}
-
-	public Date getReturnDate() {
-		return this.returnDate;
-	}
-
-	public void setReturnDate(Date returnDate) {
-		this.returnDate = returnDate;
 	}
 
 	public String getCreatedAuthor() {

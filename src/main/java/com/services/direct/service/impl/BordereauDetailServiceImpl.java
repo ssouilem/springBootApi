@@ -2,7 +2,8 @@ package com.services.direct.service.impl;
 
 import java.util.List;
 
-import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,26 +11,35 @@ import org.springframework.transaction.annotation.Transactional;
 import com.services.direct.bean.Bordereau;
 import com.services.direct.bean.BordereauDetail;
 import com.services.direct.data.BordereauDetailDto;
+import com.services.direct.exception.BusinessException;
+import com.services.direct.exception.FileNotFoundException;
+import com.services.direct.mapping.EntityDTOMapper;
 import com.services.direct.repo.BordereauDetailRepository;
 import com.services.direct.repo.BordereauRepository;
 import com.services.direct.service.BordereauDetailService;
+import com.services.direct.utility.Util;
 
 
 @Service("bordereauDetailService")
 @Transactional
 public class BordereauDetailServiceImpl implements BordereauDetailService {
 	
+	private static Logger log = LoggerFactory.getLogger(BordereauDetailServiceImpl.class);
+	
 	@Autowired
-	private ModelMapper modelMapper;
+	private EntityDTOMapper entityDTOMapper;
 	
 	private BordereauDetailRepository bordereauDetailRepository;
 	
 	private BordereauRepository bordereauRepository;
 	
 	@Autowired
-	public BordereauDetailServiceImpl(final BordereauDetailRepository bordereauDetailRepository, final BordereauRepository bordereauRepository) { 
+	public BordereauDetailServiceImpl(final BordereauDetailRepository bordereauDetailRepository, 
+			final BordereauRepository bordereauRepository,
+			EntityDTOMapper entityDTOMapper) { 
 		this.bordereauDetailRepository = bordereauDetailRepository;
 		this.bordereauRepository = bordereauRepository;
+		this.entityDTOMapper = entityDTOMapper; 
 	}
 
 	@Override
@@ -43,23 +53,41 @@ public class BordereauDetailServiceImpl implements BordereauDetailService {
 		return bordereauDetails;
 	}
 
-
-	@Override
-	public BordereauDetail addBordereauDetail(BordereauDetailDto bordereauDetailDto) {
-		BordereauDetail bordereauDetail = modelMapper.map(bordereauDetailDto, BordereauDetail.class);
+	@Transactional
+	public BordereauDetail addBordereauDetailByBordereau(Integer bordereauId, BordereauDetailDto bordereauDetailDto) throws BusinessException {
 		
-		Integer bordereauId = null ;//bordereauDetailDto.getBordereau();
-		Bordereau bordereau = bordereauRepository.getOne(bordereauId); 
+		BordereauDetail bordereauDetail = entityDTOMapper.bordereaudetailsDtotoBordereauDetails(bordereauDetailDto);
 		
-		if (bordereau != null) {
-	         System.out.println("Bordereau already exist in DB : {}" + bordereau.getNumber());
-	         bordereauDetail.setBordereau(bordereau);
-        } else {
-        	// throw exception
-        }
-		return this.bordereauDetailRepository.save(bordereauDetail);
+		if (bordereauDetail != null) {
+			Bordereau bordereau = this.bordereauRepository.getOne(bordereauId);
+			if (bordereau != null) {
+				bordereauDetail.setBordereau(bordereau);
+				log.info(" ****** Entity bordereau ID {} " , bordereau.getId());
+				try {
+					Double totalCommand = Util.totalCommandCalulate(bordereauDetail);
+					bordereauDetail.setTotalCommandLine(totalCommand);
+					
+					Double subTotalBordereau = bordereau.getSubTotal() + totalCommand;
+					bordereau.setSubTotal(subTotalBordereau);
+					
+					
+				} catch (BusinessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				bordereauDetailRepository.save(bordereauDetail);
+				
+				return bordereauDetail;
+				
+			} else {
+				throw new FileNotFoundException("The resource bordereau was not found", "FILE_NOT_FOUND");
+			}
+		} else {
+			throw new FileNotFoundException("The resource bordereaudetail was not found", "FILE_NOT_FOUND");
+		}
 	}
-	
+		
+
 	@Override
 	public void deleteBordereauDetail(Integer brDetailId) {
 		// TODO Auto-generated method stub

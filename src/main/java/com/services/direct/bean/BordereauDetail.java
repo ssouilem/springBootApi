@@ -12,6 +12,7 @@ import javax.persistence.OneToOne;
 
 import org.springframework.format.annotation.NumberFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -23,6 +24,7 @@ public class BordereauDetail {
 	@Id
 	@Column(name = "brd_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonIgnore
 	private Integer id;
 
 	@JsonInclude(value=Include.NON_EMPTY, content=Include.NON_NULL)

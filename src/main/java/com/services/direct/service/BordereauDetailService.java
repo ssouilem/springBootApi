@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.services.direct.bean.BordereauDetail;
 import com.services.direct.data.BordereauDetailDto;
+import com.services.direct.exception.BusinessException;
 
 public interface BordereauDetailService {
 
@@ -13,6 +14,7 @@ public interface BordereauDetailService {
 	
 	void deleteBordereauDetail(Integer brDetailId);
 
-	BordereauDetail addBordereauDetail(BordereauDetailDto bordereauDetailDto);
-	
+	BordereauDetail addBordereauDetailByBordereau(Integer bordereauId, BordereauDetailDto bordereauDetailDto) throws BusinessException;
+
+
 }

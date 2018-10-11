@@ -80,16 +80,16 @@ public class BordereauController {
     }
 	
     @ResponseBody
-    @RequestMapping(value = "/{Id}/addBordereauDetail", method = RequestMethod.POST)
+    @RequestMapping(value = "/{bordereauId}/bordereauDetail", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Bordereau> addBordereauDetail(@PathVariable final Integer bordereauId, @RequestBody BordereauDetailDto bordereauDetailDto) {
-    	BordereauDetail bordereauDetail = this.bordereaudetailService.addBordereauDetail(bordereauDetailDto);
+    public ResponseEntity<Bordereau> addBordereauDetail(@PathVariable final Integer bordereauId, @RequestBody BordereauDetailDto bordereauDetailDto) throws BusinessException {
+    	BordereauDetail bordereauDetail = this.bordereaudetailService.addBordereauDetailByBordereau(bordereauId, bordereauDetailDto);
     	if (bordereauDetail != null && bordereauDetail.getId() != null) {
 
     		Bordereau bordereau = this.bordereauService.getBordereauById(bordereauId);
     		if (bordereau != null) {
-    			bordereau.addBordereauDetail(bordereauDetail);
-    			this.bordereauService.updateBordereau(bordereau);
+//    			bordereau.addBordereauDetail(bordereauDetail);
+//    			this.bordereauService.updateBordereau(bordereau);
     			return new ResponseEntity<>(bordereau, HttpStatus.CREATED);
     		} else { 
     			// throw exception

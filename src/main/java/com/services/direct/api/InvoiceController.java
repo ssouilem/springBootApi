@@ -9,12 +9,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.services.direct.bean.Invoice;
 import com.services.direct.data.InvoiceInputDto;
+import com.services.direct.exception.BusinessException;
 import com.services.direct.service.InvoiceService;
 
 import io.swagger.annotations.Api;
@@ -57,7 +59,7 @@ public class InvoiceController {
 	 
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<Invoice> addInvoice(@RequestBody InvoiceInputDto contactDto){
+	public ResponseEntity<Invoice> addInvoice(@RequestBody InvoiceInputDto contactDto) throws BusinessException{
 		Invoice invoice = this.invoiceService.addInvoice(contactDto);
 		if (invoice != null) {
 			return new ResponseEntity<>(invoice, HttpStatus.OK);
@@ -65,6 +67,18 @@ public class InvoiceController {
 			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 		}	
 	}
+	
+	@ResponseBody
+    @RequestMapping(value = "/{Id}/bordereau", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<Invoice> addBordereauToInvoice(@PathVariable("Id") Integer id, @RequestParam("bordereauId") Integer bordereauId ) {
+		Invoice invoice = invoiceService.addBordereauToInvoice(id, bordereauId);
+		if (invoice != null) {
+			return new ResponseEntity<>(invoice, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+		}
+	}	
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)

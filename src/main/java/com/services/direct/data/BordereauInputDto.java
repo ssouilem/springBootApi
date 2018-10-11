@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -16,23 +17,26 @@ import lombok.Data;
 @Data
 public class BordereauInputDto {
 
+	@NotNull(message = "number is required.")
 	private String number;
-	
+
+	@NotNull(message = "type is required.")
 	private BrType type;
-	
+
 	private String createdAuthor;
 
 	@NotNull(message = "campany ID is required.")
 	private Integer company;
 
-//	@JsonFormat(pattern = "YYYY-MM-dd")
-//	private String treatmentDateStr;
-
+	@NotNull(message = "bordereauDetailList is required.")
+	@NotEmpty(message = "bordereauDetailList not empty")
 	private List<BordereauDetailDto> bordereauDetailList;
 
-	 @JsonFormat(pattern = "YYYY-MM-dd")
-	 @DateTimeFormat(pattern = "YYYY-MM-dd")
-	 private String treatmentDate;
+	@JsonFormat(
+	      shape = JsonFormat.Shape.STRING,
+	      pattern = "YYYY-MM-dd")
+	@DateTimeFormat(pattern = "YYYY-MM-dd")
+	private String treatmentDate;
 
 	public String getNumber() {
 		return number;
@@ -53,16 +57,16 @@ public class BordereauInputDto {
 	public String getTreatmentDate() {
 		return treatmentDate;
 	}
-	
-	public String  getTreatmentDateStr() {
+
+	public String getTreatmentDateStr() {
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		return df.format(treatmentDate);
 	}
-	
+
 	public void setTreatmentDate(String treatmentDate) {
 		this.treatmentDate = treatmentDate;
 	}
-	
+
 	public String getCreatedAuthor() {
 		return createdAuthor;
 	}

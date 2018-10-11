@@ -4,6 +4,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.xml.transform.Source;
 
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
@@ -14,17 +17,20 @@ import org.modelmapper.TypeToken;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.services.direct.bean.Bordereau;
 import com.services.direct.bean.BordereauDetail;
 import com.services.direct.bean.Contact;
 import com.services.direct.bean.Contract;
+import com.services.direct.bean.Invoice;
 import com.services.direct.bean.Product;
 import com.services.direct.bean.Reduction;
 import com.services.direct.data.BordereauDetailDto;
 import com.services.direct.data.BordereauInputDto;
 import com.services.direct.data.ContactInputDto;
 import com.services.direct.data.ContractInputDto;
+import com.services.direct.data.InvoiceInputDto;
 import com.services.direct.data.ProductInputDto;
 import com.services.direct.data.ReductionDto;
 import com.services.direct.repo.ProductRepository;
@@ -43,6 +49,9 @@ public class EntityDTOMapper {
 
 	public EntityDTOMapper() {
 		System.out.println("#############   EntityDTOMapper ############################ ");
+		modelMapper.getConfiguration().setAmbiguityIgnored(true);
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
 		modelMapper.addMappings(new PropertyMap<ContactInputDto, Contact>() {
 			protected void configure() {
 				// 'first name' is mapped automatically
@@ -50,15 +59,28 @@ public class EntityDTOMapper {
 				skip().setCompany(null);
 			}
 		});
-		modelMapper.getConfiguration().setAmbiguityIgnored(true);
-		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		modelMapper.addMappings(new PropertyMap<BordereauDetailDto, BordereauDetail>() {
+			protected void configure() {
+					map().setPercentage(source.getPercentage());
+					map().setQte(source.getQte());
+					skip().setId(0);
+					skip().setTotalCommandLine(null);
+			}
+		});
 
+		modelMapper.addMappings(new PropertyMap<InvoiceInputDto, Invoice>() {
+			protected void configure() {
+					skip().setId(0);
+					skip().setBordereaux(null);
+			}
+		});
+		
 		// modelMapper.addMappings(new contractDTOToContractMapping());
 		modelMapper.addMappings(new productDTOToProductMapping());
 		modelMapper.addMappings(new productToProductDTOMapping());
 		modelMapper.addMappings(new contractToContractDTOMapping());
 		modelMapper.addMappings(new reductionDtotoReductionsMapping(productRepository));
-		modelMapper.addMappings(new bordereauDetailDtotoBordereauDetailsMapping(productRepository));
+//		modelMapper.addMappings(new bordereauDetailDtotoBordereauDetailsMapping(productRepository));
 		
 		System.out.println("#############   EntityDTOMapper ############################ "
 				+ modelMapper.getConfiguration().toString());
@@ -136,6 +158,20 @@ public class EntityDTOMapper {
 		}
 	};
 
+	public Invoice invoiceDtotoInvoice(InvoiceInputDto invoiceDto) {
+		
+
+		TypeMap<InvoiceInputDto, Invoice> invoiceDtotoInvoice = (modelMapper.getTypeMap(InvoiceInputDto.class, Invoice.class) == null) ? 
+				modelMapper.createTypeMap(InvoiceInputDto.class, Invoice.class) : 
+					modelMapper.getTypeMap(InvoiceInputDto.class, Invoice.class);
+		
+				invoiceDtotoInvoice.addMappings(mapping -> {
+	    	mapping.using(toStringDate).map(InvoiceInputDto::getIssueDate, Invoice::setIssueDate);
+	    });
+		Invoice invoice = modelMapper.map(invoiceDto, Invoice.class);
+				invoice.getBordereaux().clear();
+		return invoice;
+	}
    
 	public Bordereau bordereauDtotoBordereau(BordereauInputDto bordereauDto) {
 		
@@ -187,14 +223,24 @@ public class EntityDTOMapper {
 		return modelMapper.map(bordereauDto, Bordereau.class);
 	}
 
+	@Transactional
 	public BordereauDetail bordereaudetailsDtotoBordereauDetails(BordereauDetailDto bordereauDetailDto) {
-		return modelMapper.map(bordereauDetailDto, BordereauDetail.class);
+		
+		BordereauDetail bordereauDetail = modelMapper.map(bordereauDetailDto, BordereauDetail.class);
+		bordereauDetail.setProduct(productRepository.getProductById(bordereauDetailDto.getProductId()));
+		bordereauDetail.setId(null);
+		return bordereauDetail;
 	}
 
 	public List<BordereauDetail> bordereaudetailsDtotoBordereauDetailsList(List<BordereauDetailDto> bordereauDetailsDto) {
 		System.out.println("####### ---> EntityDTOMapper - bordereaudetailsDtotoBordereauDetailsList ");
-		return modelMapper.map(bordereauDetailsDto, new TypeToken<List<BordereauDetail>>() {
-		}.getType());
+		
+		return bordereauDetailsDto.stream()
+        .map(entity -> bordereaudetailsDtotoBordereauDetails(entity)).collect(Collectors.toList());
+		
+//		return modelMapper.map(bordereauDetailsDto, new TypeToken<List<BordereauDetail>>() {
+//		}.getType());
+		
 	}
 
 	public Contact contactDtotoContact(ContactInputDto contactDto) {
@@ -290,25 +336,25 @@ public class EntityDTOMapper {
 
 	}
 	
-	static class bordereauDetailDtotoBordereauDetailsMapping extends PropertyMap<BordereauDetailDto, BordereauDetail> {
-
-		private ProductRepository productRepository;
-
-		@Autowired
-		public bordereauDetailDtotoBordereauDetailsMapping(ProductRepository productRepository) {
-			this.productRepository = productRepository;
-		}
-
-		@Override
-		protected void configure() {
-
-			// Product produit = productRepository.getOne(source.getProductId());
-			map().setProduct(productRepository.getOne(source.getProductId()));
-			map().setPercentage(source.getPercentage());
-			map().setQte(source.getQte());
-			skip().setTotalCommandLine(null);
-			skip().setId(null);
-		}
-
-	}
+//	static class bordereauDetailDtotoBordereauDetailsMapping extends PropertyMap<BordereauDetailDto, BordereauDetail> {
+//
+//		private ProductRepository productRepository;
+//
+//		@Autowired
+//		public bordereauDetailDtotoBordereauDetailsMapping(ProductRepository productRepository) {
+//			this.productRepository = productRepository;
+//		}
+//
+//		@Override
+//		protected void configure() {
+//
+//			// Product produit = productRepository.getOne(source.getProductId());
+//			map().setProduct(productRepository.getOne(source.getProductId()));
+//			map().setPercentage(source.getPercentage());
+//			map().setQte(source.getQte());
+//			skip().setTotalCommandLine(null);
+//			skip().setId(null);
+//		}
+//
+//	}
 }

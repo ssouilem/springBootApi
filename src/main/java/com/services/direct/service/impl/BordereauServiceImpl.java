@@ -20,6 +20,7 @@ import com.services.direct.repo.BordereauRepository;
 import com.services.direct.repo.CompanyRepository;
 import com.services.direct.service.BordereauService;
 import com.services.direct.utility.ResourceNotFoundException;
+import com.services.direct.utility.Util;
 
 
 @Service("bordereauService")
@@ -54,59 +55,72 @@ public class BordereauServiceImpl implements BordereauService {
 	}
 
 	@Override
+	@Transactional
 	public Bordereau createBordereau(BordereauInputDto bordereauDto) throws BusinessException {
-		
+
 		log.info("bordereauDto -> dateStr : {}" + bordereauDto.getTreatmentDate());
+
 		Bordereau bordereau = entityDTOMapper.bordereauDtotoBordereau(bordereauDto);
-		
+
 		// Associer la societe a votre bordereau
-		if(!companyRepository.existsById(bordereauDto.getCompany())) {
-		    throw new ResourceNotFoundException("CompanyId " + bordereauDto.getCompany() + " not found");
-        } else {
-        	
-        	Company company = companyRepository.getOne(bordereauDto.getCompany()); 
+		if (!companyRepository.existsById(bordereauDto.getCompany())) {
+			throw new ResourceNotFoundException("CompanyId " + bordereauDto.getCompany() + " not found");
+		} else {
 
-        	log.info("Company already exist in DB : {}" + company.getName());
-        	bordereau.setCompany(company);
-        	// save bordereau
-        	this.bordereauRepository.save(bordereau);
+			Company company = companyRepository.getOne(bordereauDto.getCompany());
 
-        	// lister les bordereaux details
-        	if (bordereauDto.getBordereauDetailList() != null) {
-        		List<BordereauDetail> bordereauDetails = entityDTOMapper.bordereaudetailsDtotoBordereauDetailsList(bordereauDto.getBordereauDetailList());
-        		bordereauDetails.forEach(bordereaudetail -> {
-        			log.info("== Bordeeau detail information : {} ", bordereaudetail.getProduct());
-        		});
-        		if (bordereauDetails != null && bordereauDetails.size() != 0) {
+			log.info("Company already exist in DB : {}" + company.getName());
+			bordereau.setCompany(company);
+			// save bordereau
+			this.bordereauRepository.save(bordereau);
 
-        			bordereauDetails.forEach(bordereauDetail -> {
-    					bordereauDetail.setBordereau(bordereau);
-    					
-    					// @TODO : controle totalCommandLine (calcul & compare)
-    					
-    					// add totalCommandLine to subTotal
-    					
-    					// save
-    					bordereauDetailRepository.save(bordereauDetail);
-    				});
-        			
-        			// calcule de subTotal bordereau
-        			bordereau.setBordereauDetails(bordereauDetails);
-        			return bordereau;
-        			
-    			} else {
-    		        throw new FileNotFoundException("Error persist resource bordereauDetail", "INTERNAL_ERROR");
-    			}
-        		
-        	} else {
-        		log.info(" =================== Pas bordereau details associés =================== ");
-        		throw new FileNotFoundException("Error JSON : Pas des bordereauDetails associés au bordereau", "INTERNAL_ERROR");
-        	}    	
-        }
-		
+			// lister les bordereaux details
+			if (bordereauDto.getBordereauDetailList() != null) {
+				List<BordereauDetail> bordereauDetails = entityDTOMapper
+						.bordereaudetailsDtotoBordereauDetailsList(bordereauDto.getBordereauDetailList());
+				bordereauDetails.forEach(bordereaudetail -> {
+					log.info("== Bordeeau detail information : {} ", bordereaudetail.getProduct());
+				});
+				if (bordereauDetails != null && bordereauDetails.size() != 0) {
+
+					bordereauDetails.forEach(bordereauDetail -> {
+						bordereauDetail.setBordereau(bordereau);
+						
+						try {
+							Double totalCommand = Util.totalCommandCalulate(bordereauDetail);
+							bordereauDetail.setTotalCommandLine(totalCommand);
+							
+							// add totalCommandLine to subTotal
+							Double subTotalBordereau = bordereau.getSubTotal() + totalCommand;
+							bordereau.setSubTotal(subTotalBordereau);
+							
+						} catch (BusinessException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+						// save
+						bordereauDetailRepository.save(bordereauDetail);
+					});
+
+					bordereau.setBordereauDetails(bordereauDetails);
+					return bordereau;
+
+				} else {
+					throw new FileNotFoundException("Error persist resource bordereauDetail", "FILE_NOT_FOUND");
+				}
+
+			} else {
+				log.info(" =================== Pas bordereau details associés =================== ");
+				throw new FileNotFoundException("Error JSON : Pas des bordereauDetails associés au bordereau",
+						"INTERNAL_ERROR");
+			}
+		}
 	}
 
 	
+	
+
 	@Override
 	public Bordereau updateBordereau(Bordereau bordereau) {
 		

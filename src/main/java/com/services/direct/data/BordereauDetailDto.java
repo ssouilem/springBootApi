@@ -1,7 +1,10 @@
 package com.services.direct.data;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.format.annotation.NumberFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.services.direct.utility.ProductUnit;
 
 import lombok.Data;
@@ -9,7 +12,9 @@ import lombok.Data;
 @Data
 public class BordereauDetailDto {
 
+	@NotNull(message = "productId is required.")
 	private Integer productId;
+	
 	private Integer percentage;
 	private String description;
 	private String reference;

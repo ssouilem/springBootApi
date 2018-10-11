@@ -1,10 +1,10 @@
 package com.services.direct.bean;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,11 +15,22 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIdentityInfo(
+		  generator = ObjectIdGenerators.PropertyGenerator.class, 
+		  property = "id")
 public class Invoice {
 
 	@Id
@@ -36,13 +47,12 @@ public class Invoice {
 	@Column(name="inv_created_date")
 	private Date createdDate;
 	
-	@JsonFormat(pattern = "YYYY-MM-dd")
-	@Column(name="inv_Issue_date")
-	private Date IssueDate;
-	
-	@JsonFormat(pattern = "YYYY-MM-dd")
-	@Column(name="inv_Return_date")
-	private Date ReturnDate;
+	@JsonFormat(
+		      shape = JsonFormat.Shape.STRING,
+		      pattern = "YYYY-MM-dd")
+	@DateTimeFormat(pattern = "dd-MM-yyyy")
+	@Column(name="inv_issue_date")
+	private Date issueDate;
 	
 	@Column(name="inv_created_author")
 	private String createdAuthor;
@@ -51,11 +61,16 @@ public class Invoice {
 	@JoinColumn(name = "inv_cmp_id",  nullable = true)
 	private Company company;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "invoice", cascade = CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@JsonInclude(value=Include.NON_EMPTY, content=Include.NON_NULL)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "invoice")
 	private List<Payment> payments;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "invoice", cascade = CascadeType.ALL)
-	private List<Bordereau> bordereaux;
+	@JsonInclude(value=Include.NON_EMPTY, content=Include.NON_NULL)
+	@OneToMany(fetch=FetchType.EAGER,
+			//cascade=CascadeType.ALL,
+			mappedBy="invoice")
+	private List<Bordereau> bordereaux = new ArrayList<Bordereau>();
 	
 	@Column(name = "inv_pay_down")
 	private Boolean payDown;
@@ -93,19 +108,11 @@ public class Invoice {
 	}
 
 	public Date getIssueDate() {
-		return IssueDate;
+		return this.issueDate;
 	}
 
 	public void setIssueDate(Date issueDate) {
-		IssueDate = issueDate;
-	}
-
-	public Date getReturnDate() {
-		return ReturnDate;
-	}
-
-	public void setReturnDate(Date returnDate) {
-		ReturnDate = returnDate;
+		this.issueDate = issueDate;
 	}
 
 	public String getCreatedAuthor() {
@@ -140,6 +147,10 @@ public class Invoice {
 		this.bordereaux = bordereaux;
 	}
 
+	public void addBordereau(Bordereau bordereau) {
+		this.bordereaux.add(bordereau);
+	}
+	
 	public Boolean getPayDown() {
 		return payDown;
 	}
