@@ -1,6 +1,7 @@
 package com.services.direct.service.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +38,9 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 	
 	@Override
-	public Payment getPaymentById(Integer id) {
+	public Payment getPaymentByUID(String paymentUid) {
 		// return contactRepository.getOne(contactId);
-		return paymentRepository.getOne(id);
+		return paymentRepository.getPaymentByUID(paymentUid);
 	}
 
 	@Override
@@ -58,6 +59,10 @@ public class PaymentServiceImpl implements PaymentService {
         } else {
         	// throw exception
         }
+		 
+		// add UID
+		UUID uuid = UUID.randomUUID();
+		payment.setUid(uuid.toString());
 		return this.paymentRepository.save(payment);
 
 	}
@@ -69,8 +74,9 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 
 	@Override
-	public void deletePayment(Integer id) {
-		this.paymentRepository.deleteById(id);
+	@Transactional
+	public void deletePaymentByUID(String paymentUid) {
+		this.paymentRepository.deletePaymentByUID(paymentUid);
 	}
 	
 	

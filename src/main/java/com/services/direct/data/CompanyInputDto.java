@@ -1,6 +1,8 @@
 package com.services.direct.data;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import lombok.Data;
 
@@ -11,6 +13,14 @@ public class CompanyInputDto {
 	private String name;
 	
 	private String address;
+	
+    @Email
+    @Size(max = 100)
+	private String mail;
+	
+	private String additionalAddress;
+	
+	private String zideCode;
 	
 	private String city;
 	
@@ -35,6 +45,30 @@ public class CompanyInputDto {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public String getMail() {
+		return mail;
+	}
+
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
+
+	public String getAdditionalAddress() {
+		return additionalAddress;
+	}
+
+	public void setAdditionalAddress(String additionalAddress) {
+		this.additionalAddress = additionalAddress;
+	}
+
+	public String getZideCode() {
+		return zideCode;
+	}
+
+	public void setZideCode(String zideCode) {
+		this.zideCode = zideCode;
 	}
 
 	public String getCity() {

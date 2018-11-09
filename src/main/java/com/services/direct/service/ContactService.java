@@ -8,12 +8,12 @@ import com.services.direct.exception.BusinessException;
 
 public interface ContactService {
 
-	Contact getContactById(Integer contactId) throws BusinessException;
+	Contact getContactByUID(String contactUid) throws BusinessException;
 	
 	Contact addContact(ContactInputDto contactDto) throws BusinessException;
 	
 	List<Contact> getAllContacts() throws BusinessException;
 	
-	void deleteContact(Integer id);
+	void deleteContactByUID(String contactUid);
 	
 }

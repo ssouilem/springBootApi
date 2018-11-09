@@ -26,6 +26,9 @@ public class BordereauDetail {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonIgnore
 	private Integer id;
+	
+    @Column(name = "brd_uid", unique = true, length = 64)
+    private String uid;
 
 	@JsonInclude(value=Include.NON_EMPTY, content=Include.NON_NULL)
 	@OneToOne(fetch = FetchType.EAGER, optional = false)
@@ -67,6 +70,14 @@ public class BordereauDetail {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
 	public Product getProduct() {

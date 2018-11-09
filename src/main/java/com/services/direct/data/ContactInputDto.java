@@ -32,7 +32,7 @@ public class ContactInputDto {
 	private String email;
 	
 	@NotEmpty
-	private Integer company;
+	private String company;
 
 	public Gender getGender() {
 		return gender;
@@ -74,11 +74,11 @@ public class ContactInputDto {
 		this.email = email;
 	}
 
-	public Integer getCompany() {
+	public String getCompany() {
 		return company;
 	}
 
-	public void setCompany(Integer company) {
+	public void setCompany(String company) {
 		this.company = company;
 	}
 	

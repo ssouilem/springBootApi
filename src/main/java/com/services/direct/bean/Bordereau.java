@@ -32,7 +32,6 @@ import com.services.direct.utility.BrType;
 
 @Entity
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-//@Proxy (lazy = false)
 @JsonIdentityInfo(
 		  generator = ObjectIdGenerators.PropertyGenerator.class, 
 		  property = "id")
@@ -42,6 +41,9 @@ public class Bordereau {
 	@Column(name="br_id")
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
+	
+    @Column(name = "br_uid", unique = true, length = 64)
+    private String uid;
 	
 	@Column(name="br_number")
 	private String number;
@@ -90,6 +92,14 @@ public class Bordereau {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
 	public String getNumber() {

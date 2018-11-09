@@ -1,6 +1,7 @@
 package com.services.direct.service.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,8 +49,8 @@ public class InvoiceServiceImpl implements InvoiceService {
 	}
 	
 	@Transactional
-	public Invoice getInvoiceById(Integer invoiceId) {
-		return invoiceRepository.getOne(invoiceId);
+	public Invoice getInvoiceByUID(String invoiceUid) {
+		return invoiceRepository.getInvoiceByUID(invoiceUid);
 	}
 
 	@Override
@@ -69,7 +70,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 			invoice.setCompany(company);
 			
 			
-			// controler et lister les bordereau
+			// controler et lister les bordereaux
 			if (invoiceDto.getBordereaux() == null || invoiceDto.getBordereaux().isEmpty()) {
 				throw new FileNotFoundException("Ressource bordereauList not found", "FILE_NOT_FOUND");
 			} else {
@@ -78,7 +79,10 @@ public class InvoiceServiceImpl implements InvoiceService {
 					// verifier au niveau_ de la base isExist
 					if (bordereauRepository.existsById(bordereauId)) {
 						// add to List
-						invoice.addBordereau(bordereauRepository.getOne(bordereauId));
+						Bordereau bordereau = bordereauRepository.getBordereauById(bordereauId);
+						bordereau.setInvoice(invoice);
+						bordereauRepository.save(bordereau);
+						invoice.addBordereau(bordereau);
 						
 					} else {
 						try {
@@ -90,6 +94,10 @@ public class InvoiceServiceImpl implements InvoiceService {
 					}
 				});
 				 
+				// add UID
+				UUID uuid = UUID.randomUUID();
+				invoice.setUid(uuid.toString());
+				
 				// calulate InvoiceTotal
 
 				// save
@@ -102,16 +110,17 @@ public class InvoiceServiceImpl implements InvoiceService {
 	@Override
 	@Transactional
 	public Invoice addBordereauToInvoice(Integer id, Integer bordereauId) {
-			log.info("Liste de parametre en entré: id {}, contractId {}", id, bordereauId);
+			log.info("Liste de parametre en entré: id {}, bordereauId {}", id, bordereauId);
 			if(!invoiceRepository.existsById(id)) {
 	            throw new ResourceNotFoundException("Invoice " + id + " not found");
 	        } else if (!bordereauRepository.existsById(bordereauId)) {
 	        	throw new ResourceNotFoundException("bordereauId " + bordereauId + " not found");
 	        } else {
-	        	Bordereau bordereau = bordereauRepository.getOne(bordereauId);
+	        	Bordereau bordereau = bordereauRepository.getBordereauById(bordereauId);
 	        	Invoice invoice  = invoiceRepository.getOne(id);
 	        	bordereau.setInvoice(invoice);
 	        	bordereauRepository.save(bordereau);
+	        	invoice.getBordereaux().add(bordereau);
 	        	
 	        	return invoice;
 	        }
@@ -124,10 +133,10 @@ public class InvoiceServiceImpl implements InvoiceService {
 	}
 
 	@Override
-	public void deleteInvoice(Integer id) {
-		// TODO Auto-generated method stub
+	@Transactional
+	public void deleteInvoiceByUID(String invoiceUid) {
+		this.invoiceRepository.deleteInvoiceByUID(invoiceUid);
+		
 	}
 	
-	
-
 }

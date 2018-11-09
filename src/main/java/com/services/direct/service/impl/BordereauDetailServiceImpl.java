@@ -1,6 +1,7 @@
 package com.services.direct.service.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,8 +44,8 @@ public class BordereauDetailServiceImpl implements BordereauDetailService {
 	}
 
 	@Override
-	public BordereauDetail getBordereauDetailById(Integer bordereaudetailId) {
-		return bordereauDetailRepository.getOne(bordereaudetailId);
+	public BordereauDetail getBordereauDetailByUID(String bordereauDetailUid) {
+		return bordereauDetailRepository.getBordereauDetailByUID(bordereauDetailUid);
 	}
 
 	@Override
@@ -54,15 +55,17 @@ public class BordereauDetailServiceImpl implements BordereauDetailService {
 	}
 
 	@Transactional
-	public BordereauDetail addBordereauDetailByBordereau(Integer bordereauId, BordereauDetailDto bordereauDetailDto) throws BusinessException {
+	public BordereauDetail addBordereauDetailByBordereau(String bordereauUid, BordereauDetailDto bordereauDetailDto) throws BusinessException {
 		
 		BordereauDetail bordereauDetail = entityDTOMapper.bordereaudetailsDtotoBordereauDetails(bordereauDetailDto);
 		
 		if (bordereauDetail != null) {
-			Bordereau bordereau = this.bordereauRepository.getOne(bordereauId);
+			Bordereau bordereau = this.bordereauRepository.getBordereauByUID(bordereauUid);
 			if (bordereau != null) {
 				bordereauDetail.setBordereau(bordereau);
-				log.info(" ****** Entity bordereau ID {} " , bordereau.getId());
+				UUID uuid = UUID.randomUUID();
+				bordereauDetail.setUid(uuid.toString());
+				log.info(" ****** Entity bordereau ID {} " , bordereau.getUid());
 				try {
 					Double totalCommand = Util.totalCommandCalulate(bordereauDetail);
 					bordereauDetail.setTotalCommandLine(totalCommand);
@@ -89,10 +92,10 @@ public class BordereauDetailServiceImpl implements BordereauDetailService {
 		
 
 	@Override
-	public void deleteBordereauDetail(Integer brDetailId) {
-		// TODO Auto-generated method stub
+	@Transactional
+	public void deleteBordereauDetailByUID(String productUid) {
+		this.bordereauDetailRepository.deleteBordereauDetailByUID(productUid);
 		
 	}
 	
-
 }

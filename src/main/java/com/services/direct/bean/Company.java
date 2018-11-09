@@ -37,12 +37,24 @@ public class Company {
 	@Column(name="cmp_id")
 	private Integer id;
 	
+    @Column(name = "cmp_uid", unique = true, length = 64)
+    private String uid;
+	
 	@NotNull
 	@Column(name="cmp_name")
 	private String name;
 	
 	@Column(name="cmp_address")
 	private String address;
+	
+	@Column(name="cmp_mail")
+	private String mail;
+	
+	@Column(name="cmp_additionalAddress")
+	private String additionalAddress;
+	
+	@Column(name="cmp_zipe_code")
+	private String zideCode;
 	
 	@Column(name="cmp_city")
 	private String city;
@@ -86,51 +98,22 @@ public class Company {
 	//@JsonBackReference
 	private Contract contract;
 	
-	/**
-	 * 
-	 */
-	public Company() {
-	}
-
-
-
-	/**
-	 * @param id
-	 * @param name
-	 * @param address
-	 * @param city
-	 * @param phoneNumber
-	 * @param faxNumber
-	 * @param tvaNumber
-	 * @param contact
-	 * @param invoices
-	 * @param bordereaux
-	 */
-	public Company(Integer id, @NotNull String name, String address, String city, String phoneNumber, String faxNumber,
-			@NotNull String tvaNumber, Contact contact, List<Invoice> invoices, List<Bordereau> bordereaux) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.address = address;
-		this.city = city;
-		this.phoneNumber = phoneNumber;
-		this.faxNumber = faxNumber;
-		this.tvaNumber = tvaNumber;
-		this.contact = contact;
-		this.invoices = invoices;
-		this.bordereaux = bordereaux;
-	}
-
-	
-	
 	public Integer getId() {
 		return id;
 	}
 	
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
 
+	public String getUid() {
+		return uid;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -145,6 +128,30 @@ public class Company {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public String getMail() {
+		return mail;
+	}
+
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
+
+	public String getAdditionalAddress() {
+		return additionalAddress;
+	}
+
+	public void setAdditionalAddress(String additionalAddress) {
+		this.additionalAddress = additionalAddress;
+	}
+
+	public String getZideCode() {
+		return zideCode;
+	}
+
+	public void setZideCode(String zideCode) {
+		this.zideCode = zideCode;
 	}
 
 	public String getCity() {

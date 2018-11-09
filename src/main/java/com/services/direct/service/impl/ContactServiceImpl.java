@@ -1,6 +1,7 @@
 package com.services.direct.service.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,9 +45,9 @@ public class ContactServiceImpl implements ContactService {
 	}
 
 	@Override
-	public Contact getContactById(Integer contactId) throws BusinessException {
+	public Contact getContactByUID(String contactUid) throws BusinessException {
 		
-		Contact contact = contactRepository.getContactId(contactId);
+		Contact contact = contactRepository.getContactByUID(contactUid);
 		if (contact != null) {
 			return contact;
 		} else {
@@ -65,8 +66,8 @@ public class ContactServiceImpl implements ContactService {
 		}
 
 		// Recuperation de la company
-		Integer companyId = contactDto.getCompany();
-		Company company = companyRepository.getCompanyById(companyId);
+		String companyUid = contactDto.getCompany();
+		Company company = companyRepository.getCompanyByUID(companyUid);
 
 		// add company to contact
 		if (company != null) {
@@ -75,6 +76,9 @@ public class ContactServiceImpl implements ContactService {
 		} else {
 			throw new FileNotFoundException("The resource company was not found BD", "FILE_NOT_FOUND");
 		}
+		// add UID
+		UUID uuid = UUID.randomUUID();
+		contact.setUid(uuid.toString());
 		return this.contactRepository.save(contact);
 
 	}
@@ -104,9 +108,10 @@ public class ContactServiceImpl implements ContactService {
 	 */
 
 	@Override
-	public void deleteContact(Integer id) {
+	@Transactional
+	public void deleteContactByUID(String contactUid) {
+		this.contactRepository.deleteContactByUID(contactUid);
 		
-		this.contactRepository.deleteById(id);
-	}
+	}	
 
 }

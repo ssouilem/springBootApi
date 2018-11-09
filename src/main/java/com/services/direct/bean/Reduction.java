@@ -7,8 +7,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -25,15 +27,22 @@ public class Reduction {
 	@Column(name="red_id")
 	private Integer id;
 	
+    @Column(name = "red_uid", unique = true, length = 64)
+    private String uid;
+    
+    @Transient
+    @JsonIgnore
+    private String productUid;
+	
 	// @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
 	@ManyToOne
-	@JoinColumn(name = "ct_pr_id", nullable = false)
+	@JoinColumn(name = "red_pr_id", nullable = false)
 	private Product product;
 	
 	@ManyToOne
 	@JoinColumn(name = "red_ctr_id",  nullable = true)
 	// @JsonProperty("contractId")
-	//@JsonIgnore
+	@JsonIgnore
 	// @JsonBackReference
 	private Contract contract;
 	
@@ -51,6 +60,23 @@ public class Reduction {
 	public void setId(Integer id) {
 		this.id = id;
 	}
+	
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
+	public String getProductUid() {
+		return productUid;
+	}
+
+	public void setProductUid(String productUid) {
+		this.productUid = productUid;
+	}
+
 	public Product getProduct() {
 		return product;
 	}

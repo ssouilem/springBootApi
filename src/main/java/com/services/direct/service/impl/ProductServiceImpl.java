@@ -1,6 +1,7 @@
 package com.services.direct.service.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,6 @@ import com.services.direct.exception.FileNotFoundException;
 import com.services.direct.mapping.EntityDTOMapper;
 import com.services.direct.repo.ProductRepository;
 import com.services.direct.service.ProductService;
-import com.services.direct.utility.ProductUnit;
 
 @Service("productService")
 @Transactional
@@ -36,11 +36,11 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	@Transactional
-	public Product getProductById(Integer productId) throws FileNotFoundException {
-		log.info(" getProductById : " + productId);
-		Product product = productRepository.getOne(productId);
-		log.info(" produit -> reference : " + product.getReference());
+	public Product getProductByUID(String productUid) throws FileNotFoundException {
+		log.info(" getProductById : " + productUid);
+		Product product = productRepository.getProductByUID(productUid);
 		if (product != null) {
+			log.info(" produit -> reference : " + product.getReference());
 			return product;
 		} else {
 			throw new FileNotFoundException("The resource product was not found", "FILE_NOT_FOUND");
@@ -48,11 +48,14 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
+	@Transactional
 	public Product createProduct(ProductInputDto productDto) throws BusinessException {
 		
 		log.info("creation de l'entite Produit");
 		log.info("--> Quality : " + productDto.getQuality());
 		Product product = entityDTOMapper.productDtotoProduct(productDto);
+		UUID uuid = UUID.randomUUID();
+		product.setUid(uuid.toString());
 		
 		if (product !=null && product.getPrice() != null && !product.getReference().isEmpty())
 		{
@@ -63,9 +66,10 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public Product updateProduct(Integer productId, ProductInputDto productDto) throws BusinessException {
+	@Transactional
+	public Product updateProduct(String productUid, ProductInputDto productDto) throws BusinessException {
 		
-		Product product = this.productRepository.getOne(productId);
+		Product product = this.productRepository.getProductByUID(productUid);
 		Product productInput = entityDTOMapper.productDtotoProduct(productDto);
 
 		if (product != null && product.equals(productInput)) {
@@ -89,14 +93,16 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
+	@Transactional
 	public List<Product> getAllProducts() {
 		List<Product> products = (List<Product>) productRepository.findAll();
 		return products;
 	}
 
 	@Override
-	public void deleteProductById(Integer productId) {
-		this.productRepository.deleteById(productId);
+	@Transactional
+	public void deleteProductByUID(String productUid) {
+		this.productRepository.deleteProductByUID(productUid);
 		
 	}
 	

@@ -7,12 +7,12 @@ import com.services.direct.data.PaymentInputDto;
 
 public interface PaymentService {
 
-	Payment getPaymentById(Integer id);
+	Payment getPaymentByUID(String paymentUid);
 	
-	Payment addPayment(PaymentInputDto invoiceDto);
+	Payment addPayment(PaymentInputDto paymentDto);
 	
 	List<Payment> getAllPayments();
 	
-	void deletePayment(Integer id);
+	void deletePaymentByUID(String paymentUid);
 	
 }

@@ -1,5 +1,9 @@
 package com.services.direct.bean;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -9,14 +13,22 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.validation.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.services.direct.utility.BankListEnum;
-import com.services.direct.utility.PaymentType;
 
 @Entity
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+@JsonIdentityInfo(
+		  generator = ObjectIdGenerators.PropertyGenerator.class, 
+		  property = "id")
 public class Payment {
 
 	
@@ -25,9 +37,11 @@ public class Payment {
 	@Column(name="pay_id")
 	private Integer id;
 	
-	@Enumerated(EnumType.STRING)
-	@Column(name="pay_type")
-	private PaymentType type;
+    @Column(name = "pay_uid", unique = true, length = 64)
+    private String uid;
+    
+	@Column(name="pay_created_date")
+	private Date createdDate;
 	
 	@Column(name="pay_amount")
 	private Double amount;
@@ -36,7 +50,16 @@ public class Payment {
 	@Column(name="pay_bank")
 	private BankListEnum bank;
 	
-	@ManyToOne
+	@NotEmpty
+	@Column(name="pay_name")
+	private String holder;
+	
+	@JsonInclude(value=Include.NON_EMPTY, content=Include.NON_NULL)
+	@OneToMany(fetch=FetchType.EAGER,
+			mappedBy="payment")
+	private List<PaymentDetail> paymentDetails = new ArrayList<PaymentDetail>();
+	
+	@OneToOne
 	@JoinColumn(name = "pay_inv_id", nullable = false)
 	private Invoice invoice;
 
@@ -48,12 +71,20 @@ public class Payment {
 		this.id = id;
 	}
 
-	public PaymentType getType() {
-		return type;
+	public String getUid() {
+		return uid;
 	}
 
-	public void setType(PaymentType type) {
-		this.type = type;
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
 	}
 
 	public Double getAmount() {
@@ -72,6 +103,22 @@ public class Payment {
 		this.bank = bank;
 	}
 
+	public String getHolder() {
+		return holder;
+	}
+
+	public void setHolder(String holder) {
+		this.holder = holder;
+	}
+
+	public List<PaymentDetail> getPaymentDetails() {
+		return paymentDetails;
+	}
+
+	public void setPaymentDetails(List<PaymentDetail> paymentDetails) {
+		this.paymentDetails = paymentDetails;
+	}
+
 	public Invoice getInvoice() {
 		return invoice;
 	}
@@ -79,6 +126,5 @@ public class Payment {
 	public void setInvoice(Invoice invoice) {
 		this.invoice = invoice;
 	}
-	
-	
+
 }

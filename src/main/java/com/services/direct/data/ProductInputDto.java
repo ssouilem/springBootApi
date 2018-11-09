@@ -2,6 +2,9 @@ package com.services.direct.data;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import org.springframework.format.annotation.NumberFormat;
 
 import com.services.direct.utility.ProductChange;
@@ -13,16 +16,30 @@ import lombok.Data;
 @Data
 public class ProductInputDto {
 
+	@NotNull(message = "Product reference is required.")
+	@NotEmpty(message = "reference not empty")
 	private String reference;
+	
 	private String name;
+	
+	@NotNull(message = "Product description is required.")
+	@NotEmpty(message = "description not empty")
 	private String description;
+	
+	@NotNull(message = "Product unit is required.")
+	@NotEmpty(message = "unit not empty")
 	private ProductUnit unit;
+	
 	private ProductQuality quality;
 
 	@NumberFormat(pattern = "#.###")
+	@NotEmpty(message = "reference not empty")
 	private BigDecimal price;
 	
 	private ProductChange change;
+	
+	@NotEmpty(message = "tva not empty")
+	private Double tva;
 
 	public String getReference() {
 		return reference;
@@ -78,6 +95,14 @@ public class ProductInputDto {
 
 	public void setQuality(ProductQuality quality) {
 		this.quality = quality;
+	}
+
+	public Double getTva() {
+		return tva;
+	}
+
+	public void setTva(Double tva) {
+		this.tva = tva;
 	}
 
 }

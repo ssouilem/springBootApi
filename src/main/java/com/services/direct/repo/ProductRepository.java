@@ -20,4 +20,11 @@ public interface ProductRepository extends JpaRepository<Product, Integer>{
 
 	@Query("SELECT product FROM Product product WHERE product.id=(:id)")
 	Product getProductById(@Param("id") Integer id);
+	
+	@Query("SELECT product FROM Product product WHERE product.uid=(:uid)")
+	Product getProductByUID(@Param("uid") String productUid);
+
+	@Modifying
+	@Query("DELETE FROM Product product WHERE product.uid=(:uid)")
+	void deleteProductByUID(@Param("uid") String productUid);
 }

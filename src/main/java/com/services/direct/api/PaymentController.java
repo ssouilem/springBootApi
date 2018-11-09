@@ -48,10 +48,10 @@ public class PaymentController {
 		return this.paymentService.getAllPayments();
 	}
 
-	@RequestMapping(value = "/{Id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{UID}", method = RequestMethod.GET)
     @ResponseBody
-    public Payment getPaymentById(@PathVariable final Integer paymentId) {
-        return this.paymentService.getPaymentById(paymentId);
+    public Payment getPaymentById(@PathVariable("UID") final String paymentUid) {
+        return this.paymentService.getPaymentByUID(paymentUid);
     }
 	
 	 
@@ -66,9 +66,9 @@ public class PaymentController {
 		}	
 	}
 	
-	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
+	@RequestMapping(value="/{UID}", method=RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-    public void deletePayment(@PathVariable Integer id) {
-        paymentService.deletePayment(id);
+    public void deletePayment(@PathVariable("UID") final String paymentUid) {
+        paymentService.deletePaymentByUID(paymentUid);
     }
 }

@@ -8,13 +8,13 @@ import com.services.direct.exception.BusinessException;
 
 public interface InvoiceService {
 
-	Invoice getInvoiceById(Integer contactId);
+	Invoice getInvoiceByUID(String invoiceUid);
 	
 	Invoice addInvoice(InvoiceInputDto invoiceDto) throws BusinessException;
 	
 	List<Invoice> getAllInvoices();
 	
-	void deleteInvoice(Integer id);
+	void deleteInvoiceByUID(String invoiceUid);
 
 	Invoice addBordereauToInvoice(Integer id, Integer bordereauId);
 	

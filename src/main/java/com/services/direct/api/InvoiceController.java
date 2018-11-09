@@ -50,10 +50,10 @@ public class InvoiceController {
 		return this.invoiceService.getAllInvoices();
 	}
 
-	@RequestMapping(value = "/{Id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{UID}", method = RequestMethod.GET)
     @ResponseBody
-    public Invoice getInvoiceById(@PathVariable final Integer invoiceId) {
-        return this.invoiceService.getInvoiceById(invoiceId);
+    public Invoice getInvoiceById(@PathVariable("UID") final String invoiceUid) {
+        return this.invoiceService.getInvoiceByUID(invoiceUid);
     }
 	
 	 
@@ -71,7 +71,7 @@ public class InvoiceController {
 	@ResponseBody
     @RequestMapping(value = "/{Id}/bordereau", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<Invoice> addBordereauToInvoice(@PathVariable("Id") Integer id, @RequestParam("bordereauId") Integer bordereauId ) {
+	public ResponseEntity<Invoice> addBordereauToInvoice(@PathVariable("UID") Integer id, @RequestParam("bordereauId") Integer bordereauId ) {
 		Invoice invoice = invoiceService.addBordereauToInvoice(id, bordereauId);
 		if (invoice != null) {
 			return new ResponseEntity<>(invoice, HttpStatus.OK);
@@ -82,7 +82,7 @@ public class InvoiceController {
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-    public void deleteShop(@PathVariable Integer id) {
-		invoiceService.deleteInvoice(id);
+    public void deleteInvoiceByUID(@PathVariable("UID") String invoiceUid) {
+		invoiceService.deleteInvoiceByUID(invoiceUid);
     }
 }

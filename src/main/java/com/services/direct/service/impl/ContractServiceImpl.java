@@ -1,6 +1,7 @@
 package com.services.direct.service.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.services.direct.bean.Contract;
+import com.services.direct.bean.Product;
 import com.services.direct.bean.Reduction;
 import com.services.direct.data.ContractInputDto;
 import com.services.direct.data.ReductionDto;
@@ -33,7 +35,7 @@ public class ContractServiceImpl implements ContractService {
 	
 	private ReductionRepository reductionRepository;
 	
-	//private ProductRepository productRepository;
+	private ProductRepository productRepository;
 
 	@Autowired
 	public ContractServiceImpl(final ContractRepository contractRepository,
@@ -43,12 +45,12 @@ public class ContractServiceImpl implements ContractService {
 		this.contractRepository = contractRepository;
 		this.entityDTOMapper     = entityDTOMapper;
 		this.reductionRepository = reductionRepository;
-		//this.productRepository = productRepository;
+		this.productRepository = productRepository;
 	}
 
 	@Override
-	public Contract getContractById(Integer contractId) {
-		return contractRepository.getOne(contractId);
+	public Contract getContractByUID(String contractUid) {
+		return contractRepository.getContractByUID(contractUid);
 	}
 
 	
@@ -65,14 +67,18 @@ public class ContractServiceImpl implements ContractService {
 				
 				log.info(" ****** contract -> reductions is not null ***** contractDto product : " + contractDto.getReductions().toString());
 				contractDto.getReductions().forEach(reduction -> {
-					log.info(" ****** ADD product : " + reduction.getProductId());
+					log.info(" ****** ADD product : " + reduction.getProductUid());
 				});
 				
 				List<Reduction> reductions = entityDTOMapper.reductionDtotoReductions(contractDto.getReductions());
-				//contract.setReductions(reductions);
+				contract.setReductions(reductions);
+				
+				// add UID
+				UUID uuid = UUID.randomUUID();
+				contract.setUid(uuid.toString());
 				
 				// Save Contract 
-				contractRepository.save(contract);
+				Contract contractEntity = contractRepository.save(contract);
 
 				// save reduction
 				if (reductions != null && reductions.size() != 0) {
@@ -80,9 +86,13 @@ public class ContractServiceImpl implements ContractService {
 					reductions.forEach(reduction -> {
 						log.info(" ****** ADD reductions : " + reduction.getDescription());
 						
-//						Product product = productRepository.getOne(reduction.getProduct().getId());
-//				    	reduction.setProduct(product);
-						reduction.setContract(contract);
+						// add UID reduction
+						UUID reductionUuid = UUID.randomUUID();
+						reduction.setUid(reductionUuid.toString());
+						
+						Product product = this.productRepository.getProductByUID(reduction.getProductUid());
+				    	reduction.setProduct(product);
+						reduction.setContract(contractEntity);
 						// contract.addReduction(reduction);
 						reductionRepository.save(reduction);
 					});
@@ -131,22 +141,36 @@ public class ContractServiceImpl implements ContractService {
 		this.contractRepository.deleteById(contractId);
 
 	}
+	
+	@Override
+	@Transactional
+	public void deleteContractByUID(String contractUid) {
+		this.contractRepository.deleteContractByUID(contractUid);
+		
+	}
 
 	@Override
 	@Transactional
-	public Reduction addReductionByProduct(Integer contractId, ReductionDto reductionDto) {
+	public Reduction addReductionByProduct(String contractUid, ReductionDto reductionDto) {
 			Reduction reduction = entityDTOMapper.reductionDtotoReduction(reductionDto);
 			if (reduction != null) {
-				Contract contract = this.contractRepository.getContractId(contractId);
+				Contract contract = this.contractRepository.getContractByUID(contractUid);
 				if (contract != null) {
+					
+					// add UID reduction
+					UUID reductionUuid = UUID.randomUUID();
+					reduction.setUid(reductionUuid.toString());
+					
+					Product product = this.productRepository.getProductByUID(reduction.getProductUid());
+			    	reduction.setProduct(product);
+	
 					reduction.setContract(contract);
 					log.info(" ****** Entity reduction ID {} : contractId {}" , reduction.getId() ,  reduction.getContract().getId());
 					reductionRepository.save(reduction);
-					
 					return reduction;
 					
 				} else {
-					 throw new RuntimeException("The resource File was not found");
+					 throw new RuntimeException("The resource contract was not found");
 				}
 			} else {
 				throw new RuntimeException("Erreur de parsing ou erreur JSON");
@@ -154,11 +178,11 @@ public class ContractServiceImpl implements ContractService {
 	}
 
 	@Override
-	public Contract deleteReduction(Integer contractId, Integer reductionId) {
-		Contract contract = this.contractRepository.getOne(contractId);
+	public Contract unlinkReductionOfContract(String contractUid, String reductionUid) {
+		Contract contract = this.contractRepository.getContractByUID(contractUid);
 		if (contract != null) {
 			contract.getReductions().forEach(reduction -> {
-				if (reduction.getId().equals(reductionId)) {
+				if (reduction.getUid().equals(reductionUid)) {
 					contract.getReductions().remove(reduction);
 				}
 			});

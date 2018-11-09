@@ -22,7 +22,7 @@ public class InvoiceInputDto {
 	@NotNull(message = "Invoice number is required.")
     private String number;
 	
-	@NotEmpty
+	@NotEmpty(message = "amount not empty")
     private Double amount;
 	
 	@JsonFormat(
@@ -38,7 +38,6 @@ public class InvoiceInputDto {
 	private Integer company;
 	
 	@NotNull(message = "bordereauList is required.")
-	@NotEmpty(message = "bordereauList not empty")
 	private List<Integer> bordereaux;
 	
 	private Boolean payDown;

@@ -6,16 +6,16 @@ import com.services.direct.bean.Company;
 
 public interface CompanyService {
 
-	Company getCompanyId(Integer contactId);
+	Company getCompanyByUID(String companyUid);
 	
-	void addCompany(Company contact);
+	Company addCompany(Company contact);
 	
 	List<Company> getAllCompanies();
 	
-	Company updateCompany(Integer id, Company cp);
+	Company updateCompany(String companyUid, Company cp);
 	
-	void deleteCompany(Integer articleId);
+	void deleteCompanyByUID(String companyUid);
 
-	Company attachContract(Integer id, Integer contractId);
+	Company attachContract(String companyUid, String contractUid);
 	
 }

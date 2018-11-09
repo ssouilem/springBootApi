@@ -31,6 +31,9 @@ public class Contact {
 	@ApiModelProperty(notes = "The database generated contact ID")
 	private Integer id;
 	
+    @Column(name = "ct_uid", unique = true, length = 64)
+    private String uid;
+    
 	@Enumerated(EnumType.STRING)
     @Column(length = 10, name="ct_gender")
     private Gender gender;
@@ -58,21 +61,6 @@ public class Contact {
     @JoinColumn(name = "ct_cmp_id", nullable = false)
     private Company company;
 	
-	public Contact() {	
-	}
-
-	public Contact(Integer id, Gender gender, @NotEmpty String firstName, @NotEmpty String lastName, String phoneNumber,
-			@NotNull @Email @Size(max = 100) String email, Company company) {
-		super();
-		this.id = id;
-		this.gender = gender;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.phoneNumber = phoneNumber;
-		this.email = email;
-		this.company = company;
-	}
-
 	public Integer getId() {
 		return id;
 	}
@@ -81,7 +69,14 @@ public class Contact {
 		this.id = id;
 	}
 
-	
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
 	public Gender getGender() {
 		return gender;
 	}

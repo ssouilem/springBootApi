@@ -54,45 +54,50 @@ public class CompanyController {
 	}
 
     // Get a Single company
-	@RequestMapping(value = "/{companyId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{UID}", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Company> getCompanyById(@PathVariable(value = "companyId") Integer companyId) {
+    public ResponseEntity<Company> getCompanyByUID(@PathVariable(value = "UID") String companyUid) {
         
-		Company company = companyService.getCompanyId(companyId);
+		Company company = companyService.getCompanyByUID(companyUid);
 		if (company != null) {
 			return new ResponseEntity<>(company, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 		}
-		// return this.companyService.getCompanyId(companyId);
     }
 	
 	// Create a new Company
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public void addCompany(@RequestBody Company company){
-	  this.companyService.addCompany(company);
+	public ResponseEntity<Company> CreatedCompany(@RequestBody Company company){
+	
+		Company companyEntity = this.companyService.addCompany(company);
+		if (companyEntity != null) {
+			return new ResponseEntity<>(companyEntity, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	// Update a Company
-	@PutMapping("/{id}")
-	public Company updateNote(@PathVariable(value = "id") Integer id, @Valid @RequestBody Company company) {
-		return this.companyService.updateCompany(id, company);
+	@PutMapping("/{UID}")
+	public Company updateNote(@PathVariable(value = "UID") String companyUid, @Valid @RequestBody Company company) {
+		return this.companyService.updateCompany(companyUid, company);
 	}
 	
 	// Delete a Company
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteArticle(@PathVariable("id") Integer id) {
-		companyService.deleteCompany(id);
+	@DeleteMapping("/{UID}")
+	public ResponseEntity<Void> deleteCompanyByUID(@PathVariable("UID") String companyUid) {
+		companyService.deleteCompanyByUID(companyUid);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}	
 	
 	// add a contract
 	@ResponseBody
-    @RequestMapping(value = "/{Id}/contract", method = RequestMethod.POST)
+    @RequestMapping(value = "/{UID}/contract", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<Company> attachContract(@PathVariable("Id") Integer id, @RequestParam("contractId") Integer contractId ) {
-		Company company = companyService.attachContract(id, contractId);
+	public ResponseEntity<Company> attachContract(@PathVariable("UID") String companyUid, @RequestParam("contractUid") String contractUid ) {
+		Company company = companyService.attachContract(companyUid, contractUid);
 		if (company != null) {
 			return new ResponseEntity<>(company, HttpStatus.OK);
 		} else {

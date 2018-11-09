@@ -10,13 +10,13 @@ import com.services.direct.exception.BusinessException;
 
 public interface BordereauService {
 
-	Bordereau getBordereauById(Integer bordereauId);
+	Bordereau getBordereauByUID(String bordereauUid);
 	
 	Bordereau createBordereau(BordereauInputDto bordereauDto) throws BusinessException;
 	
 	List<Bordereau> getAllBordereaux();
 	
-	void deleteBordereau(Integer id);
+	void deleteBordereauByUID(String bordereauUid);
 
 	Bordereau updateBordereau(Bordereau bordereau);
 	

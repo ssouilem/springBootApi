@@ -12,8 +12,8 @@ import lombok.Data;
 @Data
 public class BordereauDetailDto {
 
-	@NotNull(message = "productId is required.")
-	private Integer productId;
+	@NotNull(message = "productUid is required.")
+	private String productUid;
 	
 	private Integer percentage;
 	private String description;
@@ -24,12 +24,11 @@ public class BordereauDetailDto {
 	@NumberFormat(pattern = "######.###")
 	private Double totalCommandLine;
 	
-	
-	public Integer getProductId() {
-		return productId;
+	public String getProductUid() {
+		return productUid;
 	}
-	public void setProductId(Integer productId) {
-		this.productId = productId;
+	public void setProductUid(String productUid) {
+		this.productUid = productUid;
 	}
 	public Integer getPercentage() {
 		return percentage;

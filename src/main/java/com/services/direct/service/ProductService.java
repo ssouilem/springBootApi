@@ -9,14 +9,14 @@ import com.services.direct.exception.FileNotFoundException;
 
 public interface ProductService {
 
-	Product getProductById(Integer productId) throws FileNotFoundException;
-	
 	Product createProduct(ProductInputDto productDto) throws BusinessException;
 	
-	Product updateProduct(Integer productId, ProductInputDto productDto) throws BusinessException;
-	
 	List<Product> getAllProducts();
-	
-	void deleteProductById(Integer productId);
+
+	Product getProductByUID(String productUid) throws FileNotFoundException;
+
+	Product updateProduct(String productUid, ProductInputDto productDto) throws BusinessException;
+
+	void deleteProductByUID(String productUid);
 	
 }

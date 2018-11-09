@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.services.direct.bean.Product;
 import com.services.direct.data.ProductInputDto;
 import com.services.direct.exception.BusinessException;
-import com.services.direct.exception.FileNotFoundException;
 import com.services.direct.service.ProductService;
 
 import io.swagger.annotations.Api;
@@ -61,24 +60,24 @@ public class ProductController {
 		return this.productService.getAllProducts();
 	}
 
-	@RequestMapping(value = "/{productId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{UID}", method = RequestMethod.GET)
     @ResponseBody
-    public Product getProductById(@PathVariable final Integer productId) throws BusinessException {
-        return this.productService.getProductById(productId);
+    public Product getProductById(@PathVariable("UID") final String productId) throws BusinessException {
+        return this.productService.getProductByUID(productId);
     }
 	
-	@RequestMapping(value="/{productId}", method=RequestMethod.DELETE)
+	@RequestMapping(value="/{UID}", method=RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-    public void deleteProduct(@PathVariable Integer productId) {
-        productService.deleteProductById(productId);;
+    public void deleteProductBuUID(@PathVariable("UID") String productUid) {
+        productService.deleteProductByUID(productUid);
     }
 	
     @ResponseBody
-    @RequestMapping(value = "/{Id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{UID}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Product> updateProduct(@PathVariable(name = "Id") final Integer productId, @RequestBody ProductInputDto productDto) throws BusinessException {
+    public ResponseEntity<Product> updateProduct(@PathVariable("UID") final String productUid, @RequestBody ProductInputDto productDto) throws BusinessException {
     		
-    	Product product = this.productService.updateProduct(productId, productDto);
+    	Product product = this.productService.updateProduct(productUid, productDto);
     	
     	if (product != null) {
 			return new ResponseEntity<>(product, HttpStatus.OK);

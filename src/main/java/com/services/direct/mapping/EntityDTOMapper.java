@@ -6,8 +6,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.xml.transform.Source;
-
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -79,7 +77,14 @@ public class EntityDTOMapper {
 		modelMapper.addMappings(new productDTOToProductMapping());
 		modelMapper.addMappings(new productToProductDTOMapping());
 		modelMapper.addMappings(new contractToContractDTOMapping());
-		modelMapper.addMappings(new reductionDtotoReductionsMapping(productRepository));
+		modelMapper.addMappings(new PropertyMap<ReductionDto, Reduction>() {
+			protected void configure() {
+					map().setProductUid(source.getProductUid());
+					skip().setId(0);
+					skip().setProduct(null);
+			}
+		});
+		//modelMapper.addMappings(new reductionDtotoReductionsMapping(productRepository));
 //		modelMapper.addMappings(new bordereauDetailDtotoBordereauDetailsMapping(productRepository));
 		
 		System.out.println("#############   EntityDTOMapper ############################ "
@@ -169,7 +174,7 @@ public class EntityDTOMapper {
 	    	mapping.using(toStringDate).map(InvoiceInputDto::getIssueDate, Invoice::setIssueDate);
 	    });
 		Invoice invoice = modelMapper.map(invoiceDto, Invoice.class);
-				invoice.getBordereaux().clear();
+		if (!invoice.getBordereaux().isEmpty())	invoice.getBordereaux().clear();
 		return invoice;
 	}
    
@@ -227,7 +232,7 @@ public class EntityDTOMapper {
 	public BordereauDetail bordereaudetailsDtotoBordereauDetails(BordereauDetailDto bordereauDetailDto) {
 		
 		BordereauDetail bordereauDetail = modelMapper.map(bordereauDetailDto, BordereauDetail.class);
-		bordereauDetail.setProduct(productRepository.getProductById(bordereauDetailDto.getProductId()));
+		bordereauDetail.setProduct(productRepository.getProductByUID(bordereauDetailDto.getProductUid()));
 		bordereauDetail.setId(null);
 		return bordereauDetail;
 	}
@@ -237,10 +242,6 @@ public class EntityDTOMapper {
 		
 		return bordereauDetailsDto.stream()
         .map(entity -> bordereaudetailsDtotoBordereauDetails(entity)).collect(Collectors.toList());
-		
-//		return modelMapper.map(bordereauDetailsDto, new TypeToken<List<BordereauDetail>>() {
-//		}.getType());
-		
 	}
 
 	public Contact contactDtotoContact(ContactInputDto contactDto) {
@@ -317,24 +318,24 @@ public class EntityDTOMapper {
 		}
 	}
 
-	static class reductionDtotoReductionsMapping extends PropertyMap<ReductionDto, Reduction> {
-
-		private ProductRepository productRepository;
-
-		@Autowired
-		public reductionDtotoReductionsMapping(ProductRepository productRepository) {
-			this.productRepository = productRepository;
-		}
-
-		@Override
-		protected void configure() {
-
-			// Product produit = productRepository.getOne(source.getProductId());
-			map().setProduct(productRepository.getOne(source.getProductId()));
-			skip().setId(null);
-		}
-
-	}
+//	static class reductionDtotoReductionsMapping extends PropertyMap<ReductionDto, Reduction> {
+//
+//		private ProductRepository productRepository;
+//
+//		@Autowired
+//		public reductionDtotoReductionsMapping(ProductRepository productRepository) {
+//			this.productRepository = productRepository;
+//		}
+//
+//		@Override
+//		protected void configure() {
+//
+//			// Product produit = productRepository.getOne(source.getProductId());
+//			map().setProduct(productRepository.getProductByUID(source.getProductUid()));
+//			skip().setId(null);
+//		}
+//
+//	}
 	
 //	static class bordereauDetailDtotoBordereauDetailsMapping extends PropertyMap<BordereauDetailDto, BordereauDetail> {
 //

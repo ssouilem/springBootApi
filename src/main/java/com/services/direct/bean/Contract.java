@@ -39,6 +39,9 @@ public class Contract {
 	@Column(name="ctr_id")
 	private Integer id;
 	
+    @Column(name = "ctr_uid", unique = true, length = 64)
+    private String uid;
+    
 	@Column(name="ctr_name")
 	private String name;
 	
@@ -69,6 +72,15 @@ public class Contract {
 	public void setId(Integer id) {
 		this.id = id;
 	}
+	
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
 	public String getName() {
 		return name;
 	}

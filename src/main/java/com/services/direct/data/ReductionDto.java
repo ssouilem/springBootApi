@@ -5,18 +5,18 @@ import lombok.Data;
 @Data
 public class ReductionDto {
 
-	private Integer productId;
+	private String productUid;
 	private String description;
 	private Integer percentage;
 	
 	// private Integer contractId;
 
-	public Integer getProductId() {
-		return productId;
+	public String getProductUid() {
+		return productUid;
 	}
 
-	public void setProductId(Integer productId) {
-		this.productId = productId;
+	public void setProductUid(String productUid) {
+		this.productUid = productUid;
 	}
 
 	public String getDescription() {

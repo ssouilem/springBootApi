@@ -1,6 +1,7 @@
 package com.services.direct.service.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,14 +35,17 @@ public class CompanyServiceImpl implements CompanyService {
 	
 	@Override
 	@Transactional
-	public Company getCompanyId(Integer companyId) {
-		return companyRepository.getCompanyById(companyId);
+	public Company getCompanyByUID(String companyUid) {
+		return companyRepository.getCompanyByUID(companyUid);
 	}
 
 	@Override
 	@Transactional
-	public void addCompany(Company company) {
-		this.companyRepository.save(company);
+	public Company addCompany(Company company) {
+		// add UID
+		UUID uuid = UUID.randomUUID();
+		company.setUid(uuid.toString());
+		return this.companyRepository.save(company);
 
 	}
 
@@ -51,39 +55,40 @@ public class CompanyServiceImpl implements CompanyService {
 	}
 	
 	@Override
-	public Company updateCompany(Integer id, Company companyRequest) {
+	public Company updateCompany(String companyUid, Company companyRequest) {
 		
-		if(!companyRepository.existsById(id)) {
-            throw new ResourceNotFoundException("CompanyId " + id + " not found");
-        }
+//		if(!companyRepository.existsById(companyUid)) {
+//            throw new ResourceNotFoundException("CompanyId " + companyUid + " not found");
+//      }
 		
-		 return companyRepository.findById(id).map(company -> {
-			 	company.setAddress(companyRequest.getAddress());
-			 	company.setFaxNumber(companyRequest.getFaxNumber());
-	            return companyRepository.save(company);
-	        }).orElseThrow(() -> new ResourceNotFoundException("CompanyId " + id + "not found"));
+		Company company = companyRepository.getCompanyByUID(companyUid);
+	 	company.setAddress(companyRequest.getAddress());
+	 	company.setFaxNumber(companyRequest.getFaxNumber());
+        return companyRepository.save(company);
+	        
 	}
 	
 	@Override
-	public void deleteCompany(Integer id) {
+	@Transactional
+	public void deleteCompanyByUID(String companyUid) {
 		
-		if(!companyRepository.existsById(id)) {
-            throw new ResourceNotFoundException("CompanyId " + id + " not found");
-        }
-		companyRepository.deleteById(id);
+//		if(!companyRepository.existsById(id)) {
+//            throw new ResourceNotFoundException("CompanyId " + id + " not found");
+//        }
+		companyRepository.deleteCompanyByUID(companyUid);
 	}
 
 	@Override
 	@Transactional
-	public Company attachContract(Integer id, Integer contractId) {
-		log.info("Liste de parametre en entré: id {}, contractId {}", id, contractId);
-		if(!companyRepository.existsById(id)) {
-            throw new ResourceNotFoundException("CompanyId " + id + " not found");
-        } else if (!contractRepository.existsById(contractId)) {
-        	throw new ResourceNotFoundException("productId " + contractId + " not found");
-        } else {
-        	Contract contract = contractRepository.getContractId(contractId);
-        	Company company  = companyRepository.getOne(id);
+	public Company attachContract(String companyUid, String contractUid) {
+		log.info("Liste de parametre en entré: id {}, contractId {}", companyUid, contractUid);
+//		if(!companyRepository.existsById(companyUid)) {
+//            throw new ResourceNotFoundException("CompanyId " + id + " not found");
+//        } else if (!contractRepository.existsById(contractId)) {
+//        	throw new ResourceNotFoundException("productId " + contractId + " not found");
+//        } else {
+        	Contract contract = contractRepository.getContractByUID(contractUid);
+        	Company company  = companyRepository.getCompanyByUID(companyUid);
         	
         	
         	log.info("contract information : contract {} ", contract.toString());
@@ -91,7 +96,6 @@ public class CompanyServiceImpl implements CompanyService {
         	companyRepository.save(company);
         	
         	return company;
-        }
+       // }
 	}
-
 }

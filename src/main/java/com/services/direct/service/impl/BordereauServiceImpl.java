@@ -1,6 +1,7 @@
 package com.services.direct.service.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,8 +51,8 @@ public class BordereauServiceImpl implements BordereauService {
 	}
 	
 	@Transactional
-	public Bordereau getBordereauById(Integer bordereauId) {
-		return bordereauRepository.getOne(bordereauId);
+	public Bordereau getBordereauByUID(String bordereauUid) {
+		return bordereauRepository.getBordereauByUID(bordereauUid);
 	}
 
 	@Override
@@ -71,6 +72,11 @@ public class BordereauServiceImpl implements BordereauService {
 
 			log.info("Company already exist in DB : {}" + company.getName());
 			bordereau.setCompany(company);
+			
+			// add UID
+			UUID uuid = UUID.randomUUID();
+			bordereau.setUid(uuid.toString());
+			
 			// save bordereau
 			this.bordereauRepository.save(bordereau);
 
@@ -134,8 +140,10 @@ public class BordereauServiceImpl implements BordereauService {
 	}
 
 	@Override
-	public void deleteBordereau(Integer id) {
-		// TODO Auto-generated method stub
+	@Transactional
+	public void deleteBordereauByUID(String bordereauUid) {
+		this.bordereauRepository.deleteBordereauByUID(bordereauUid);
+		
 	}
 
 }

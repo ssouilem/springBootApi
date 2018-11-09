@@ -43,15 +43,25 @@ public class ContactController {
 //    })
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Contact> getAllContacts() throws BusinessException {
-		return this.contactService.getAllContacts();
+	public ResponseEntity<List<Contact>> getAllContacts() throws BusinessException {
+    	List<Contact> contacts = this.contactService.getAllContacts();
+		if (contacts != null && !contacts.isEmpty()) {
+			return new ResponseEntity<>(contacts, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+		}
 	}
 
-	@RequestMapping(value = "/{contactId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{UID}", method = RequestMethod.GET)
     @ResponseBody
-    public Contact getContactById(@PathVariable final Integer contactId)  throws BusinessException {
-        return this.contactService.getContactById(contactId);
-    }
+    public ResponseEntity<Contact> getContactByUID(@PathVariable("UID") final String contactUid)  throws BusinessException {
+		Contact contact =  this.contactService.getContactByUID(contactUid);
+        if (contact != null) {
+			return new ResponseEntity<>(contact, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+		}	
+	}
 	
 	 
 	@RequestMapping(value = "/", method = RequestMethod.POST)
@@ -65,9 +75,9 @@ public class ContactController {
 		}	
 	}
 	
-	@RequestMapping(value="/contacts/{id}", method=RequestMethod.DELETE)
+	@RequestMapping(value="/{UID}", method=RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-    public void deleteContact(@PathVariable Integer id) {
-        contactService.deleteContact(id);
+    public void deleteContactByUID(@PathVariable("UID") String contactUid) {
+        contactService.deleteContactByUID(contactUid);
     }
 }

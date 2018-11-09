@@ -55,10 +55,10 @@ public class BordereauController {
 		return this.bordereauService.getAllBordereaux();
 	}
 
-	@RequestMapping(value = "/{bordereauId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{UID}", method = RequestMethod.GET)
     @ResponseBody
-    public Bordereau getInvoiceById(@PathVariable final Integer bordereauId) {
-        return this.bordereauService.getBordereauById(bordereauId);
+    public Bordereau getInvoiceById(@PathVariable("UID") final String bordereauUid) {
+        return this.bordereauService.getBordereauByUID(bordereauUid);
     }
 	
 	 
@@ -73,20 +73,21 @@ public class BordereauController {
 		}	
 	}
 	
-	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
+	@RequestMapping(value="/{UID}", method=RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-    public void deleteShop(@PathVariable Integer id) {
-        bordereauService.deleteBordereau(id);
+    public void deleteBordereauByUID(@PathVariable("UID") String bordereauUid) {
+        bordereauService.deleteBordereauByUID(bordereauUid);
     }
 	
-    @ResponseBody
-    @RequestMapping(value = "/{bordereauId}/bordereauDetail", method = RequestMethod.POST)
+	
+	@ResponseBody
+    @RequestMapping(value = "/{UID}/bordereauDetail", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Bordereau> addBordereauDetail(@PathVariable final Integer bordereauId, @RequestBody BordereauDetailDto bordereauDetailDto) throws BusinessException {
-    	BordereauDetail bordereauDetail = this.bordereaudetailService.addBordereauDetailByBordereau(bordereauId, bordereauDetailDto);
+    public ResponseEntity<Bordereau> addBordereauDetail(@PathVariable("UID") String bordereauUid, @RequestBody BordereauDetailDto bordereauDetailDto) throws BusinessException {
+    	BordereauDetail bordereauDetail = this.bordereaudetailService.addBordereauDetailByBordereau(bordereauUid, bordereauDetailDto);
     	if (bordereauDetail != null && bordereauDetail.getId() != null) {
 
-    		Bordereau bordereau = this.bordereauService.getBordereauById(bordereauId);
+    		Bordereau bordereau = this.bordereauService.getBordereauByUID(bordereauUid);
     		if (bordereau != null) {
 //    			bordereau.addBordereauDetail(bordereauDetail);
 //    			this.bordereauService.updateBordereau(bordereau);
@@ -101,13 +102,13 @@ public class BordereauController {
     }
     
     @ResponseBody
-    @RequestMapping(value = "/{Id}/removeBordereauDetail/{bordereauDetailId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{UID}/removeBordereauDetail/{bordereauDetailUid}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Bordereau> removeBordereauDetail(@PathVariable(name = "Id") final Integer bordereauId, @PathVariable(name = "bordereauDetailId") final Integer bordereauDetailId) {
-    	Bordereau bordereau = this.bordereauService.getBordereauById(bordereauId);
+    public ResponseEntity<Bordereau> removeBordereauDetail(@PathVariable("UID") final String bordereauUid, @PathVariable("bordereauDetailUid") final String bordereauDetailUid) {
+    	Bordereau bordereau = this.bordereauService.getBordereauByUID(bordereauUid);
 
     	if (bordereau != null) {
-    		this.bordereaudetailService.deleteBordereauDetail(bordereauDetailId);
+    		this.bordereaudetailService.deleteBordereauDetailByUID(bordereauDetailUid);
     		return new ResponseEntity<>(bordereau, HttpStatus.OK);
 		} else { 
 			// throw exception

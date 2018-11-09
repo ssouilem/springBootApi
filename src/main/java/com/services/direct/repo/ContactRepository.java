@@ -3,6 +3,7 @@ package com.services.direct.repo;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -17,6 +18,13 @@ public interface ContactRepository extends JpaRepository<Contact, Integer>{
 	@Query("SELECT contact FROM Contact contact WHERE contact.id=(:id)")
 	Contact getContactId(@Param("id") Integer contactId);
 	
+	@Query("SELECT contact FROM Contact contact WHERE contact.uid=(:uid)")
+	Contact getContactByUID(@Param("uid") String contactUid);
+	
 	@Query("SELECT contact FROM Contact contact")
 	List<Contact> getAllContacts();
+
+	@Modifying
+	@Query("DELETE FROM Contact contact WHERE contact.uid=(:uid)")
+	void deleteContactByUID(@Param("uid") String contactUid);
 }

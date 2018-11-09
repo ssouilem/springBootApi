@@ -42,7 +42,7 @@ public class ContractController {
 	public ResponseEntity<Contract> createContract(@RequestBody ContractInputDto contractDto) throws Exception {
 		Contract contract = this.contractService.createContract(contractDto);
 		if (contract != null) {
-			return new ResponseEntity<>(contract, HttpStatus.OK);
+			return new ResponseEntity<>(contract, HttpStatus.CREATED);
 		} else {
 			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 		}	
@@ -57,29 +57,38 @@ public class ContractController {
     })
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Contract> getAllContracts() {
-		return this.contractService.getAllContracts();
+	public ResponseEntity<List<Contract>> getAllContracts() {
+		List<Contract> contracts = this.contractService.getAllContracts();
+		if (contracts != null && !contracts.isEmpty()) {
+			return new ResponseEntity<>(contracts, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+		}	
 	}
 
-	@RequestMapping(value = "/{Id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{UID}", method = RequestMethod.GET)
     @ResponseBody
-    public Contract getContractById(@PathVariable final Integer contractId) {
-        return this.contractService.getContractById(contractId);
+    public ResponseEntity<Contract> getContractByUID(@PathVariable("UID") final String contractId) {
+        Contract contract =  this.contractService.getContractByUID(contractId);
+        if (contract != null) {
+			return new ResponseEntity<>(contract, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+		}	
     }
 	
-	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
+	@RequestMapping(value="/{UID}", method=RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-    public void deleteContract(@PathVariable Integer id) {
-        contractService.deleteContract(id);
+    public void deleteContractByUID(@PathVariable("UID") String contractUid) {
+        contractService.deleteContractByUID(contractUid);
     }
 	
     @ResponseBody
-    @RequestMapping(value = "/{contractId}/reductions", method = RequestMethod.POST)
+    @RequestMapping(value = "/{UID}/reductions", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Reduction> addReductionByProduct(@PathVariable final Integer contractId, @RequestBody ReductionDto reductionDto) {
-    	Reduction reduction = this.contractService.addReductionByProduct(contractId, reductionDto);
+    public ResponseEntity<Reduction> addReductionByProduct(@PathVariable("UID") final String contractUid, @RequestBody ReductionDto reductionDto) {
     	
-    	
+    	Reduction reduction = this.contractService.addReductionByProduct(contractUid, reductionDto);
     	if (reduction != null && reduction.getId() != null) {
     		return new ResponseEntity<>(reduction, HttpStatus.CREATED);
     	} else {
@@ -88,11 +97,11 @@ public class ContractController {
     }
     
     @ResponseBody
-    @RequestMapping(value = "/{Id}/reductions/{reductionId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{UID}/reductions/{reductionUid}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Contract> removeReduction(@PathVariable(name = "Id") final Integer contractId, @PathVariable(name = "reductionId") final Integer reductionId) {
+    public ResponseEntity<Contract> unlinkReductionOfContract(@PathVariable("UID") final String contractUid, @PathVariable(name = "reductionUid") final String reductionUid) {
     		
-    	Contract contract = this.contractService.deleteReduction(contractId, reductionId);
+    	Contract contract = this.contractService.unlinkReductionOfContract(contractUid, reductionUid);
     	return new ResponseEntity<>(contract, HttpStatus.OK);
 		
     }

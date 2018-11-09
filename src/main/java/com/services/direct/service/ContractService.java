@@ -9,7 +9,7 @@ import com.services.direct.data.ReductionDto;
 
 public interface ContractService {
 
-	Contract getContractById(Integer contractId);
+	Contract getContractByUID(String contractUid);
 	
 	Contract createContract(ContractInputDto contractDto) throws Exception;
 	
@@ -19,8 +19,10 @@ public interface ContractService {
 	
 	void deleteContract(Integer contractId);
 	
-	Reduction addReductionByProduct(Integer contractId, ReductionDto reductionDto);
+	Reduction addReductionByProduct(String contractUid, ReductionDto reductionDto);
 	
-	Contract deleteReduction(Integer contractId, Integer reductionId);
+	Contract unlinkReductionOfContract(String contractUid, String reductionUid);
+	
+	void deleteContractByUID(String contractUid);
 	
 }

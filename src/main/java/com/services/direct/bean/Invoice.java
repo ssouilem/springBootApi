@@ -4,6 +4,7 @@ package com.services.direct.bean;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,9 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -38,6 +38,9 @@ public class Invoice {
 	@Column(name="inv_id")
     private Integer id;
 	
+    @Column(name = "inv_uid", unique = true, length = 64)
+    private String uid;
+    
 	@Column(name="inv_number")
     private String number;
 	
@@ -61,16 +64,17 @@ public class Invoice {
 	@JoinColumn(name = "inv_cmp_id",  nullable = true)
 	private Company company;
 	
-	@LazyCollection(LazyCollectionOption.FALSE)
+	// @LazyCollection(LazyCollectionOption.FALSE)
 	@JsonInclude(value=Include.NON_EMPTY, content=Include.NON_NULL)
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "invoice")
-	private List<Payment> payments;
+	@OneToOne(fetch=FetchType.EAGER, 
+			mappedBy="invoice")
+	private Payment payment;
 	
 	@JsonInclude(value=Include.NON_EMPTY, content=Include.NON_NULL)
 	@OneToMany(fetch=FetchType.EAGER,
 			//cascade=CascadeType.ALL,
 			mappedBy="invoice")
-	private List<Bordereau> bordereaux = new ArrayList<Bordereau>();
+	private Set<Bordereau> bordereaux;
 	
 	@Column(name = "inv_pay_down")
 	private Boolean payDown;
@@ -81,6 +85,14 @@ public class Invoice {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
 	public String getNumber() {
@@ -131,19 +143,19 @@ public class Invoice {
 		this.company = company;
 	}
 
-	public List<Payment> getPayments() {
-		return payments;
+	public Payment getPayment() {
+		return payment;
 	}
 
-	public void setPayments(List<Payment> payments) {
-		this.payments = payments;
+	public void setPayment(Payment payment) {
+		this.payment = payment;
 	}
 
-	public List<Bordereau> getBordereaux() {
+	public Set<Bordereau> getBordereaux() {
 		return bordereaux;
 	}
 
-	public void setBordereaux(List<Bordereau> bordereaux) {
+	public void setBordereaux(Set<Bordereau> bordereaux) {
 		this.bordereaux = bordereaux;
 	}
 

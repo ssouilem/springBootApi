@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotEmpty;
 
 import org.springframework.format.annotation.NumberFormat;
 import org.springframework.lang.Nullable;
@@ -23,7 +24,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.services.direct.utility.ProductChange;
 import com.services.direct.utility.ProductQuality;
@@ -41,6 +41,9 @@ public class Product {
 	@Column(name = "pr_id")
 	private Integer id;
 
+    @Column(name = "pr_uid", unique = true, length = 64)
+    private String uid;
+    
 	@Column(name = "pr_reference")
 	private String reference;
 	
@@ -65,10 +68,13 @@ public class Product {
 	@Column(name = "pr_change")
 	@Enumerated(EnumType.STRING)
 	private ProductChange change;
+	
+	@Column(name = "pr_tva")
+	private float tva;
 
 	@Nullable
 	@JsonInclude(Include.NON_NULL)
-	@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "product")
+	@OneToMany(fetch = FetchType.EAGER, cascade =  CascadeType.ALL, mappedBy = "product")
 	private List<Reduction> reductions;
 
 	@JsonIgnore
@@ -82,6 +88,14 @@ public class Product {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
 	public String getReference() {
@@ -140,13 +154,6 @@ public class Product {
 		this.change = change;
 	}
 
-	// public List<Contract> getContracts() {
-	// return contracts;
-	// }
-	// public void setContracts(List<Contract> contracts) {
-	// this.contracts = contracts;
-	// }
-	
 	public List<Reduction> getReductions() {
 		return reductions;
 	}
@@ -165,6 +172,14 @@ public class Product {
 
 	public void setBordereaudetail(BordereauDetail bordereaudetail) {
 		this.bordereaudetail = bordereaudetail;
+	}
+	
+	public float getTva() {
+		return tva;
+	}
+
+	public void setTva(float tva) {
+		this.tva = tva;
 	}
 
 	@Override

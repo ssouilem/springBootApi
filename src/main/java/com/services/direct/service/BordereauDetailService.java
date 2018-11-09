@@ -8,13 +8,13 @@ import com.services.direct.exception.BusinessException;
 
 public interface BordereauDetailService {
 
-	BordereauDetail getBordereauDetailById(Integer brDetailId);
+	BordereauDetail getBordereauDetailByUID(String bordereauDetailUid);
 	
 	List<BordereauDetail> getAllBordereauDetails();
 	
-	void deleteBordereauDetail(Integer brDetailId);
+	void deleteBordereauDetailByUID(String bordereauDetailUid);
 
-	BordereauDetail addBordereauDetailByBordereau(Integer bordereauId, BordereauDetailDto bordereauDetailDto) throws BusinessException;
+	BordereauDetail addBordereauDetailByBordereau(String bordereauUid, BordereauDetailDto bordereauDetailDto) throws BusinessException;
 
 
 }
