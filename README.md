@@ -12,13 +12,13 @@
 	> saisir le mot de passe 'new-password' ou ''
 	 
 4. **Ajouter les droits** 
->GRANT ALL PRIVILEGES ON *.* TO 'ssouilem'@'localhost' IDENTIFIED BY 'direct';
+>GRANT ALL PRIVILEGES ON *.* TO 'login'@'localhost' IDENTIFIED BY 'direct';
 GRANT SELECT ON *.* TO 'login'@'localhost';
 CREATE USER 'login'@'%' IDENTIFIED BY 'direct';
 GRANT select on DBname.* to 'login'@'%';
 
 5. **Connexion && Create Databases**
- - mysql -u ssouilem -p
+ - mysql -u login -p
 - CREATE DATABASE direct;
 - SHOW databases;
 
