@@ -54,7 +54,7 @@ public class EntityDTOMapper {
 			protected void configure() {
 				// 'first name' is mapped automatically
 				map().setFirstName(source.getFirstName());
-				skip().setCompany(null);
+				skip().setCustomer(null);
 			}
 		});
 		modelMapper.addMappings(new PropertyMap<BordereauDetailDto, BordereauDetail>() {

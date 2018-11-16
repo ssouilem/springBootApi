@@ -1,5 +1,7 @@
 package com.services.direct.repo;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -7,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.services.direct.bean.Company;
 import com.services.direct.bean.Product;
 
 @Repository
@@ -27,4 +28,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer>{
 	@Modifying
 	@Query("DELETE FROM Product product WHERE product.uid=(:uid)")
 	void deleteProductByUID(@Param("uid") String productUid);
+	
+	@Query("SELECT product FROM Product product")
+	List<Product> getAllProducts();
 }

@@ -10,14 +10,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.services.direct.bean.Bordereau;
-import com.services.direct.bean.Company;
+import com.services.direct.bean.Customer;
 import com.services.direct.bean.Invoice;
 import com.services.direct.data.InvoiceInputDto;
 import com.services.direct.exception.BusinessException;
 import com.services.direct.exception.FileNotFoundException;
 import com.services.direct.mapping.EntityDTOMapper;
 import com.services.direct.repo.BordereauRepository;
-import com.services.direct.repo.CompanyRepository;
+import com.services.direct.repo.CustomerRepository;
 import com.services.direct.repo.InvoiceRepository;
 import com.services.direct.service.InvoiceService;
 import com.services.direct.utility.ResourceNotFoundException;
@@ -35,15 +35,15 @@ public class InvoiceServiceImpl implements InvoiceService {
 	
 	private BordereauRepository bordereauRepository;
 	
-	private CompanyRepository companyRepository;
+	private CustomerRepository customerRepository;
 	
 	@Autowired
 	public InvoiceServiceImpl(final InvoiceRepository invoiceRepository, 
-			final CompanyRepository companyRepository,
+			final CustomerRepository customerRepository,
 			final BordereauRepository bordereauRepository,
 			EntityDTOMapper entityDTOMapper) { 
 		this.invoiceRepository = invoiceRepository;
-		this.companyRepository = companyRepository;
+		this.customerRepository = customerRepository;
 		this.bordereauRepository = bordereauRepository;
 		this.entityDTOMapper     = entityDTOMapper;
 	}
@@ -61,13 +61,13 @@ public class InvoiceServiceImpl implements InvoiceService {
 		Invoice invoice = entityDTOMapper.invoiceDtotoInvoice(invoiceDto);
 		
 		// Associer la societe a votre bordereau
-		if (!companyRepository.existsById(invoiceDto.getCompany())) {
-			throw new ResourceNotFoundException("CompanyId " + invoiceDto.getCompany() + " not found");
+		if (!customerRepository.existsById(invoiceDto.getCustomer())) {
+			throw new ResourceNotFoundException("CustomerId " + invoiceDto.getCustomer() + " not found");
 		} else {
 
-			Company company = companyRepository.getOne(invoiceDto.getCompany());
-			log.info("Company already exist in DB : {}" + company.getName());
-			invoice.setCompany(company);
+			Customer customer = customerRepository.getOne(invoiceDto.getCustomer());
+			log.info("Customer already exist in DB : {}" + customer.getName());
+			invoice.setCustomer(customer);
 			
 			
 			// controler et lister les bordereaux

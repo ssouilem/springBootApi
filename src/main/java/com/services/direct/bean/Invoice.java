@@ -1,9 +1,7 @@
 package com.services.direct.bean;
 
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -61,8 +59,8 @@ public class Invoice {
 	private String createdAuthor;
 	
 	@ManyToOne
-	@JoinColumn(name = "inv_cmp_id",  nullable = true)
-	private Company company;
+	@JoinColumn(name = "inv_cus_id",  nullable = true)
+	private Customer customer;
 	
 	// @LazyCollection(LazyCollectionOption.FALSE)
 	@JsonInclude(value=Include.NON_EMPTY, content=Include.NON_NULL)
@@ -135,12 +133,12 @@ public class Invoice {
 		this.createdAuthor = createdAuthor;
 	}
 
-	public Company getCompany() {
-		return company;
+	public Customer getCustomer() {
+		return customer;
 	}
 
-	public void setCompany(Company company) {
-		this.company = company;
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
 	}
 
 	public Payment getPayment() {

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -27,24 +28,34 @@ public class GeneratePdfReport {
 
 		try {
 
-			PdfPTable table = new PdfPTable(3);
-			table.setWidthPercentage(60);
-			table.setWidths(new int[] { 1, 3, 3 });
+			PdfPTable table = new PdfPTable(4);
+			table.setWidthPercentage(100.0f);
+			// table.setWidthPercentage(60);
+			table.setWidths(new float[] {3.0f, 2.0f, 2.0f, 3.0f});
+			table.setSpacingBefore(10);
 
 			Font headFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+			headFont.setColor(BaseColor.WHITE);
 
-			PdfPCell hcell;
-			hcell = new PdfPCell(new Phrase("Id", headFont));
-			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			table.addCell(hcell);
-
-			hcell = new PdfPCell(new Phrase("Name", headFont));
-			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			table.addCell(hcell);
-
-			hcell = new PdfPCell(new Phrase("Population", headFont));
-			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			table.addCell(hcell);
+			// define table header cell
+	        PdfPCell cell = new PdfPCell();
+	        cell.setBackgroundColor(BaseColor.BLUE);
+	        cell.setPadding(4);
+	        
+	        // write table header
+	        cell.setPhrase(new Phrase("Book Title", headFont));
+	        table.addCell(cell);
+	         
+	        cell.setPhrase(new Phrase("Author", headFont));
+	        table.addCell(cell);
+	 
+	         
+	        cell.setPhrase(new Phrase("Published Date", headFont));
+	        table.addCell(cell);
+	         
+	        cell.setPhrase(new Phrase("Price", headFont));
+	        
+			table.addCell(cell);
 
 			for (City city : cities) {
 
@@ -66,6 +77,8 @@ public class GeneratePdfReport {
 				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				cell.setPaddingRight(5);
 				table.addCell(cell);
+				
+				table.addCell("01/02/1979");
 			}
 
 			PdfWriter.getInstance(document, out);

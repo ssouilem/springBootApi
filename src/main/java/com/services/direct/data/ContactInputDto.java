@@ -32,7 +32,7 @@ public class ContactInputDto {
 	private String email;
 	
 	@NotEmpty
-	private String company;
+	private String customer;
 
 	public Gender getGender() {
 		return gender;
@@ -74,12 +74,12 @@ public class ContactInputDto {
 		this.email = email;
 	}
 
-	public String getCompany() {
-		return company;
+	public String getCustomer() {
+		return customer;
 	}
 
-	public void setCompany(String company) {
-		this.company = company;
+	public void setCustomer(String customer) {
+		this.customer = customer;
 	}
 	
 //    public Date getSubmissionDateConverted(String timezone) throws ParseException {

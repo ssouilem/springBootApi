@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,8 @@ import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/products")
+// @CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "http://compta.dev.local.ina.fr:8081")
 @Api(value="onlinestore", description="API REST product")
 public class ProductController {
 	
@@ -66,6 +69,7 @@ public class ProductController {
         return this.productService.getProductByUID(productId);
     }
 	
+	@CrossOrigin(origins = "http://compta.dev.local.ina.fr:8081")
 	@RequestMapping(value="/{UID}", method=RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
     public void deleteProductBuUID(@PathVariable("UID") String productUid) {
@@ -85,5 +89,10 @@ public class ProductController {
 			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 		}
 		
+    }
+    
+    @RequestMapping(value = "/**", method = RequestMethod.OPTIONS)
+    public ResponseEntity handle() {
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

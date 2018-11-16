@@ -11,14 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.services.direct.bean.Bordereau;
 import com.services.direct.bean.BordereauDetail;
-import com.services.direct.bean.Company;
+import com.services.direct.bean.Customer;
 import com.services.direct.data.BordereauInputDto;
 import com.services.direct.exception.BusinessException;
 import com.services.direct.exception.FileNotFoundException;
 import com.services.direct.mapping.EntityDTOMapper;
 import com.services.direct.repo.BordereauDetailRepository;
 import com.services.direct.repo.BordereauRepository;
-import com.services.direct.repo.CompanyRepository;
+import com.services.direct.repo.CustomerRepository;
 import com.services.direct.service.BordereauService;
 import com.services.direct.utility.ResourceNotFoundException;
 import com.services.direct.utility.Util;
@@ -28,7 +28,7 @@ import com.services.direct.utility.Util;
 @Transactional
 public class BordereauServiceImpl implements BordereauService {
 	
-	private static Logger log = LoggerFactory.getLogger(CompanyServiceImpl.class);
+	private static Logger log = LoggerFactory.getLogger(CustomerServiceImpl.class);
 	
 	@Autowired
 	private EntityDTOMapper entityDTOMapper;
@@ -37,16 +37,16 @@ public class BordereauServiceImpl implements BordereauService {
 	
 	private BordereauDetailRepository bordereauDetailRepository;
 	
-	private CompanyRepository companyRepository;
+	private CustomerRepository customerRepository;
 	
 	@Autowired
 	public BordereauServiceImpl(final BordereauRepository bordereauRepository, 
-			final CompanyRepository companyRepository,
+			final CustomerRepository customerRepository,
 			final BordereauDetailRepository bordereauDetailRepository,
 			EntityDTOMapper entityDTOMapper) { 
 		this.bordereauRepository = bordereauRepository;
 		this.bordereauDetailRepository = bordereauDetailRepository;
-		this.companyRepository = companyRepository;
+		this.customerRepository = customerRepository;
 		this.entityDTOMapper     = entityDTOMapper;
 	}
 	
@@ -64,14 +64,14 @@ public class BordereauServiceImpl implements BordereauService {
 		Bordereau bordereau = entityDTOMapper.bordereauDtotoBordereau(bordereauDto);
 
 		// Associer la societe a votre bordereau
-		if (!companyRepository.existsById(bordereauDto.getCompany())) {
-			throw new ResourceNotFoundException("CompanyId " + bordereauDto.getCompany() + " not found");
-		} else {
+//		if (!customerRepository.existsById(bordereauDto.getCustomer())) {
+//			throw new ResourceNotFoundException("CustomerId " + bordereauDto.getCustomer() + " not found");
+//		} else {
 
-			Company company = companyRepository.getOne(bordereauDto.getCompany());
+			Customer customer = customerRepository.getCustomerByUID(bordereauDto.getCustomer());
 
-			log.info("Company already exist in DB : {}" + company.getName());
-			bordereau.setCompany(company);
+			log.info("Customer already exist in DB : {}" + customer.getName());
+			bordereau.setCustomer(customer);
 			
 			// add UID
 			UUID uuid = UUID.randomUUID();
@@ -121,7 +121,7 @@ public class BordereauServiceImpl implements BordereauService {
 				throw new FileNotFoundException("Error JSON : Pas des bordereauDetails associés au bordereau",
 						"INTERNAL_ERROR");
 			}
-		}
+		// }
 	}
 
 	

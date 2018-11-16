@@ -4,11 +4,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.services.direct.bean.Company;
+import com.services.direct.bean.Task;
 
 @Repository
 @Transactional
-public interface TaskRepository extends JpaRepository<Company, Integer>{
+public interface TaskRepository extends JpaRepository<Task, Integer>{
 
 //	@Query("SELECT contact FROM Contact contact WHERE contact.id=(:id)")
 //	Contact getContactId(@Param("id") Integer contactId);

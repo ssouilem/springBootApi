@@ -9,14 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.services.direct.bean.Company;
+import com.services.direct.bean.Customer;
 import com.services.direct.bean.Contact;
 import com.services.direct.data.ContactInputDto;
 import com.services.direct.exception.BusinessException;
 import com.services.direct.exception.ContactNotFoundException;
 import com.services.direct.exception.FileNotFoundException;
 import com.services.direct.mapping.EntityDTOMapper;
-import com.services.direct.repo.CompanyRepository;
+import com.services.direct.repo.CustomerRepository;
 import com.services.direct.repo.ContactRepository;
 import com.services.direct.service.ContactService;
 
@@ -32,15 +32,15 @@ public class ContactServiceImpl implements ContactService {
 
 	private ContactRepository contactRepository;
 
-	private CompanyRepository companyRepository;
+	private CustomerRepository customerRepository;
 
 	@Autowired
 	public ContactServiceImpl(final ContactRepository contactRepository, 
-			final CompanyRepository companyRepository,
+			final CustomerRepository customerRepository,
 			EntityDTOMapper entityDTOMapper) {
 		
 		this.contactRepository = contactRepository;
-		this.companyRepository = companyRepository;
+		this.customerRepository = customerRepository;
 		this.entityDTOMapper   = entityDTOMapper;
 	}
 
@@ -65,16 +65,16 @@ public class ContactServiceImpl implements ContactService {
 			throw new ContactNotFoundException("The resource contcat was not found", "CONTACT_NOT_FOUND");
 		}
 
-		// Recuperation de la company
-		String companyUid = contactDto.getCompany();
-		Company company = companyRepository.getCompanyByUID(companyUid);
+		// Recuperation de la customer
+		String customerUid = contactDto.getCustomer();
+		Customer customer = customerRepository.getCustomerByUID(customerUid);
 
-		// add company to contact
-		if (company != null) {
-			log.info("Company already exist in DB : {}", company.getName());
-			contact.setCompany(company);
+		// add customer to contact
+		if (customer != null) {
+			log.info("Customer already exist in DB : {}", customer.getName());
+			contact.setCustomer(customer);
 		} else {
-			throw new FileNotFoundException("The resource company was not found BD", "FILE_NOT_FOUND");
+			throw new FileNotFoundException("The resource customer was not found BD", "FILE_NOT_FOUND");
 		}
 		// add UID
 		UUID uuid = UUID.randomUUID();

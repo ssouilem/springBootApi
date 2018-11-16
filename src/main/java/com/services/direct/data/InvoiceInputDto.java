@@ -3,7 +3,6 @@ package com.services.direct.data;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
@@ -34,8 +33,8 @@ public class InvoiceInputDto {
 	@Nullable
 	private String createdAuthor;
 	
-	@NotNull(message = "campany ID is required.")
-	private Integer company;
+	@NotNull(message = "customer ID is required.")
+	private Integer customer;
 	
 	@NotNull(message = "bordereauList is required.")
 	private List<Integer> bordereaux;
@@ -79,12 +78,12 @@ public class InvoiceInputDto {
 		this.createdAuthor = createdAuthor;
 	}
 
-	public Integer getCompany() {
-		return company;
+	public Integer getCustomer() {
+		return customer;
 	}
 
-	public void setCompany(Integer company) {
-		this.company = company;
+	public void setCustomer(Integer customer) {
+		this.customer = customer;
 	}
 
 	public List<Integer> getBordereaux() {

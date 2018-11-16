@@ -92,7 +92,6 @@ public class CompanyServiceImpl implements CompanyService {
         	
         	
         	log.info("contract information : contract {} ", contract.toString());
-        	company.setContract(contract);
         	companyRepository.save(company);
         	
         	return company;

@@ -1,27 +1,14 @@
 package com.services.direct.bean;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.lang.Nullable;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
@@ -69,35 +56,6 @@ public class Company {
 	@Column(name="cmp_tva_number")
 	private String tvaNumber;
 
-	@JsonInclude(Include.NON_NULL)
-	@OneToOne(fetch=FetchType.EAGER, 
-			//cascade =  CascadeType.ALL,
-			mappedBy="company")
-	private Contact contact;
-	
-	@JsonIgnore
-	@Nullable
-	@OneToMany(fetch=FetchType.LAZY,
-			cascade=CascadeType.ALL,
-			mappedBy="company")
-	// @JsonManagedReference
-	private List<Invoice> invoices;
-	
-	@JsonIgnore
-	@Nullable
-	@OneToMany(fetch=FetchType.LAZY,
-			cascade=CascadeType.ALL,
-			mappedBy="company")
-	// @JsonManagedReference
-	private List<Bordereau> bordereaux;
-	
-	@ManyToOne
-	@JsonIgnore
-	@JoinColumn(name = "cmp_ctr_id", nullable = true)
-	@JsonInclude(value=Include.NON_EMPTY, content=Include.NON_NULL)
-	//@JsonBackReference
-	private Contract contract;
-	
 	public Integer getId() {
 		return id;
 	}
@@ -185,46 +143,4 @@ public class Company {
 	public void setTvaNumber(String tvaNumber) {
 		this.tvaNumber = tvaNumber;
 	}
-
-	public Contact getContact() {
-		return contact;
-	}
-
-	public void setContact(Contact contact) {
-		this.contact = contact;
-	}
-
-	public List<Invoice> getInvoices() {
-		return invoices;
-	}
-
-	public void setInvoices(List<Invoice> invoices) {
-		this.invoices = invoices;
-	}
-	
-	public void addInvoices(Invoice invoice) {
-		this.invoices.add(invoice);
-	}
-
-	public List<Bordereau> getBordereaux() {
-		return bordereaux;
-	}
-
-	public void setBordereaux(List<Bordereau> bordereaux) {
-		this.bordereaux = bordereaux;
-	}
-	
-	public void addBordereau(Bordereau bordereau) {
-		this.bordereaux.add(bordereau);
-	}
-
-	public Contract getContract() {
-		return contract;
-	}
-
-	public void setContract(Contract contract) {
-		this.contract = contract;
-	}
-	
-	
 }

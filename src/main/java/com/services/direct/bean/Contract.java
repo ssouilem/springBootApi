@@ -3,7 +3,6 @@ package com.services.direct.bean;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -14,7 +13,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import org.hibernate.annotations.Proxy;
 import org.springframework.lang.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -62,7 +60,7 @@ public class Contract {
 			mappedBy="contract")
 	@JsonInclude(value=Include.NON_EMPTY, content=Include.NON_NULL)
 	@JsonIgnore
-	private List<Company> companies = new ArrayList<Company>();
+	private List<Customer> customers = new ArrayList<Customer>();
 	
 	
 	public Integer getId() {
@@ -105,15 +103,15 @@ public class Contract {
 		this.type = type;
 	}
 
-	public List<Company> getCompanies() {
-		return companies;
+	public List<Customer> getCustomer() {
+		return customers;
 	}
 
-	public void setCompanies(List<Company> companies) {
-		this.companies = companies;
+	public void setCustomers(List<Customer> companies) {
+		this.customers = companies;
 	}
 
-	public void addCompany(Company company) {
-		this.companies.add(company);
+	public void addCustomer(Customer company) {
+		this.customers.add(company);
 	}
 }

@@ -58,8 +58,8 @@ public class Contact {
 	
 	@JsonBackReference
 	@OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ct_cmp_id", nullable = false)
-    private Company company;
+    @JoinColumn(name = "ct_cus_id", nullable = false)
+    private Customer customer;
 	
 	public Integer getId() {
 		return id;
@@ -117,13 +117,12 @@ public class Contact {
 		this.email = email;
 	}
 
-	public Company getCompany() {
-		return company;
+	public Customer getCustomer() {
+		return customer;
 	}
 
-	public void setCompany(Company company) {
-		this.company = company;
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
 	}
-
 	
 }

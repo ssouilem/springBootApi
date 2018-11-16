@@ -95,7 +95,7 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	@Transactional
 	public List<Product> getAllProducts() {
-		List<Product> products = (List<Product>) productRepository.findAll();
+		List<Product> products = productRepository.getAllProducts();
 		return products;
 	}
 

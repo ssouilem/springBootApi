@@ -18,7 +18,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.Proxy;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -74,8 +73,8 @@ public class Bordereau {
 	private Invoice invoice;
 	
 	@ManyToOne
-	@JoinColumn(name = "br_cmp_id",  nullable = false)
-	private Company company;
+	@JoinColumn(name = "br_cus_id",  nullable = false)
+	private Customer customer;
 	
 	@JsonInclude(value=Include.NON_EMPTY, content=Include.NON_NULL)
 	@OneToMany(fetch=FetchType.EAGER,
@@ -150,12 +149,13 @@ public class Bordereau {
 		this.invoice = invoice;
 	}
 
-	public Company getCompany() {
-		return company;
+	
+	public Customer getCustomer() {
+		return customer;
 	}
 
-	public void setCompany(Company company) {
-		this.company = company;
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
 	}
 
 	public List<BordereauDetail> getBordereauDetails() {

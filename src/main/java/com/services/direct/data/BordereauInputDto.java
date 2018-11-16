@@ -25,8 +25,8 @@ public class BordereauInputDto {
 
 	private String createdAuthor;
 
-	@NotNull(message = "campany ID is required.")
-	private Integer company;
+	@NotNull(message = "customer uid is required.")
+	private String customer;
 
 	@NotNull(message = "bordereauDetailList is required.")
 	@NotEmpty(message = "bordereauDetailList not empty")
@@ -75,12 +75,12 @@ public class BordereauInputDto {
 		this.createdAuthor = createdAuthor;
 	}
 
-	public Integer getCompany() {
-		return company;
+	public String getCustomer() {
+		return customer;
 	}
 
-	public void setCompany(Integer company) {
-		this.company = company;
+	public void setCustomer(String customer) {
+		this.customer = customer;
 	}
 
 	public List<BordereauDetailDto> getBordereauDetailList() {

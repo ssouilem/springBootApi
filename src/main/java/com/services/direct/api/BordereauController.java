@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,7 +58,7 @@ public class BordereauController {
 
 	@RequestMapping(value = "/{UID}", method = RequestMethod.GET)
     @ResponseBody
-    public Bordereau getInvoiceById(@PathVariable("UID") final String bordereauUid) {
+    public Bordereau getBordereauByUID(@PathVariable("UID") final String bordereauUid) {
         return this.bordereauService.getBordereauByUID(bordereauUid);
     }
 	
@@ -74,6 +75,7 @@ public class BordereauController {
 	}
 	
 	@RequestMapping(value="/{UID}", method=RequestMethod.DELETE)
+	@CrossOrigin(origins = "http://compta.dev.local.ina.fr:8081")
 	@ResponseStatus(HttpStatus.OK)
     public void deleteBordereauByUID(@PathVariable("UID") String bordereauUid) {
         bordereauService.deleteBordereauByUID(bordereauUid);
