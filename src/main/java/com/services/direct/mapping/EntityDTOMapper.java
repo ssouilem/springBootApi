@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.UUID;
 
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
@@ -233,6 +234,12 @@ public class EntityDTOMapper {
 		
 		BordereauDetail bordereauDetail = modelMapper.map(bordereauDetailDto, BordereauDetail.class);
 		bordereauDetail.setProduct(productRepository.getProductByUID(bordereauDetailDto.getProductUid()));
+		
+		// new UID
+		System.out.println("#############   generate UID bordereau detail ############################ ");
+		UUID uuid = UUID.randomUUID();
+		bordereauDetail.setUid(uuid.toString());
+
 		bordereauDetail.setId(null);
 		return bordereauDetail;
 	}

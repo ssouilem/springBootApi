@@ -44,7 +44,7 @@ public class Contract {
 	private String name;
 	
 	@Nullable
-	@OneToMany(fetch=FetchType.EAGER,
+	@OneToMany(orphanRemoval=true, fetch=FetchType.EAGER,
 			//cascade={CascadeType.PERSIST, CascadeType.MERGE},
 			mappedBy="contract")
 	@JsonInclude(value=Include.NON_EMPTY, content=Include.NON_NULL)

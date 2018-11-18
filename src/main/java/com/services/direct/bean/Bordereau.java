@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -77,8 +78,8 @@ public class Bordereau {
 	private Customer customer;
 	
 	@JsonInclude(value=Include.NON_EMPTY, content=Include.NON_NULL)
-	@OneToMany(fetch=FetchType.EAGER,
-			//cascade=CascadeType.ALL,
+	@OneToMany(orphanRemoval=true, fetch=FetchType.EAGER,
+			cascade=CascadeType.REMOVE,
 			mappedBy="bordereau")
 	private List<BordereauDetail> bordereauDetails = new ArrayList<BordereauDetail>();
 	

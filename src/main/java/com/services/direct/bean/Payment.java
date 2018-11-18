@@ -55,7 +55,7 @@ public class Payment {
 	private String holder;
 	
 	@JsonInclude(value=Include.NON_EMPTY, content=Include.NON_NULL)
-	@OneToMany(fetch=FetchType.EAGER,
+	@OneToMany(orphanRemoval=true, fetch=FetchType.EAGER,
 			mappedBy="payment")
 	private List<PaymentDetail> paymentDetails = new ArrayList<PaymentDetail>();
 	

@@ -35,13 +35,13 @@ public class BordereauDetail {
 	@JoinColumn(name = "brd_pr_id", nullable = false)
 	private Product product;
 
-	@Column(name = "pr_percentage")
+	@Column(name = "brd_percentage")
 	private Integer percentage;
 
-	@Column(name = "pr_description")
+	@Column(name = "brd_description")
 	private String description;
 
-	@Column(name = "pr_qte")
+	@Column(name = "brd_qte")
 	private Integer qte;
 
 	@ManyToOne
@@ -49,7 +49,7 @@ public class BordereauDetail {
 	private Bordereau bordereau;
 
 	@NumberFormat(pattern = "######.###")
-	@Column(name = "pr_total")
+	@Column(name = "brd_total")
 	private Double totalCommandLine;
 
 	// /**

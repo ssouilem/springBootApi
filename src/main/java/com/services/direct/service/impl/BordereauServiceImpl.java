@@ -85,7 +85,7 @@ public class BordereauServiceImpl implements BordereauService {
 				List<BordereauDetail> bordereauDetails = entityDTOMapper
 						.bordereaudetailsDtotoBordereauDetailsList(bordereauDto.getBordereauDetailList());
 				bordereauDetails.forEach(bordereaudetail -> {
-					log.info("== Bordeeau detail information : {} ", bordereaudetail.getProduct());
+					log.info("== Bordereau detail information : {} ", bordereaudetail.getProduct());
 				});
 				if (bordereauDetails != null && bordereauDetails.size() != 0) {
 

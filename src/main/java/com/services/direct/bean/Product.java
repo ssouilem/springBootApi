@@ -74,12 +74,12 @@ public class Product {
 
 	@Nullable
 	@JsonInclude(Include.NON_NULL)
-	@OneToMany(fetch = FetchType.EAGER, cascade =  CascadeType.ALL, mappedBy = "product")
+	@OneToMany(orphanRemoval=true, fetch = FetchType.EAGER, cascade =  CascadeType.REMOVE, mappedBy = "product")
 	private List<Reduction> reductions;
 
 	@JsonIgnore
 	@JsonInclude(Include.NON_NULL)
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "product")
+	@OneToOne(orphanRemoval=true, fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "product")
 	private BordereauDetail bordereaudetail;
 
 	public Integer getId() {
