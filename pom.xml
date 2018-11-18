@@ -73,37 +73,6 @@
 			<artifactId>itext</artifactId>
 			<version>4.2.2</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.itextpdf/layout -->
-<dependency>
-    <groupId>com.itextpdf</groupId>
-    <artifactId>layout</artifactId>
-    <version>7.0.0</version>
-</dependency>
-		<dependency>
-            <groupId>com.itextpdf</groupId>
-            <artifactId>itext-pdfa</artifactId>
-            <version>5.5.14-SNAPSHOT</version>
-        </dependency>
-		<dependency>
-		    <groupId>com.itextpdf</groupId>
-		    <artifactId>kernel</artifactId>
-		    <version>7.0.0</version>
-		</dependency>
-		<dependency>
-            <groupId>com.itextpdf</groupId>
-            <artifactId>itext-xtra</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.itextpdf</groupId>
-            <artifactId>itext-hyph-xml</artifactId>
-            <version>5.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.itextpdf</groupId>
-            <artifactId>itext-asian</artifactId>
-            <version>5.2.0</version>
-        </dependency>
 		
 		<!-- Swagger -->
 		<dependency>

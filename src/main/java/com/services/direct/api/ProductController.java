@@ -69,7 +69,7 @@ public class ProductController {
         return this.productService.getProductByUID(productId);
     }
 	
-	@CrossOrigin(origins = "http://compta.dev.local.ina.fr:8081")
+	@CrossOrigin
 	@RequestMapping(value="/{UID}", method=RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
     public void deleteProductBuUID(@PathVariable("UID") String productUid) {
