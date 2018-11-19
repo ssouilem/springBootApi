@@ -40,6 +40,7 @@ public class ProductController {
 	
 	@ApiOperation(value = "Create new product",response = Iterable.class)
 	@RequestMapping(value = "/", method = RequestMethod.POST)
+	@CrossOrigin
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<Product> createProduct(@RequestBody ProductInputDto productDto) throws BusinessException {
 		Product product = this.productService.createProduct(productDto);
@@ -69,7 +70,7 @@ public class ProductController {
         return this.productService.getProductByUID(productId);
     }
 	
-	@CrossOrigin(origins = "http://compta.dev.local.ina.fr:8081")
+	
 	@RequestMapping(value="/{UID}", method=RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
     public void deleteProductBuUID(@PathVariable("UID") String productUid) {
