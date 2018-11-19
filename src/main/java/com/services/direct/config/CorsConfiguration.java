@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
  */
 
 @Configuration
-// @EnableWebMvc // @TODO l'activation @EnableWebMvc bloque la page Swagger-ui.html
+@EnableWebMvc // @TODO l'activation @EnableWebMvc bloque la page Swagger-ui.html
 public class CorsConfiguration {
 
 	@Bean

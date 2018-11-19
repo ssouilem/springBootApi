@@ -1,3 +1,5 @@
+show variables like 'sql_mode' ; 
+SET sql_mode = '';
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
@@ -17,7 +19,7 @@ DROP TABLE IF EXISTS `product`;
 
 CREATE TABLE `product` (
   `pr_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `pr_created_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `pr_created_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `pr_change` varchar(50) DEFAULT NULL,
   `pr_description` varchar(255) DEFAULT NULL,
   `pr_name` varchar(100) DEFAULT NULL,
@@ -61,7 +63,7 @@ DROP TABLE IF EXISTS `company`;
 
 CREATE TABLE `company` (
   `cmp_id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `cmp_created_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `cmp_created_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `cmp_uid` varchar(64) NOT NULL,
   `cmp_additional_address` varchar(255) DEFAULT NULL,
   `cmp_address` varchar(255) DEFAULT NULL,
@@ -88,7 +90,7 @@ DROP TABLE IF EXISTS `contract`;
 CREATE TABLE `contract` (
   `ctr_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `ctr_uid` varchar(64) DEFAULT NULL,
-  `ctr_created_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `ctr_created_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `ctr_name` varchar(255) DEFAULT NULL,
   `ctr_type` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`ctr_id`)
@@ -103,7 +105,7 @@ DROP TABLE IF EXISTS `customer`;
 
 CREATE TABLE `directs`.`customer` (
   `cus_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `cus_creation_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `cus_creation_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `cus_additional_address` varchar(255) DEFAULT NULL,
   `cus_address` varchar(255) DEFAULT NULL,
   `cus_city` varchar(255) DEFAULT NULL,
@@ -132,8 +134,8 @@ CREATE TABLE `invoice` (
   `inv_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `inv_uid` varchar(64) DEFAULT NULL,
   `inv_created_author` varchar(100) DEFAULT NULL,
-  `inv_created_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
-  `inv_issue_date` datetime DEFAULT NULL,
+  `inv_created_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  `inv_issue_date` DATETIME DEFAULT NULL,
   `inv_amount` decimal(19,3) DEFAULT NULL,
   `inv_number` varchar(50) DEFAULT NULL,
   `inv_pay_down` bit(1) DEFAULT NULL,
@@ -158,8 +160,8 @@ CREATE TABLE `bordereau` (
   `br_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `br_uid` varchar(64) DEFAULT NULL,
   `br_created_author` varchar(100) DEFAULT NULL,
-  `br_created_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
-  `br_treatment_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `br_created_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  `br_treatment_date` DATETIME DEFAULT NULL,
   `br_number` varchar(50) DEFAULT NULL,
   `br_subtotal` decimal(19,3) DEFAULT NULL,
   `br_type` varchar(30) DEFAULT NULL,
@@ -225,7 +227,7 @@ DROP TABLE IF EXISTS `contact`;
 CREATE TABLE `contact` (
   `ct_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `ct_uid` varchar(64) DEFAULT NULL,
-  `ct_creation_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `ct_creation_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `ct_email` varchar(100) NOT NULL,
   `ct_first_name` varchar(255) DEFAULT NULL,
   `ct_gender` varchar(10) DEFAULT NULL,
@@ -261,7 +263,7 @@ CREATE TABLE `payment` (
   `pay_amount` decimal(19,3) DEFAULT NULL,
   `pay_amount_pending` decimal(19,3) DEFAULT NULL,
   `pay_bank` varchar(50) DEFAULT NULL,
-  `pay_created_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `pay_created_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `pay_name` varchar(100) DEFAULT NULL,
   `pay_inv_id` INT(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`pay_id`),
@@ -282,9 +284,9 @@ DROP TABLE IF EXISTS `payment_detail`;
 
 CREATE TABLE `payment_detail` (
   `payd_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `payd_created_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `payd_created_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `payd_amount` decimal(19,3) DEFAULT NULL,
-  `payd_issue_date` datetime DEFAULT NULL,
+  `payd_issue_date` DATETIME DEFAULT NULL,
   `payd_transaction_id` varchar(255) DEFAULT NULL,
   `payd_type` varchar(50) DEFAULT NULL,
   `payd_pay_id` INT(10) UNSIGNED NOT NULL,
@@ -331,10 +333,10 @@ DROP TABLE IF EXISTS `task`;
 
 CREATE TABLE `task` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `created_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `description` varchar(255) DEFAULT NULL,
   `is_done` bit(1) DEFAULT NULL,
-  `target_date` datetime DEFAULT NULL,
+  `target_date` DATETIME DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8;
 
@@ -346,7 +348,7 @@ DROP TABLE IF EXISTS `directs`.`credentials` ;
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `directs`.`credentials` (
   `crd_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `crd_created_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `crd_created_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `crd_login` VARCHAR(30) NOT NULL,
   `crd_password` VARCHAR(60) NULL,
   `crd_cipher_method` VARCHAR(15) NOT NULL DEFAULT 'SHA512',
