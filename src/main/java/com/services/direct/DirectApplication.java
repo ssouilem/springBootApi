@@ -32,12 +32,5 @@ public class DirectApplication {
 	      }    
 	   };
 	}
-//	@Bean
-//	public ContactMapper contactMapper() {
-//		ContactMapper INSTANCE = Mappers.getMapper( ContactMapper.class );
-//		return INSTANCE;
-//	}
-	
-	//For non Spring application, we can create instance by using new keyword
-	// ModelMapper modelMapper = new ModelMapper();
+
 }

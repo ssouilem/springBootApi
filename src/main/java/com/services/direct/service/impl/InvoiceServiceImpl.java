@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.collect.Sets;
 import com.services.direct.bean.Bordereau;
 import com.services.direct.bean.Customer;
 import com.services.direct.bean.Invoice;
@@ -61,49 +62,32 @@ public class InvoiceServiceImpl implements InvoiceService {
 		Invoice invoice = entityDTOMapper.invoiceDtotoInvoice(invoiceDto);
 		
 		// Associer la societe a votre bordereau
-		if (!customerRepository.existsById(invoiceDto.getCustomer())) {
-			throw new ResourceNotFoundException("CustomerId " + invoiceDto.getCustomer() + " not found");
-		} else {
+//		if (!customerRepository.existsById(invoiceDto.getCustomer())) {
+//			throw new ResourceNotFoundException("CustomerId " + invoiceDto.getCustomer() + " not found");
+//		} else {
 
-			Customer customer = customerRepository.getOne(invoiceDto.getCustomer());
+			Customer customer = customerRepository.getCustomerByUID(invoiceDto.getCustomer());
 			log.info("Customer already exist in DB : {}" + customer.getName());
 			invoice.setCustomer(customer);
-			
 			
 			// controler et lister les bordereaux
 			if (invoiceDto.getBordereaux() == null || invoiceDto.getBordereaux().isEmpty()) {
 				throw new FileNotFoundException("Ressource bordereauList not found", "FILE_NOT_FOUND");
 			} else {
-				invoiceDto.getBordereaux().forEach(bordereauId -> {
-
-					// verifier au niveau_ de la base isExist
-					if (bordereauRepository.existsById(bordereauId)) {
-						// add to List
-						Bordereau bordereau = bordereauRepository.getBordereauById(bordereauId);
-						bordereau.setInvoice(invoice);
-						bordereauRepository.save(bordereau);
-						invoice.addBordereau(bordereau);
-						
-					} else {
-						try {
-							throw new FileNotFoundException("Bordereau not found", "FILE_NOT_FOUND");
-						} catch (FileNotFoundException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-				});
-				 
+				List<Bordereau> bordereaux = entityDTOMapper
+						.bordereauDtotoBordereauList(invoiceDto.getBordereaux(), invoice);
 				// add UID
 				UUID uuid = UUID.randomUUID();
 				invoice.setUid(uuid.toString());
+				
+				invoice.setBordereaux(Sets.newHashSet(bordereaux));
 				
 				// calulate InvoiceTotal
 
 				// save
 				invoiceRepository.save(invoice);
 			}
-		}
+		//}
 		return invoice;
 	}
 	

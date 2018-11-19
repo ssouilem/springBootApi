@@ -1,16 +1,25 @@
 package com.services.direct.config;
+import java.text.SimpleDateFormat;
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 
 /**
  * Configures CORS globally.
  */
 
 @Configuration
-@EnableWebMvc
+// @EnableWebMvc // @TODO l'activation @EnableWebMvc bloque la page Swagger-ui.html
 public class CorsConfiguration {
 
 	@Bean
@@ -35,6 +44,16 @@ public class CorsConfiguration {
 						"Access-Control-Request-Headers", 
 						"Access-Control-Request-Method");
 			}
+			// @TODO verifier l'utilisation de cette fonction
+			@Override
+		    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+		        converters.add(new MappingJackson2HttpMessageConverter(
+		                new Jackson2ObjectMapperBuilder()
+		                        .propertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
+		                        .dateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
+		                        .build()));
+		    }
+			
 		};
 	}
 

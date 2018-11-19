@@ -34,10 +34,10 @@ public class InvoiceInputDto {
 	private String createdAuthor;
 	
 	@NotNull(message = "customer ID is required.")
-	private Integer customer;
+	private String customer;
 	
 	@NotNull(message = "bordereauList is required.")
-	private List<Integer> bordereaux;
+	private List<BordereauUidDto> bordereaux;
 	
 	private Boolean payDown;
 
@@ -78,19 +78,19 @@ public class InvoiceInputDto {
 		this.createdAuthor = createdAuthor;
 	}
 
-	public Integer getCustomer() {
+	public String getCustomer() {
 		return customer;
 	}
 
-	public void setCustomer(Integer customer) {
+	public void setCustomer(String customer) {
 		this.customer = customer;
 	}
 
-	public List<Integer> getBordereaux() {
+	public List<BordereauUidDto> getBordereaux() {
 		return bordereaux;
 	}
 
-	public void setBordereaux(List<Integer> bordereaux) {
+	public void setBordereaux(List<BordereauUidDto> bordereaux) {
 		this.bordereaux = bordereaux;
 	}
 

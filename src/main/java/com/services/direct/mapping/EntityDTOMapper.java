@@ -4,8 +4,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
@@ -27,11 +27,13 @@ import com.services.direct.bean.Product;
 import com.services.direct.bean.Reduction;
 import com.services.direct.data.BordereauDetailDto;
 import com.services.direct.data.BordereauInputDto;
+import com.services.direct.data.BordereauUidDto;
 import com.services.direct.data.ContactInputDto;
 import com.services.direct.data.ContractInputDto;
 import com.services.direct.data.InvoiceInputDto;
 import com.services.direct.data.ProductInputDto;
 import com.services.direct.data.ReductionDto;
+import com.services.direct.repo.BordereauRepository;
 import com.services.direct.repo.ProductRepository;
 
 @Component
@@ -40,10 +42,12 @@ public class EntityDTOMapper {
 	ModelMapper modelMapper = new ModelMapper();
 
 	private ProductRepository productRepository;
+	private BordereauRepository bordereauRepository;
 
 	@Autowired
-	public EntityDTOMapper(ProductRepository productRepository) {
+	public EntityDTOMapper(ProductRepository productRepository, BordereauRepository bordereauRepository) {
 		this.productRepository = productRepository;
+		this.bordereauRepository = bordereauRepository;
 	}
 
 	public EntityDTOMapper() {
@@ -251,6 +255,25 @@ public class EntityDTOMapper {
         .map(entity -> bordereaudetailsDtotoBordereauDetails(entity)).collect(Collectors.toList());
 	}
 
+	@Transactional
+	public Bordereau bordereauDtotoBordereau(BordereauUidDto bordereauDto, Invoice invoice) {
+		
+		Bordereau bordereau = bordereauRepository.getBordereauByUID(bordereauDto.getBordereauUid());
+		
+		bordereau.setInvoice(invoice);
+		// new UID
+		System.out.println("#############   generate UID bordereau detail ############################ ");
+		bordereauRepository.save(bordereau);
+		invoice.addBordereau(bordereau); // @TODO to verify
+		return bordereau;
+	}
+	public List<Bordereau> bordereauDtotoBordereauList(List<BordereauUidDto> bordereauDto, Invoice invoice) {
+		System.out.println("####### ---> EntityDTOMapper - bordereauDtotoBordereauList ");
+		
+		return bordereauDto.stream()
+        .map(entity -> bordereauDtotoBordereau(entity, invoice)).collect(Collectors.toList());
+	}
+	
 	public Contact contactDtotoContact(ContactInputDto contactDto) {
 		return modelMapper.map(contactDto, Contact.class);
 	}

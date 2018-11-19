@@ -20,7 +20,6 @@ import com.services.direct.repo.BordereauDetailRepository;
 import com.services.direct.repo.BordereauRepository;
 import com.services.direct.repo.CustomerRepository;
 import com.services.direct.service.BordereauService;
-import com.services.direct.utility.ResourceNotFoundException;
 import com.services.direct.utility.Util;
 
 
