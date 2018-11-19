@@ -59,7 +59,6 @@ public class GeneratePdfReport {
 
 			for (City city : cities) {
 
-				PdfPCell cell;
 
 				cell = new PdfPCell(new Phrase(city.getId().toString()));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);

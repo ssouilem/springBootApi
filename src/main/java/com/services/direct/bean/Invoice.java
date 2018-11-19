@@ -64,7 +64,7 @@ public class Invoice {
 	
 	// @LazyCollection(LazyCollectionOption.FALSE)
 	@JsonInclude(value=Include.NON_EMPTY, content=Include.NON_NULL)
-	@OneToOne(fetch=FetchType.EAGER, 
+	@OneToOne(orphanRemoval=true, fetch=FetchType.EAGER, 
 			mappedBy="invoice")
 	private Payment payment;
 	

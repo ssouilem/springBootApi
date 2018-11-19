@@ -70,7 +70,6 @@ public class ProductController {
         return this.productService.getProductByUID(productId);
     }
 	
-	
 	@RequestMapping(value="/{UID}", method=RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
     public void deleteProductBuUID(@PathVariable("UID") String productUid) {

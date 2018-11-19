@@ -70,21 +70,21 @@ public class Customer {
 	private String tvaNumber;
 
 	@JsonInclude(Include.NON_NULL)
-	@OneToOne(fetch=FetchType.EAGER, 
+	@OneToOne(orphanRemoval=true, fetch=FetchType.EAGER, 
 			mappedBy="customer")
 	private Contact contact;
 	
 	@JsonIgnore
 	@Nullable
-	@OneToMany(fetch=FetchType.LAZY,
-			cascade=CascadeType.ALL,
+	@OneToMany(orphanRemoval=true, fetch=FetchType.LAZY,
+//			cascade=CascadeType.ALL,
 			mappedBy="customer")
 	private List<Invoice> invoices;
 	
 	@JsonIgnore
 	@Nullable
-	@OneToMany(fetch=FetchType.LAZY,
-			cascade=CascadeType.ALL,
+	@OneToMany(orphanRemoval=true, fetch=FetchType.LAZY,
+			//cascade=CascadeType.ALL,
 			mappedBy="customer")
 	private List<Bordereau> bordereaux;
 	
