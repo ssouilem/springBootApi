@@ -20,7 +20,7 @@ public class CustomerInputDto {
 	
 	private String additionalAddress;
 	
-	private String zideCode;
+	private String postalCode;
 	
 	private String city;
 	
@@ -63,12 +63,12 @@ public class CustomerInputDto {
 		this.additionalAddress = additionalAddress;
 	}
 
-	public String getZideCode() {
-		return zideCode;
+	public String getPostalCode() {
+		return postalCode;
 	}
 
-	public void setZideCode(String zideCode) {
-		this.zideCode = zideCode;
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
 	}
 
 	public String getCity() {

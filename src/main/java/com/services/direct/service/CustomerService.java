@@ -3,12 +3,13 @@ package com.services.direct.service;
 import java.util.List;
 
 import com.services.direct.bean.Customer;
+import com.services.direct.data.CustomerInputDto;
 
 public interface CustomerService {
 
 	Customer getCustomerByUID(String customerUid);
 	
-	Customer addCustomer(Customer contact);
+	Customer addCustomer(CustomerInputDto contact);
 	
 	List<Customer> getAllCompanies();
 	

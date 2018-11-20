@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.services.direct.bean.Customer;
+import com.services.direct.data.CustomerInputDto;
 import com.services.direct.service.CustomerService;
 
 import io.swagger.annotations.Api;
@@ -69,7 +70,7 @@ public class CustomerController {
 	// Create a new Customer
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<Customer> CreatedCustomer(@RequestBody Customer customer){
+	public ResponseEntity<Customer> CreatedCustomer(@RequestBody CustomerInputDto customer){
 	
 		Customer customerEntity = this.customerService.addCustomer(customer);
 		if (customerEntity != null) {

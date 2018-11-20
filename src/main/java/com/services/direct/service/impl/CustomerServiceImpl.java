@@ -11,6 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.services.direct.bean.Contract;
 import com.services.direct.bean.Customer;
+import com.services.direct.bean.Product;
+import com.services.direct.data.CustomerInputDto;
+import com.services.direct.mapping.EntityDTOMapper;
 import com.services.direct.repo.ContractRepository;
 import com.services.direct.repo.CustomerRepository;
 import com.services.direct.service.CustomerService;
@@ -24,11 +27,15 @@ public class CustomerServiceImpl implements CustomerService {
 	private CustomerRepository customerRepository;
 
 	private ContractRepository contractRepository;
+	
+	@Autowired
+	private EntityDTOMapper entityDTOMapper;
 
 	@Autowired
-	public CustomerServiceImpl(final CustomerRepository customerRepository, ContractRepository contractRepository) {
+	public CustomerServiceImpl(final CustomerRepository customerRepository, ContractRepository contractRepository, EntityDTOMapper entityDTOMapper) {
 		this.customerRepository = customerRepository;
 		this.contractRepository = contractRepository;
+		this.entityDTOMapper     = entityDTOMapper;
 	}
 
 	@Override
@@ -39,8 +46,9 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	@Transactional
-	public Customer addCustomer(Customer customer) {
+	public Customer addCustomer(CustomerInputDto customerDto) {
 		// add UID
+		Customer customer = entityDTOMapper.customerDtotoCustomer(customerDto);
 		UUID uuid = UUID.randomUUID();
 		customer.setUid(uuid.toString());
 		return this.customerRepository.save(customer);

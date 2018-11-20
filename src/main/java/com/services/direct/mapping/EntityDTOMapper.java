@@ -22,6 +22,7 @@ import com.services.direct.bean.Bordereau;
 import com.services.direct.bean.BordereauDetail;
 import com.services.direct.bean.Contact;
 import com.services.direct.bean.Contract;
+import com.services.direct.bean.Customer;
 import com.services.direct.bean.Invoice;
 import com.services.direct.bean.Product;
 import com.services.direct.bean.Reduction;
@@ -30,6 +31,7 @@ import com.services.direct.data.BordereauInputDto;
 import com.services.direct.data.BordereauUidDto;
 import com.services.direct.data.ContactInputDto;
 import com.services.direct.data.ContractInputDto;
+import com.services.direct.data.CustomerInputDto;
 import com.services.direct.data.InvoiceInputDto;
 import com.services.direct.data.ProductInputDto;
 import com.services.direct.data.ReductionDto;
@@ -80,6 +82,8 @@ public class EntityDTOMapper {
 		
 		// modelMapper.addMappings(new contractDTOToContractMapping());
 		modelMapper.addMappings(new productDTOToProductMapping());
+		modelMapper.addMappings(new customerDTOtoCustomerMapping());
+		
 		modelMapper.addMappings(new productToProductDTOMapping());
 		modelMapper.addMappings(new contractToContractDTOMapping());
 		modelMapper.addMappings(new PropertyMap<ReductionDto, Reduction>() {
@@ -315,6 +319,11 @@ public class EntityDTOMapper {
 	public Product productDtotoProduct(ProductInputDto productDto) {
 		return modelMapper.map(productDto, Product.class);
 	}
+	
+	public Customer customerDtotoCustomer(CustomerInputDto customerDto) {
+		return modelMapper.map(customerDto, Customer.class);
+	}
+
 
 	static class contractToContractDTOMapping extends PropertyMap<Contract, ContractInputDto> {
 		// /** Define mapping configure PropertyMap <Source, Destination> **/
@@ -337,6 +346,16 @@ public class EntityDTOMapper {
 		@Override
 		protected void configure() {
 			map().setQuality(source.getQuality());
+		}
+	}
+	
+	static class customerDTOtoCustomerMapping extends PropertyMap<CustomerInputDto, Customer> {
+
+		@Override
+		protected void configure() {
+			map().setAdditionalAddress(source.getAdditionalAddress());
+			map().setPostalCode(source.getPostalCode());
+			map().setTvaNumber(source.getTvaNumber());
 		}
 	}
 

@@ -54,7 +54,7 @@ public class Customer {
 	private String additionalAddress;
 	
 	@Column(name="cus_zipe_code")
-	private String zideCode;
+	private String postalCode;
 	
 	@Column(name="cus_city")
 	private String city;
@@ -142,12 +142,12 @@ public class Customer {
 		this.additionalAddress = additionalAddress;
 	}
 
-	public String getZideCode() {
-		return zideCode;
+	public String getPostalCode() {
+		return postalCode;
 	}
 
-	public void setZideCode(String zideCode) {
-		this.zideCode = zideCode;
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
 	}
 
 	public String getCity() {

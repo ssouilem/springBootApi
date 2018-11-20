@@ -46,6 +46,9 @@ public class Payment {
 	@Column(name="pay_amount")
 	private Double amount;
 	
+	@Column(name="pay_amount_pending")
+	private Double amountPending;
+	
 	@Enumerated(EnumType.STRING)
 	@Column(name="pay_bank")
 	private BankListEnum bank;
@@ -93,6 +96,14 @@ public class Payment {
 
 	public void setAmount(Double amount) {
 		this.amount = amount;
+	}
+
+	public Double getAmountPending() {
+		return amountPending;
+	}
+
+	public void setAmountPending(Double amountPending) {
+		this.amountPending = amountPending;
 	}
 
 	public BankListEnum getBank() {

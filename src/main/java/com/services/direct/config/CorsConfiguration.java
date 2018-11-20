@@ -9,7 +9,6 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
@@ -44,6 +43,7 @@ public class CorsConfiguration {
 						"Access-Control-Request-Headers", 
 						"Access-Control-Request-Method");
 			}
+			
 			// @TODO verifier l'utilisation de cette fonction
 			@Override
 		    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
@@ -53,7 +53,6 @@ public class CorsConfiguration {
 		                        .dateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
 		                        .build()));
 		    }
-			
 		};
 	}
 

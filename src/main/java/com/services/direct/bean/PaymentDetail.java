@@ -34,6 +34,9 @@ public class PaymentDetail {
 	@Column(name="payd_id")
 	private Integer id;
 	
+	@Column(name="pay_created_date")
+	private Date createdDate;
+	
 	@NotEmpty
 	@Enumerated(EnumType.STRING)
 	@Column(name="payd_type")
@@ -63,6 +66,14 @@ public class PaymentDetail {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
 	}
 
 	public PaymentType getType() {

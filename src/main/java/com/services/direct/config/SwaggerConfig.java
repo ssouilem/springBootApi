@@ -1,8 +1,10 @@
 package com.services.direct.config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
@@ -17,7 +19,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableSwagger2
-@Profile("!test")
+// @EnableWebMvc
+// @ComponentScan(basePackages  = { "com.services.direct.api" })  
+//@Profile("!test")
 public class SwaggerConfig extends WebMvcConfigurationSupport {
 
     /**
@@ -54,7 +58,7 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
        
        @Override
        protected void addResourceHandlers(ResourceHandlerRegistry registry) {
-           registry.addResourceHandler("swagger-ui.html")
+           registry.addResourceHandler("/swagger-ui.html")
                    .addResourceLocations("classpath:/META-INF/resources/");
 
            registry.addResourceHandler("/webjars/**")
