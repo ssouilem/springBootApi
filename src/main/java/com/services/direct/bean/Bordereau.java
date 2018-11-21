@@ -69,7 +69,7 @@ public class Bordereau {
 	@Column(name = "br_created_author")
     private String createdAuthor;
 	
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "br_inv_id",  nullable = true)
 	private Invoice invoice;
 	
@@ -78,7 +78,7 @@ public class Bordereau {
 	private Customer customer;
 	
 	@JsonInclude(value=Include.NON_EMPTY, content=Include.NON_NULL)
-	@OneToMany(orphanRemoval=true, fetch=FetchType.EAGER,
+	@OneToMany(orphanRemoval=true, fetch=FetchType.LAZY,
 			cascade=CascadeType.REMOVE,
 			mappedBy="bordereau")
 	private List<BordereauDetail> bordereauDetails = new ArrayList<BordereauDetail>();

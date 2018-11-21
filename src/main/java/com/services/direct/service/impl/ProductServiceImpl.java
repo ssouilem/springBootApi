@@ -52,7 +52,7 @@ public class ProductServiceImpl implements ProductService {
 	public Product createProduct(ProductInputDto productDto) throws BusinessException {
 		
 		log.info("creation de l'entite Produit");
-		log.info("--> Quality : " + productDto.getQuality());
+		log.info("--> Quality : " + productDto.getCategory());
 		Product product = entityDTOMapper.productDtotoProduct(productDto);
 		UUID uuid = UUID.randomUUID();
 		product.setUid(uuid.toString());
@@ -76,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
 			log.info("update produit equals entity DB");
 			return product;
 		} else if (productInput !=null) {
-			log.info("update produitDto equals entity DB" + productInput.getQuality());
+			log.info("update produitDto equals entity DB" + productInput.getCategory());
 			
 			product.setName(productInput.getName());
 			product.setDescription(productInput.getDescription());
@@ -84,7 +84,7 @@ public class ProductServiceImpl implements ProductService {
 			product.setPrice(productInput.getPrice());
 			product.setChange(productInput.getChange());
 			product.setUnit(productInput.getUnit());
-			product.setQuality(productInput.getQuality());
+			product.setCategory(productInput.getCategory());
 			
 			return this.productRepository.save(product);
 		} else {

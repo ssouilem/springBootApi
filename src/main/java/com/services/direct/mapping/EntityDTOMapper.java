@@ -345,7 +345,7 @@ public class EntityDTOMapper {
 
 		@Override
 		protected void configure() {
-			map().setQuality(source.getQuality());
+			map().setCategory(source.getCategory());
 		}
 	}
 	
@@ -363,7 +363,7 @@ public class EntityDTOMapper {
 
 		@Override
 		protected void configure() {
-			map().setQuality(source.getQuality());
+			map().setCategory(source.getCategory());
 		}
 	}
 

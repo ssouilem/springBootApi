@@ -14,7 +14,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.validation.constraints.NotEmpty;
 
 import org.springframework.format.annotation.NumberFormat;
 import org.springframework.lang.Nullable;
@@ -25,8 +24,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.services.direct.utility.ProductCategory;
 import com.services.direct.utility.ProductChange;
-import com.services.direct.utility.ProductQuality;
 import com.services.direct.utility.ProductUnit;
 
 @Entity
@@ -47,9 +46,9 @@ public class Product {
 	@Column(name = "pr_reference")
 	private String reference;
 	
-	@Column(name = "pr_quality")
+	@Column(name = "pr_category")
 	@Enumerated(EnumType.STRING)
-	private ProductQuality quality;
+	private ProductCategory category;
 
 	@Column(name = "pr_name")
 	private String name;
@@ -106,12 +105,12 @@ public class Product {
 		this.reference = reference;
 	}
 
-	public ProductQuality getQuality() {
-		return quality;
+	public ProductCategory getCategory() {
+		return category;
 	}
 
-	public void setQuality(ProductQuality quality) {
-		this.quality = quality;
+	public void setCategory(ProductCategory quality) {
+		this.category = quality;
 	}
 
 	public String getName() {

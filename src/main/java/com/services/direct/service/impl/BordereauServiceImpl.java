@@ -133,6 +133,7 @@ public class BordereauServiceImpl implements BordereauService {
 	}
 
 	@Override
+	@Transactional
 	public List<Bordereau> getAllBordereaux() {
 		List<Bordereau> bordereaux = (List<Bordereau>) bordereauRepository.findAll();
 		return bordereaux;

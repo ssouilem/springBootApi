@@ -7,8 +7,8 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.NumberFormat;
 
+import com.services.direct.utility.ProductCategory;
 import com.services.direct.utility.ProductChange;
-import com.services.direct.utility.ProductQuality;
 import com.services.direct.utility.ProductUnit;
 
 import lombok.Data;
@@ -30,7 +30,7 @@ public class ProductInputDto {
 	@NotEmpty(message = "unit not empty")
 	private ProductUnit unit;
 	
-	private ProductQuality quality;
+	private ProductCategory category;
 
 	@NumberFormat(pattern = "#.###")
 	@NotEmpty(message = "reference not empty")
@@ -89,12 +89,12 @@ public class ProductInputDto {
 		this.change = change;
 	}
 
-	public ProductQuality getQuality() {
-		return quality;
+	public ProductCategory getCategory() {
+		return category;
 	}
 
-	public void setQuality(ProductQuality quality) {
-		this.quality = quality;
+	public void setCategory(ProductCategory quality) {
+		this.category = quality;
 	}
 
 	public Double getTva() {

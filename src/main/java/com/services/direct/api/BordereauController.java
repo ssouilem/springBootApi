@@ -52,7 +52,7 @@ public class BordereauController {
     })
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Bordereau> getAllContacts() {
+	public List<Bordereau> getAllBordereaux() {
 		return this.bordereauService.getAllBordereaux();
 	}
 

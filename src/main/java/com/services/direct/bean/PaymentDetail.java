@@ -34,7 +34,7 @@ public class PaymentDetail {
 	@Column(name="payd_id")
 	private Integer id;
 	
-	@Column(name="pay_created_date")
+	@Column(name="payd_created_date")
 	private Date createdDate;
 	
 	@NotEmpty
