@@ -52,18 +52,6 @@ public class BordereauDetail {
 	@Column(name = "brd_total")
 	private Double totalCommandLine;
 
-	// /**
-	// * @param produit
-	// * @param percentage
-	// * @param qte
-	// */
-	// public BordereauDetail(Product product, Integer percentage, Integer qte) {
-	// super();
-	// this.product = product;
-	// this.percentage = percentage;
-	// this.qte = qte;
-	// }
-
 	public Integer getId() {
 		return id;
 	}

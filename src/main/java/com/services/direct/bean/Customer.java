@@ -67,7 +67,7 @@ public class Customer {
 	
 	@NotNull
 	@Column(name="cus_tva_number")
-	private String tvaNumber;
+	private String siret;
 
 	@JsonInclude(Include.NON_NULL)
 	@OneToOne(orphanRemoval=true, fetch=FetchType.EAGER, 
@@ -174,12 +174,12 @@ public class Customer {
 		this.faxNumber = faxNumber;
 	}
 
-	public String getTvaNumber() {
-		return tvaNumber;
+	public String getSiret() {
+		return siret;
 	}
 
-	public void setTvaNumber(String tvaNumber) {
-		this.tvaNumber = tvaNumber;
+	public void setSiret(String tvaNumber) {
+		this.siret = tvaNumber;
 	}
 
 	public Contact getContact() {

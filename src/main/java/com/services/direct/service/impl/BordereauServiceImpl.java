@@ -2,6 +2,7 @@ package com.services.direct.service.impl;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import com.services.direct.bean.Bordereau;
 import com.services.direct.bean.BordereauDetail;
 import com.services.direct.bean.Customer;
 import com.services.direct.data.BordereauInputDto;
+import com.services.direct.data.output.BordereauDto;
 import com.services.direct.exception.BusinessException;
 import com.services.direct.exception.FileNotFoundException;
 import com.services.direct.mapping.EntityDTOMapper;
@@ -123,9 +125,6 @@ public class BordereauServiceImpl implements BordereauService {
 		// }
 	}
 
-	
-	
-
 	@Override
 	public Bordereau updateBordereau(Bordereau bordereau) {
 		
@@ -134,9 +133,18 @@ public class BordereauServiceImpl implements BordereauService {
 
 	@Override
 	@Transactional
-	public List<Bordereau> getAllBordereaux() {
+	public List<BordereauDto> getAllBordereaux() {
 		List<Bordereau> bordereaux = (List<Bordereau>) bordereauRepository.findAll();
-		return bordereaux;
+		// 
+		return bordereaux.stream().map(entity -> entityDTOMapper.bordereauToBordereauDto(entity)).collect(Collectors.toList());
+	}
+	
+	private Bordereau findCustomerById(Bordereau bordereau) {
+		
+		// New UID
+		Customer customer = customerRepository.getCustomerById(bordereau.getCustomer().getId());
+		bordereau.setCustomer(customer);
+		return bordereau;
 	}
 
 	@Override

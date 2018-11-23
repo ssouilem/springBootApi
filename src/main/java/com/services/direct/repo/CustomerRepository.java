@@ -23,4 +23,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer>{
 	@Query("DELETE FROM Customer customer WHERE customer.uid=(:uid)")
 	void deleteCustomerByUID(@Param("uid") String customerUid);
 
+	@Query("SELECT count(*) FROM Customer customer WHERE (customer.siret=(:siret) or customer.name=(:name))")
+	int findBySiretOrName(@Param("siret") String siret, @Param("name") String name);
+	
 }

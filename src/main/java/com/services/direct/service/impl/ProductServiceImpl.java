@@ -3,6 +3,7 @@ package com.services.direct.service.impl;
 import java.util.List;
 import java.util.UUID;
 
+import org.hibernate.TransactionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.services.direct.bean.Product;
 import com.services.direct.data.ProductInputDto;
 import com.services.direct.exception.BusinessException;
+import com.services.direct.exception.DuplicateEntityException;
 import com.services.direct.exception.FileNotFoundException;
+import com.services.direct.exception.TechnicalException;
 import com.services.direct.mapping.EntityDTOMapper;
 import com.services.direct.repo.ProductRepository;
 import com.services.direct.service.ProductService;
@@ -57,9 +60,16 @@ public class ProductServiceImpl implements ProductService {
 		UUID uuid = UUID.randomUUID();
 		product.setUid(uuid.toString());
 		
+		
+		
 		if (product !=null && product.getPrice() != null && !product.getReference().isEmpty())
 		{
-			return productRepository.save(product);
+			// verification de doublon
+			if (productRepository.findByReferenceOrName(product.getReference(), product.getName()) == 0) {
+				return productRepository.save(product);
+			} else {
+				throw new DuplicateEntityException("the product exists in base", "DUPLICATE_PRODUCT");
+			}
 		} else {
 		   throw new FileNotFoundException("The resource reductions was not found", "FILE_NOT_FOUND");
 		}
@@ -101,12 +111,12 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	@Transactional
-	public void deleteProductByUID(String productUid) {
-		this.productRepository.deleteProductByUID(productUid);
+	public void deleteProductByUID(String productUid) throws BusinessException {
 		
+		try {
+			this.productRepository.deleteProductByUID(productUid);
+		} catch (Exception e) {
+			throw new BusinessException("PRODUCT_USED", e.getCause());
+		} 	
 	}
-	
-	
-	
-	
 }

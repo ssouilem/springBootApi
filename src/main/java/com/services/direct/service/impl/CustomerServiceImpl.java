@@ -3,6 +3,7 @@ package com.services.direct.service.impl;
 import java.util.List;
 import java.util.UUID;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.services.direct.bean.Contract;
 import com.services.direct.bean.Customer;
-import com.services.direct.bean.Product;
 import com.services.direct.data.CustomerInputDto;
+import com.services.direct.exception.BusinessException;
+import com.services.direct.exception.DuplicateEntityException;
+import com.services.direct.exception.TechnicalException;
 import com.services.direct.mapping.EntityDTOMapper;
 import com.services.direct.repo.ContractRepository;
 import com.services.direct.repo.CustomerRepository;
@@ -46,16 +49,22 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	@Transactional
-	public Customer addCustomer(CustomerInputDto customerDto) {
+	public Customer addCustomer(CustomerInputDto customerDto) throws BusinessException {
 		// add UID
 		Customer customer = entityDTOMapper.customerDtotoCustomer(customerDto);
 		UUID uuid = UUID.randomUUID();
 		customer.setUid(uuid.toString());
-		return this.customerRepository.save(customer);
-
+		
+		// verification de doublon
+		if (customerRepository.findBySiretOrName(customer.getSiret(), customer.getName()) == 0) {
+			return this.customerRepository.save(customer);
+		} else {
+			throw new DuplicateEntityException("the customer exists in base", "DUPLICATE_CUSTOMER");
+		}
 	}
 
 	@Override
+	@Transactional
 	public List<Customer> getAllCompanies() {
 		return customerRepository.findAll();
 	}
@@ -77,12 +86,15 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	@Transactional
-	public void deleteCustomerByUID(String customerUid) {
-
-		// if(!customerRepository.existsById(id)) {
-		// throw new ResourceNotFoundException("CustomerId " + id + " not found");
-		// }
-		customerRepository.deleteCustomerByUID(customerUid);
+	public void deleteCustomerByUID(String customerUid) throws BusinessException {
+		try {
+			customerRepository.deleteCustomerByUID(customerUid);
+		} catch (ConstraintViolationException e) {
+			throw new BusinessException("the customer is used", "USED_CUSTOMER");
+		} catch (Exception e) {
+			throw new TechnicalException("Internal exception", "INTERNAL_ERROR");
+		}
+		
 	}
 
 	@Override

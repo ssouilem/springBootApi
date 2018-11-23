@@ -22,7 +22,7 @@ CREATE TABLE `product` (
   `pr_description` varchar(255) DEFAULT NULL,
   `pr_name` varchar(100) DEFAULT NULL,
   `pr_price` decimal(19,3) DEFAULT NULL,
-  `pr_quality` varchar(50) DEFAULT NULL,
+  `pr_category` varchar(50) DEFAULT NULL,
   `pr_reference` varchar(50) DEFAULT NULL,
   `pr_tva` float DEFAULT NULL,
   `pr_uid` varchar(64) DEFAULT NULL,
@@ -202,7 +202,7 @@ CREATE TABLE `bordereau_detail` (
   CONSTRAINT `fk_bordereau_detail_product`
     FOREIGN KEY (`brd_pr_id`)
     REFERENCES `directs`.`product` (`pr_id`)
-    ON DELETE CASCADE
+    ON DELETE RESTRICT
     ON UPDATE NO ACTION,
  CONSTRAINT `fk_bordereau_detail_bordereau`
     FOREIGN KEY (`brd_br_id`)
@@ -215,6 +215,7 @@ CREATE TABLE `bordereau_detail` (
 SHOW WARNINGS;
 
 
+CREATE INDEX `fk_bordereau_product_idx` ON `directs`.`bordereau_detail` (`brd_pr_id` ASC);
 
 --
 -- Table structure for table `contact`

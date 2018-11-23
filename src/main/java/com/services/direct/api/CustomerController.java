@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.services.direct.bean.Customer;
 import com.services.direct.data.CustomerInputDto;
+import com.services.direct.exception.BusinessException;
 import com.services.direct.service.CustomerService;
 
 import io.swagger.annotations.Api;
@@ -71,7 +72,7 @@ public class CustomerController {
 	// Create a new Customer
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<Customer> CreatedCustomer(@RequestBody CustomerInputDto customer){
+	public ResponseEntity<Customer> CreatedCustomer(@RequestBody CustomerInputDto customer) throws BusinessException{
 	
 		Customer customerEntity = this.customerService.addCustomer(customer);
 		if (customerEntity != null) {
@@ -90,7 +91,7 @@ public class CustomerController {
 	// Delete a Customer
 	@DeleteMapping("/{UID}")
 	@CrossOrigin
-	public ResponseEntity<Void> deleteCustomerByUID(@PathVariable("UID") String customerUid) {
+	public ResponseEntity<Void> deleteCustomerByUID(@PathVariable("UID") String customerUid) throws BusinessException {
 		customerService.deleteCustomerByUID(customerUid);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}	

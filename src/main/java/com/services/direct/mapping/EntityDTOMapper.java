@@ -1,5 +1,6 @@
 package com.services.direct.mapping;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,6 +36,7 @@ import com.services.direct.data.CustomerInputDto;
 import com.services.direct.data.InvoiceInputDto;
 import com.services.direct.data.ProductInputDto;
 import com.services.direct.data.ReductionDto;
+import com.services.direct.data.output.BordereauDto;
 import com.services.direct.repo.BordereauRepository;
 import com.services.direct.repo.ProductRepository;
 
@@ -57,9 +59,9 @@ public class EntityDTOMapper {
 		modelMapper.getConfiguration().setAmbiguityIgnored(true);
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
+		/* Mappage DTO -> Entity */
 		modelMapper.addMappings(new PropertyMap<ContactInputDto, Contact>() {
 			protected void configure() {
-				// 'first name' is mapped automatically
 				map().setFirstName(source.getFirstName());
 				skip().setCustomer(null);
 			}
@@ -93,11 +95,11 @@ public class EntityDTOMapper {
 					skip().setProduct(null);
 			}
 		});
-		//modelMapper.addMappings(new reductionDtotoReductionsMapping(productRepository));
-//		modelMapper.addMappings(new bordereauDetailDtotoBordereauDetailsMapping(productRepository));
-		
+
 		System.out.println("#############   EntityDTOMapper ############################ "
 				+ modelMapper.getConfiguration().toString());
+
+		/* Mappage Entity -> DTO*/
 	}
 
 //	Provider<Date> dateProvider = new AbstractProvider<Date>() {
@@ -168,7 +170,17 @@ public class EntityDTOMapper {
 				e.printStackTrace();
 				return null;
 			}
-
+		}
+	};
+	
+	Converter<Date, String> toDateString = new AbstractConverter<Date, String>() {
+		
+		@Override
+		protected String convert(Date source) {
+			String dateFormat = "yyyy-MM-dd";
+			
+			DateFormat df = new SimpleDateFormat(dateFormat);
+			return df.format(source);
 		}
 	};
 
@@ -189,34 +201,7 @@ public class EntityDTOMapper {
    
 	public Bordereau bordereauDtotoBordereau(BordereauInputDto bordereauDto) {
 		
-//		modelMapper.addMappings(new PropertyMap<BordereauInputDto, Bordereau>() {
-//			protected void configure() {
-//				
-//			
-//				Converter<String, Date> toStringDate = new AbstractConverter<String, Date>() {
-//					@Override
-//					protected Date convert(String source) {
-//						String dateFormat = "yyyy-MM-dd";
-//						try {
-//							return new SimpleDateFormat(dateFormat).parse(source);
-//						} catch (ParseException e) {
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();
-//							return null;
-//						}
-//
-//					}
-//				};
-//				using(toStringDate).map(source.getTreatmentDate(), destination.getTreatmentDate());
-//				
-//			}
-//		});
 
-//		modelMapper.createTypeMap(String.class, Date.class);
-//		modelMapper.addConverter(toStringDate);
-//		modelMapper.getTypeMap(String.class, Date.class).setProvider(dateProvider);
-// 		add the mapping settings to the ModelMapper
-		
 		System.out.println("####### ---> EntityDTOMapper - bordereauDtotoBordereau ");
 	    // modelMapper.addMappings(candidateMapping);
 		
@@ -228,14 +213,23 @@ public class EntityDTOMapper {
 	    barToFooMapping.addMappings(mapping -> {
 	    	mapping.using(toStringDate).map(BordereauInputDto::getTreatmentDate, Bordereau::setTreatmentDate);
 	    });
-	    
-	    
-	    //barToFooMapping.addMappings(candidateMapping);
-	    // barToFooMapping.addMappings(mapping -> mapping.using(toStringDate).skip(destinationSetter);
-		
-//	    		
+	        		
 		return modelMapper.map(bordereauDto, Bordereau.class);
 	}
+	
+	public BordereauDto bordereauToBordereauDto(Bordereau bordereau) {
+		
+		TypeMap<Bordereau, BordereauDto> bordereauDto = (modelMapper.getTypeMap(Bordereau.class, BordereauDto.class) == null) ? 
+				modelMapper.createTypeMap(Bordereau.class, BordereauDto.class) : modelMapper.getTypeMap(Bordereau.class, BordereauDto.class);
+		
+			bordereauDto.addMappings(mapping -> {
+	    	mapping.using(toDateString).map(Bordereau::getTreatmentDate, BordereauDto::setTreatmentDate);
+	    	mapping.map(Bordereau::getBordereauDetails, BordereauDto::setBordereauDetailList);
+	    	
+	    });
+	    return modelMapper.map(bordereau, BordereauDto.class);
+	}
+	
 
 	@Transactional
 	public BordereauDetail bordereaudetailsDtotoBordereauDetails(BordereauDetailDto bordereauDetailDto) {
@@ -355,7 +349,7 @@ public class EntityDTOMapper {
 		protected void configure() {
 			map().setAdditionalAddress(source.getAdditionalAddress());
 			map().setPostalCode(source.getPostalCode());
-			map().setTvaNumber(source.getTvaNumber());
+			map().setSiret(source.getSiret());
 		}
 	}
 
