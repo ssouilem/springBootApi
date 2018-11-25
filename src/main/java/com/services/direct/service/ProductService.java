@@ -17,6 +17,6 @@ public interface ProductService {
 
 	Product updateProduct(String productUid, ProductInputDto productDto) throws BusinessException;
 
-	void deleteProductByUID(String productUid);
+	void deleteProductByUID(String productUid) throws BusinessException;
 	
 }

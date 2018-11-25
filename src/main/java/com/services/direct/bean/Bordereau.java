@@ -73,7 +73,7 @@ public class Bordereau {
 	@JoinColumn(name = "br_inv_id",  nullable = true)
 	private Invoice invoice;
 	
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name = "br_cus_id",  nullable = false)
 	private Customer customer;
 	

@@ -29,7 +29,7 @@ public class CustomerInputDto {
 	private String faxNumber;
 	
 	@NotNull
-	private String tvaNumber;
+	private String siret;
 
 	public String getName() {
 		return name;
@@ -95,12 +95,12 @@ public class CustomerInputDto {
 		this.faxNumber = faxNumber;
 	}
 
-	public String getTvaNumber() {
-		return tvaNumber;
+	public String getSiret() {
+		return siret;
 	}
 
-	public void setTvaNumber(String tvaNumber) {
-		this.tvaNumber = tvaNumber;
+	public void setSiret(String tvaNumber) {
+		this.siret = tvaNumber;
 	}
 	
 	

@@ -45,14 +45,14 @@ public class CorsConfiguration {
 			}
 			
 			// @TODO verifier l'utilisation de cette fonction
-			@Override
-		    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-		        converters.add(new MappingJackson2HttpMessageConverter(
-		                new Jackson2ObjectMapperBuilder()
-		                        .propertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
-		                        .dateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
-		                        .build()));
-		    }
+//			@Override
+//		    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+//		        converters.add(new MappingJackson2HttpMessageConverter(
+//		                new Jackson2ObjectMapperBuilder()
+//		                        .propertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
+//		                        .dateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
+//		                        .build()));
+//		    }
 		};
 	}
 

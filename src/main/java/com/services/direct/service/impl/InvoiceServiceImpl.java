@@ -1,5 +1,6 @@
 package com.services.direct.service.impl;
 
+
 import java.util.List;
 import java.util.UUID;
 
@@ -55,7 +56,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor=Exception.class)
 	public Invoice addInvoice(InvoiceInputDto invoiceDto) throws BusinessException {
 		
 		log.info("addInvoice -> Invoice Number : {}" + invoiceDto.getNumber());

@@ -3,9 +3,8 @@ package com.services.direct.service;
 import java.util.List;
 
 import com.services.direct.bean.Bordereau;
-import com.services.direct.bean.BordereauDetail;
-import com.services.direct.data.BordereauDetailDto;
 import com.services.direct.data.BordereauInputDto;
+import com.services.direct.data.output.BordereauDto;
 import com.services.direct.exception.BusinessException;
 
 public interface BordereauService {
@@ -14,7 +13,7 @@ public interface BordereauService {
 	
 	Bordereau createBordereau(BordereauInputDto bordereauDto) throws BusinessException;
 	
-	List<Bordereau> getAllBordereaux();
+	List<BordereauDto> getAllBordereaux();
 	
 	void deleteBordereauByUID(String bordereauUid);
 

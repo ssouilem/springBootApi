@@ -73,7 +73,7 @@ public class ProductController {
 	@CrossOrigin
 	@RequestMapping(value="/{UID}", method=RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-    public void deleteProductBuUID(@PathVariable("UID") String productUid) {
+    public void deleteProductBuUID(@PathVariable("UID") String productUid) throws BusinessException {
         productService.deleteProductByUID(productUid);
     }
 	

@@ -29,6 +29,15 @@ public class DuplicateEntityException extends BusinessException {
     }
 
     /**
+    * constructor for DuplicateEntityException
+    *
+    * @param message to set
+    * @param code to set
+    */
+   public DuplicateEntityException(String message, String code) {
+       super(message, code);
+   }
+    /**
      * constructor for DuplicateEntityException
      *
      * @param cause to set

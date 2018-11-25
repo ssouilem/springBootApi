@@ -18,6 +18,7 @@ import com.services.direct.bean.Bordereau;
 import com.services.direct.bean.BordereauDetail;
 import com.services.direct.data.BordereauDetailDto;
 import com.services.direct.data.BordereauInputDto;
+import com.services.direct.data.output.BordereauDto;
 import com.services.direct.exception.BusinessException;
 import com.services.direct.service.BordereauDetailService;
 import com.services.direct.service.BordereauService;
@@ -51,9 +52,9 @@ public class BordereauController {
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     })
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	@ResponseBody
-	public List<Bordereau> getAllBordereaux() {
-		return this.bordereauService.getAllBordereaux();
+	public @ResponseBody List<BordereauDto> getAllBordereaux() {
+		List<BordereauDto> bordereaux = this.bordereauService.getAllBordereaux();
+		return bordereaux;
 	}
 
 	@RequestMapping(value = "/{UID}", method = RequestMethod.GET)
