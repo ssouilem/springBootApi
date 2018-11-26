@@ -3,19 +3,18 @@ package com.services.direct.service.impl;
 import java.util.List;
 import java.util.UUID;
 
-import org.hibernate.TransactionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.errors.ErrorDto;
 import com.services.direct.bean.Product;
 import com.services.direct.data.ProductInputDto;
 import com.services.direct.exception.BusinessException;
 import com.services.direct.exception.DuplicateEntityException;
 import com.services.direct.exception.FileNotFoundException;
-import com.services.direct.exception.TechnicalException;
 import com.services.direct.mapping.EntityDTOMapper;
 import com.services.direct.repo.ProductRepository;
 import com.services.direct.service.ProductService;
@@ -54,24 +53,41 @@ public class ProductServiceImpl implements ProductService {
 	@Transactional
 	public Product createProduct(ProductInputDto productDto) throws BusinessException {
 		
-		log.info("creation de l'entite Produit");
-		log.info("--> Quality : " + productDto.getCategory());
 		Product product = entityDTOMapper.productDtotoProduct(productDto);
 		UUID uuid = UUID.randomUUID();
 		product.setUid(uuid.toString());
 		
-		
-		
-		if (product !=null && product.getPrice() != null && !product.getReference().isEmpty())
-		{
-			// verification de doublon
-			if (productRepository.findByReferenceOrName(product.getReference(), product.getName()) == 0) {
-				return productRepository.save(product);
-			} else {
-				throw new DuplicateEntityException("the product exists in base", "DUPLICATE_PRODUCT");
-			}
+		if (product.getDescription().isEmpty()) {
+			throw new BusinessException("PRODUCT_ERROR")
+				.add(new ErrorDto("DESCRIPTION_ERROR", "La description est vide"));
+		} else if (product.getName().isEmpty()) {
+			throw new BusinessException("PRODUCT_ERROR")
+			.add(new ErrorDto("NAME_ERROR", "Le nom de produit est vide"));
+		} else if (product.getPrice().doubleValue() == 0) {
+			throw new BusinessException("PRODUCT_ERROR")
+			.add(new ErrorDto("PRICE_ERROR", "Le prix de produit est vide"));
+		} else if (product.getReference().isEmpty()) {
+			throw new BusinessException("PRODUCT_ERROR")
+			.add(new ErrorDto("REFERENCE_ERROR", "La reference de produit est vide"));
 		} else {
-		   throw new FileNotFoundException("The resource reductions was not found", "FILE_NOT_FOUND");
+		
+			if (product !=null && product.getPrice() != null && !product.getReference().isEmpty())
+			{
+				// verification de doublon
+				if (productRepository.findByReferenceOrName(product.getReference(), product.getName()) == 0) {
+					try {
+						return productRepository.save(product);
+					} catch (NullPointerException ex) {
+						throw new FileNotFoundException("REQUEST_ERROR : Verifier les parametres d'appel", "REQUEST_ERROR")
+						.add(new ErrorDto("REQUEST_ERROR", "request params error"));
+					}
+				} else {
+					throw new DuplicateEntityException("the product exists in base", "DUPLICATE_PRODUCT")
+						.add(new ErrorDto("IS EXIST", "Le produit existe déja en base"));
+				}
+			} else {
+			   throw new FileNotFoundException("The resource reductions was not found", "FILE_NOT_FOUND");
+			}
 		}
 	}
 
@@ -79,27 +95,29 @@ public class ProductServiceImpl implements ProductService {
 	@Transactional
 	public Product updateProduct(String productUid, ProductInputDto productDto) throws BusinessException {
 		
-		Product product = this.productRepository.getProductByUID(productUid);
-		Product productInput = entityDTOMapper.productDtotoProduct(productDto);
-
-		if (product != null && product.equals(productInput)) {
-			log.info("update produit equals entity DB");
-			return product;
-		} else if (productInput !=null) {
-			log.info("update produitDto equals entity DB" + productInput.getCategory());
+		if (productRepository.isExistProductByUID(productUid) > 0) {
 			
-			product.setName(productInput.getName());
-			product.setDescription(productInput.getDescription());
-			product.setReference(productInput.getReference());
-			product.setPrice(productInput.getPrice());
-			product.setChange(productInput.getChange());
-			product.setUnit(productInput.getUnit());
-			product.setCategory(productInput.getCategory());
-			
-			return this.productRepository.save(product);
-		} else {
-			throw new FileNotFoundException("The resource product was not found", "FILE_NOT_FOUND");
-		}
+			Product product = this.productRepository.getProductByUID(productUid);
+			Product productInput = entityDTOMapper.productDtotoProduct(productDto);
+	
+			if (product != null && product.equals(productInput)) {
+				log.info("update produit equals entity DB");
+				return product;
+			} else {
+				log.info("update produitDto equals entity DB" + productInput.getCategory());
+				
+				product.setName(productInput.getName());
+				product.setDescription(productInput.getDescription());
+				product.setReference(productInput.getReference());
+				product.setPrice(productInput.getPrice());
+				product.setChange(productInput.getChange());
+				product.setUnit(productInput.getUnit());
+				product.setCategory(productInput.getCategory());
+				
+				return this.productRepository.save(product);
+			}
+		} else
+			throw new FileNotFoundException("PRODUCT_NOT_EXIST");	
 	}
 
 	@Override
@@ -114,9 +132,15 @@ public class ProductServiceImpl implements ProductService {
 	public void deleteProductByUID(String productUid) throws BusinessException {
 		
 		try {
-			this.productRepository.deleteProductByUID(productUid);
+			if (productRepository.isExistProductByUID(productUid) > 0)
+				this.productRepository.deleteProductByUID(productUid);
+			else
+				throw new BusinessException("NOT_EXIST");
+			
 		} catch (Exception e) {
-			throw new BusinessException("PRODUCT_USED", e.getCause());
+			throw new FileNotFoundException("PRODUCT_USED");
 		} 	
 	}
+	
+	
 }

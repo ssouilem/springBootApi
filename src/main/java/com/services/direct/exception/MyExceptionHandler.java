@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -29,7 +30,7 @@ public class MyExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(BusinessException.class)
 	protected ResponseEntity<Object> handleBusinessException(BusinessException ex) {
 		log.debug("BusinessException -> Message Erreur :  " + ex.getMessage());
-		ErrorMessage errorObj = new ErrorMessage(ex.getMessage());
+		ErrorMessage errorObj = new ErrorMessage(ex.getMessage(), ex.getErrors());
 		return new ResponseEntity<>(errorObj, new HttpHeaders(), HttpStatus.CONFLICT);
 	}
 	
@@ -43,19 +44,20 @@ public class MyExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(ConstraintViolationException.class)
 	protected ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex) {
 		log.debug("ConstraintViolationException -> Message Erreur :  " + ex.getMessage());
-		ErrorMessage errorObj = new ErrorMessage(ex.getMessage(), "");
+		ErrorMessage errorObj = new ErrorMessage(ex.getMessage());
 		return new ResponseEntity<>(errorObj, new HttpHeaders(), HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler(MySQLIntegrityConstraintViolationException.class)
-	protected ResponseEntity<Object> handleMySQLConstraintViolationException(MySQLIntegrityConstraintViolationException ex) {
-		log.debug("BusinessException -> Message Erreur :  " + ex.getMessage());
+	protected ResponseEntity<Object> handleMySQLIntegrityConstraintViolationException(MySQLIntegrityConstraintViolationException ex) {
+		log.debug("ConstraintViolationException -> Message Erreur :  " + ex.getMessage());
 		ErrorMessage errorObj = new ErrorMessage(ex.getMessage());
 		return new ResponseEntity<>(errorObj, new HttpHeaders(), HttpStatus.CONFLICT);
 	}
 	
 	
 	@ExceptionHandler(DataIntegrityViolationException.class)
+	@ResponseStatus(HttpStatus.CONFLICT) 
 	protected ResponseEntity<Object> handleDataIntegrityViolation(DataIntegrityViolationException ex,
 			WebRequest request) {
 		log.debug("handleDataIntegrityViolation -> Message Erreur :  " + ex.getMessage());

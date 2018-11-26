@@ -1,28 +1,31 @@
 package com.services.direct.exception;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.errors.ErrorDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class ErrorMessage {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
 	private LocalDateTime timestamp;
 	private String message;
-	private String details;
+	private List<ErrorDto> errors = new ArrayList<>();
 
 	public ErrorMessage() {
 	}
 
-	public ErrorMessage(String message, String details) {
+	public ErrorMessage(String message, List<ErrorDto> errors) {
 		this.timestamp = LocalDateTime.now();
 		this.message = message;
-		this.details = details;
+		this.errors = errors;
 	}
 	
-	public ErrorMessage(LocalDateTime timestamp, String message, String details) {
+	public ErrorMessage(LocalDateTime timestamp, String message, List<ErrorDto> errors) {
 		this.timestamp = timestamp;
 		this.message = message;
-		this.details = details;
+		this.errors = errors;
 	}
 
 	public ErrorMessage(String message) {
@@ -46,13 +49,16 @@ public class ErrorMessage {
 		this.message = message;
 	}
 
-	public String getDetails() {
-		return details;
+	public List<ErrorDto> getErrors() {
+		return errors;
 	}
 
-	public void setDetails(String details) {
-		this.details = details;
+	public void setErrors(List<ErrorDto> errors) {
+		this.errors = errors;
 	}
 	
-	
+	public ErrorMessage add(ErrorDto err) {
+	    errors.add(err);
+	    return this;
+	  }
 }

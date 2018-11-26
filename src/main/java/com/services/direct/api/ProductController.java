@@ -2,7 +2,10 @@ package com.services.direct.api;
 
 import java.util.List;
 
+import org.hibernate.TransactionException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,9 +17,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.errors.ErrorDto;
 import com.services.direct.bean.Product;
 import com.services.direct.data.ProductInputDto;
 import com.services.direct.exception.BusinessException;
+import com.services.direct.exception.ErrorMessage;
+import com.services.direct.exception.FileNotFoundException;
 import com.services.direct.service.ProductService;
 
 import io.swagger.annotations.Api;
@@ -73,8 +79,29 @@ public class ProductController {
 	@CrossOrigin
 	@RequestMapping(value="/{UID}", method=RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-    public void deleteProductBuUID(@PathVariable("UID") String productUid) throws BusinessException {
-        productService.deleteProductByUID(productUid);
+    public ResponseEntity<ErrorMessage> deleteProductBuUID(@PathVariable("UID") String productUid) {
+        try {
+			productService.deleteProductByUID(productUid);
+        } catch (Exception ex) {
+			if (ex.getCause() instanceof ConstraintViolationException) {
+				return new ResponseEntity<ErrorMessage>(new ErrorMessage("Database error" + ex.getCause()), new HttpHeaders(),
+						HttpStatus.CONFLICT);
+			} else if (ex.getCause() instanceof TransactionException) {
+				return new ResponseEntity<ErrorMessage>(
+					new ErrorMessage("Database error" + ex.getCause()).add(new ErrorDto("USED", "Le produit est utilisé par un autre element")),
+					new HttpHeaders(),
+					HttpStatus.CONFLICT);
+			} else if (ex instanceof FileNotFoundException) {
+			return new ResponseEntity<ErrorMessage>(
+					new ErrorMessage(ex.getMessage()).add(new ErrorDto("NOT EXIST", "Le produit n'existe pas en base")),
+					new HttpHeaders(),
+					HttpStatus.NOT_FOUND);
+			} else {
+				return new ResponseEntity<ErrorMessage>(new ErrorMessage("Database error" + ex.getMessage()), new HttpHeaders(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 	
     @ResponseBody
@@ -91,9 +118,9 @@ public class ProductController {
 		}
 		
     }
-    
-    @RequestMapping(value = "/**", method = RequestMethod.OPTIONS)
-    public ResponseEntity handle() {
-        return new ResponseEntity(HttpStatus.OK);
-    }
+//    
+//    @RequestMapping(value = "/**", method = RequestMethod.OPTIONS)
+//    public ResponseEntity handle() {
+//        return new ResponseEntity(HttpStatus.OK);
+//    }
 }

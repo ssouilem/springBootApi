@@ -1,4 +1,4 @@
-package fr.maileva.facile.commons.jaxrs.errors;
+package com.errors;
 
 import java.util.ArrayList;
 import java.util.List;

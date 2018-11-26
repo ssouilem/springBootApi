@@ -32,6 +32,9 @@ public interface ProductRepository extends JpaRepository<Product, Integer>{
 	@Query("SELECT product FROM Product product")
 	List<Product> getAllProducts();
 	
+	@Query("SELECT count(*) FROM Product product WHERE product.uid=(:uid)")
+	int isExistProductByUID(@Param("uid") String productUid);
+	
 	@Query("SELECT count(*) FROM Product product WHERE (product.reference=(:reference) or product.name=(:name))")
 	int findByReferenceOrName(@Param("reference") String reference, @Param("name") String name);
 }

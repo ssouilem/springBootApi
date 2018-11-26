@@ -1,4 +1,4 @@
-package fr.maileva.facile.commons.jaxrs.errors;
+package com.errors;
 
 /**
  * An immutable error with a code and a message.

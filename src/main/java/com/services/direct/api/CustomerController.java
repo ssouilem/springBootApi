@@ -4,7 +4,9 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.services.direct.bean.Customer;
 import com.services.direct.data.CustomerInputDto;
 import com.services.direct.exception.BusinessException;
+import com.services.direct.exception.ErrorMessage;
 import com.services.direct.service.CustomerService;
 
 import io.swagger.annotations.Api;
@@ -91,9 +94,20 @@ public class CustomerController {
 	// Delete a Customer
 	@DeleteMapping("/{UID}")
 	@CrossOrigin
-	public ResponseEntity<Void> deleteCustomerByUID(@PathVariable("UID") String customerUid) throws BusinessException {
-		customerService.deleteCustomerByUID(customerUid);
-		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+	public ResponseEntity<ErrorMessage> deleteCustomerByUID(@PathVariable("UID") String customerUid) {
+		
+		try {
+			customerService.deleteCustomerByUID(customerUid);
+		} catch (BusinessException ex) {
+			if (ex.getCause() instanceof ConstraintViolationException) {
+				ResponseEntity<ErrorMessage> responseEntity = new ResponseEntity<ErrorMessage>(new ErrorMessage("Database error" + ex.getCause()), new HttpHeaders(),
+						HttpStatus.CONFLICT);
+				return responseEntity;
+			}
+			return new ResponseEntity<ErrorMessage>(new ErrorMessage("Database error" + ex.getMessage()), new HttpHeaders(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}	
 	
 	// add a contract

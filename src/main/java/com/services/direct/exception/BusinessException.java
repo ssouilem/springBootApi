@@ -1,5 +1,10 @@
 package com.services.direct.exception;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.errors.ErrorDto;
+
 /**
  * business exception class
  * 
@@ -17,6 +22,8 @@ public class BusinessException extends Exception {
      * code
      */
     private String code;
+    
+    private List<ErrorDto> errors = new ArrayList<>();
 
     /**
      * constructor for BusinessException
@@ -63,4 +70,17 @@ public class BusinessException extends Exception {
     public String getCode() {
         return code;
     }
+    
+    public List<ErrorDto> getErrors() {
+		return errors;
+	}
+
+	public void setErrors(List<ErrorDto> errors) {
+		this.errors = errors;
+	}
+	
+	public BusinessException add(ErrorDto err) {
+	    errors.add(err);
+	    return this;
+	}
 }
