@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.errors.ErrorDto;
 import com.services.direct.bean.Contract;
 import com.services.direct.bean.Customer;
 import com.services.direct.data.CustomerInputDto;
@@ -59,7 +60,8 @@ public class CustomerServiceImpl implements CustomerService {
 		if (customerRepository.findBySiretOrName(customer.getSiret(), customer.getName()) == 0) {
 			return this.customerRepository.save(customer);
 		} else {
-			throw new DuplicateEntityException("the customer exists in base", "DUPLICATE_CUSTOMER");
+			throw new DuplicateEntityException("DUPLICATE_CUSTOMER")
+			.add(new ErrorDto("DUPLICATE_CUSTOMER", "the customer exists in base"));
 		}
 	}
 

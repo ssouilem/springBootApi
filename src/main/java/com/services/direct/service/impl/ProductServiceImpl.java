@@ -56,38 +56,36 @@ public class ProductServiceImpl implements ProductService {
 		Product product = entityDTOMapper.productDtotoProduct(productDto);
 		UUID uuid = UUID.randomUUID();
 		product.setUid(uuid.toString());
-		
-		if (product.getDescription().isEmpty()) {
-			throw new BusinessException("PRODUCT_ERROR")
-				.add(new ErrorDto("DESCRIPTION_ERROR", "La description est vide"));
-		} else if (product.getName().isEmpty()) {
-			throw new BusinessException("PRODUCT_ERROR")
-			.add(new ErrorDto("NAME_ERROR", "Le nom de produit est vide"));
-		} else if (product.getPrice().doubleValue() == 0) {
-			throw new BusinessException("PRODUCT_ERROR")
-			.add(new ErrorDto("PRICE_ERROR", "Le prix de produit est vide"));
-		} else if (product.getReference().isEmpty()) {
-			throw new BusinessException("PRODUCT_ERROR")
-			.add(new ErrorDto("REFERENCE_ERROR", "La reference de produit est vide"));
-		} else {
-		
-			if (product !=null && product.getPrice() != null && !product.getReference().isEmpty())
-			{
-				// verification de doublon
-				if (productRepository.findByReferenceOrName(product.getReference(), product.getName()) == 0) {
-					try {
-						return productRepository.save(product);
-					} catch (NullPointerException ex) {
-						throw new FileNotFoundException("REQUEST_ERROR : Verifier les parametres d'appel", "REQUEST_ERROR")
-						.add(new ErrorDto("REQUEST_ERROR", "request params error"));
+		try {
+			if (product.getDescription().isEmpty()) {
+				throw new BusinessException("PRODUCT_ERROR")
+					.add(new ErrorDto("DESCRIPTION_ERROR", "La description est vide"));
+			} else if (product.getName().isEmpty()) {
+				throw new BusinessException("PRODUCT_ERROR")
+				.add(new ErrorDto("NAME_ERROR", "Le nom de produit est vide"));
+			} else if (product.getPrice().doubleValue() == 0) {
+				throw new BusinessException("PRODUCT_ERROR")
+				.add(new ErrorDto("PRICE_ERROR", "Le prix de produit est vide"));
+			} else if (product.getReference().isEmpty()) {
+				throw new BusinessException("PRODUCT_ERROR")
+				.add(new ErrorDto("REFERENCE_ERROR", "La reference de produit est vide"));
+			} else {
+				if (product !=null && product.getPrice() != null && !product.getReference().isEmpty())
+				{
+					// verification de doublon
+					if (productRepository.findByReferenceOrName(product.getReference(), product.getName()) == 0) {
+							return productRepository.save(product);
+					} else {
+						throw new DuplicateEntityException("DUPLICATE_PRODUCT")
+							.add(new ErrorDto("DUPLICATE_PRODUCT", "The product already exists in base"));
 					}
 				} else {
-					throw new DuplicateEntityException("the product exists in base", "DUPLICATE_PRODUCT")
-						.add(new ErrorDto("IS EXIST", "Le produit existe déja en base"));
+				   throw new FileNotFoundException("PRODUCT_NOT_FOUND");
 				}
-			} else {
-			   throw new FileNotFoundException("The resource reductions was not found", "FILE_NOT_FOUND");
 			}
+		} catch (NullPointerException ex) {
+			throw new FileNotFoundException("INTERNAL_ERROR")
+			.add(new ErrorDto("REQUEST_ERROR", ex.getMessage()));
 		}
 	}
 
