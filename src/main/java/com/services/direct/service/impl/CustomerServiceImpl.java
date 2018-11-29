@@ -16,6 +16,7 @@ import com.services.direct.bean.Customer;
 import com.services.direct.data.CustomerInputDto;
 import com.services.direct.exception.BusinessException;
 import com.services.direct.exception.DuplicateEntityException;
+import com.services.direct.exception.FileNotFoundException;
 import com.services.direct.exception.TechnicalException;
 import com.services.direct.mapping.EntityDTOMapper;
 import com.services.direct.repo.ContractRepository;
@@ -48,6 +49,7 @@ public class CustomerServiceImpl implements CustomerService {
 		return customerRepository.getCustomerByUID(customerUid);
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	@Transactional
 	public Customer addCustomer(CustomerInputDto customerDto) throws BusinessException {
@@ -56,12 +58,32 @@ public class CustomerServiceImpl implements CustomerService {
 		UUID uuid = UUID.randomUUID();
 		customer.setUid(uuid.toString());
 		
-		// verification de doublon
-		if (customerRepository.findBySiretOrName(customer.getSiret(), customer.getName()) == 0) {
-			return this.customerRepository.save(customer);
-		} else {
-			throw new DuplicateEntityException("DUPLICATE_CUSTOMER")
-			.add(new ErrorDto("DUPLICATE_CUSTOMER", "the customer exists in base"));
+		try {
+			if (customer !=null) {
+				if (customer.getSiret().isEmpty()) {
+					throw new BusinessException("CUSTOMER_ERROR")
+						.add(new ErrorDto("SIRET_ERROR", "La description est vide"));
+				} else if (customer.getName().isEmpty()) {
+					throw new BusinessException("CUSTOMER_ERROR")
+					.add(new ErrorDto("NAME_ERROR", "Le nom de client est vide"));
+				} else if (customer.getPhoneNumber().isEmpty()) {
+					throw new BusinessException("CUSTOMER_ERROR")
+					.add(new ErrorDto("PHONE_NUMBER_ERROR", "Le numero de telephone est vide"));
+				} else {
+					// verification de doublon
+					if (customerRepository.findBySiretOrName(customer.getSiret(), customer.getName()) == 0) {
+						return this.customerRepository.save(customer);
+					} else {
+						throw new DuplicateEntityException("DUPLICATE_CUSTOMER")
+						.add(new ErrorDto("DUPLICATE_CUSTOMER", "the customer exists in base"));
+					}
+				}
+			} else {
+			   throw new FileNotFoundException("CUSTOMER_NOT_FOUND");
+			}
+		} catch (NullPointerException ex) {
+			throw new FileNotFoundException("INTERNAL_ERROR")
+			.add(new ErrorDto("REQUEST_ERROR", ex.getMessage()));
 		}
 	}
 
@@ -73,11 +95,6 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public Customer updateCustomer(String customerUid, Customer customerRequest) {
-
-		// if(!customerRepository.existsById(customerUid)) {
-		// throw new ResourceNotFoundException("CustomerId " + customerUid + " not
-		// found");
-		// }
 
 		Customer customer = customerRepository.getCustomerByUID(customerUid);
 		customer.setAddress(customerRequest.getAddress());
