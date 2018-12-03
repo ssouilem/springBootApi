@@ -10,8 +10,8 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>direct</name>
-	<description>Demo project for Spring Boot</description>
+	<name>compta maison</name>
+	<description>Compta and Generate PDF document and Spring Boot</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -19,13 +19,18 @@
 		<version>2.0.5.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+		<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+	</properties>
 	<repositories>
-  <repository>
-    <id>itext</id>
-    <name>iText Repository - snapshots</name>
-    <url>https://repo.itextsupport.com/snapshot/</url>
-  </repository>
-</repositories>
+	  <repository>
+	    <id>itext</id>
+	    <name>iText Repository - snapshots</name>
+	    <url>https://repo.itextsupport.com/snapshot/</url>
+	  </repository>
+	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -66,13 +71,25 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<!-- jasperreports geneate pdf  -->
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>6.6.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-support</artifactId>
+			<version>2.0.8</version>
+		</dependency>
 		
 		<!-- traitement pdf itext -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.lowagie</groupId>
 			<artifactId>itext</artifactId>
 			<version>4.2.2</version>
-		</dependency>
+		</dependency> -->
 		
 		<!-- Swagger -->
 		<dependency>

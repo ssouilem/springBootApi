@@ -37,17 +37,15 @@ public class PaymentDetail {
 	@Column(name="payd_created_date")
 	private Date createdDate;
 	
-	@NotEmpty
 	@Enumerated(EnumType.STRING)
 	@Column(name="payd_type")
 	private PaymentType type;
 	
-	@NotEmpty
 	@Column(name="payd_amount")
 	private Double amount;
 	
 	@Column(name="payd_transactionId")
-	private String transactionId;
+	private String transactionNumber;
 	
 	@JsonFormat(
 		      shape = JsonFormat.Shape.STRING,
@@ -92,12 +90,12 @@ public class PaymentDetail {
 		this.amount = amount;
 	}
 
-	public String getTransactionId() {
-		return transactionId;
+	public String getTransactionNumber() {
+		return transactionNumber;
 	}
 
-	public void setTransactionId(String transactionId) {
-		this.transactionId = transactionId;
+	public void setTransactionNumber(String transactionId) {
+		this.transactionNumber = transactionId;
 	}
 
 	public Date getIssueDate() {

@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.services.direct.bean.Payment;
 import com.services.direct.data.PaymentInputDto;
+import com.services.direct.data.output.PaymentOutputDto;
+import com.services.direct.exception.BusinessException;
 import com.services.direct.service.PaymentService;
 
 import io.swagger.annotations.Api;
@@ -57,8 +59,9 @@ public class PaymentController {
 	 
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<Payment> addBordereau(@RequestBody PaymentInputDto paymentDto){
-		Payment payment = this.paymentService.addPayment(paymentDto);
+	public ResponseEntity<PaymentOutputDto> addPayment(@RequestBody PaymentInputDto paymentDto) throws BusinessException{
+		PaymentOutputDto payment = this.paymentService.addPayment(paymentDto);
+		
 		if (payment != null) {
 			return new ResponseEntity<>(payment, HttpStatus.OK);
 		} else {

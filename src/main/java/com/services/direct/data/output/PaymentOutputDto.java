@@ -1,5 +1,6 @@
-package com.services.direct.data;
+package com.services.direct.data.output;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EnumType;
@@ -7,21 +8,24 @@ import javax.persistence.Enumerated;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.services.direct.bean.BordereauDetail;
 import com.services.direct.utility.BankListEnum;
 
 import lombok.Data;
 
 @Data
-public class PaymentInputDto {
+public class PaymentOutputDto {
 
+	private String uid;
+	
 	private BankListEnum bank;
 	
 	@NotNull(message = "holder is required.")
 	private String holder;
 
-	private List<PaymentDetailDto> paymentDetails;
+	private List<PaymentOutputDetailDto> paymentDetails = new ArrayList<PaymentOutputDetailDto>();
 	
-	private String invoice;
+	private InvoiceOutputDto invoice;
 
 	@NotEmpty
     private Double amount;
@@ -52,19 +56,31 @@ public class PaymentInputDto {
 		this.holder = holder;
 	}
 
-	public List<PaymentDetailDto> getPaymentDetails() {
+	public List<PaymentOutputDetailDto> getPaymentDetails() {
 		return paymentDetails;
 	}
 
-	public void setPaymentDetails(List<PaymentDetailDto> paymentDetails) {
+	public void setPaymentDetails(List<PaymentOutputDetailDto> paymentDetails) {
 		this.paymentDetails = paymentDetails;
 	}
 
-	public String getInvoice() {
+	public void addPaymentDetail(PaymentOutputDetailDto paymentDetail) {
+		paymentDetails.add(paymentDetail);
+	}
+	
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
+	public InvoiceOutputDto getInvoice() {
 		return invoice;
 	}
 
-	public void setInvoice(String invoice) {
+	public void setInvoice(InvoiceOutputDto invoice) {
 		this.invoice = invoice;
 	}
 
