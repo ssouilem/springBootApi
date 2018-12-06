@@ -17,6 +17,9 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.services.direct.utility.Gender;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -56,9 +59,9 @@ public class Contact {
 	@Column(name="ct_email")
     private String email;
 	
-	@JsonBackReference
 	@OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ct_cus_id", nullable = false)
+	@JsonInclude(value=Include.NON_EMPTY, content=Include.NON_NULL)
     private Customer customer;
 	
 	public Integer getId() {

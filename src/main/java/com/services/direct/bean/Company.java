@@ -1,24 +1,40 @@
 package com.services.direct.bean;
 
+import java.io.Serializable;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.lang.Nullable;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.services.direct.bean.security.User;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @JsonIdentityInfo(
 		  generator = ObjectIdGenerators.PropertyGenerator.class, 
 		  property = "id")
-public class Company {
+public class Company implements Serializable {
 
-	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="cmp_id")
@@ -55,6 +71,16 @@ public class Company {
 	@NotNull
 	@Column(name="cmp_tva_number")
 	private String tvaNumber;
+	
+	
+//	@OneToOne(orphanRemoval=true, fetch=FetchType.LAZY, 
+//			mappedBy="company")
+    @JsonIgnore
+	//@JsonInclude(Include.NON_NULL)
+	@Nullable
+	@OneToMany(orphanRemoval=true, fetch=FetchType.LAZY,
+			mappedBy="company")
+	private List<User> user;
 
 	public Integer getId() {
 		return id;
@@ -143,4 +169,13 @@ public class Company {
 	public void setTvaNumber(String tvaNumber) {
 		this.tvaNumber = tvaNumber;
 	}
+
+	public List<User> getUser() {
+		return user;
+	}
+
+	public void setUser(List<User> user) {
+		this.user = user;
+	}
+	
 }

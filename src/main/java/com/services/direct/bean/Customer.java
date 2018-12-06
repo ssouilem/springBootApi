@@ -2,7 +2,6 @@ package com.services.direct.bean;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,6 +21,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
@@ -31,6 +32,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 		  property = "id")
 public class Customer {
 
+	private static final long serialVersionUID = -4572195412018767502L;
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -69,7 +71,8 @@ public class Customer {
 	@Column(name="cus_tva_number")
 	private String siret;
 
-	@JsonInclude(Include.NON_NULL)
+	@JsonProperty("contact")
+	@JsonInclude(value=Include.NON_EMPTY, content=Include.NON_NULL)
 	@OneToOne(orphanRemoval=true, fetch=FetchType.EAGER, 
 			mappedBy="customer")
 	private Contact contact;
@@ -93,6 +96,12 @@ public class Customer {
 	@JoinColumn(name = "cus_ctr_id", nullable = true)
 	@JsonInclude(value=Include.NON_EMPTY, content=Include.NON_NULL)
 	private Contract contract;
+	
+	@ManyToOne
+	@JsonIgnore
+	@JoinColumn(name = "cus_company_id", nullable = true)
+	@JsonInclude(value=Include.NON_EMPTY, content=Include.NON_NULL)
+	private Company company;
 	
 	public Integer getId() {
 		return id;
@@ -221,6 +230,12 @@ public class Customer {
 	public void setContract(Contract contract) {
 		this.contract = contract;
 	}
-	
-	
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
 }

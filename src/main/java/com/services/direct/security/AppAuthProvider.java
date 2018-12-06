@@ -8,16 +8,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.services.direct.service.UserService;
+import com.services.direct.service.impl.UserDetailsServiceImpl;
 
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class AppAuthProvider extends DaoAuthenticationProvider {
 	
 	@Autowired
-	UserService userDetailsService;
+	UserDetailsServiceImpl userDetailsService;
 	
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -25,9 +24,6 @@ public class AppAuthProvider extends DaoAuthenticationProvider {
 		
 		String name = auth.getName();
 		String password = auth.getCredentials().toString();
-		
-		// log.info("testing logging with lombok"+ name + " " + password);
-	
 		UserDetails user = userDetailsService.loadUserByUsername(name);
 
         if (user == null) {

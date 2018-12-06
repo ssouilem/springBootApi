@@ -7,12 +7,14 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.errors.ErrorDto;
 import com.services.direct.bean.Contract;
 import com.services.direct.bean.Customer;
+import com.services.direct.bean.security.User;
 import com.services.direct.data.CustomerInputDto;
 import com.services.direct.exception.BusinessException;
 import com.services.direct.exception.DuplicateEntityException;
@@ -33,6 +35,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	private ContractRepository contractRepository;
 	
+	
 	@Autowired
 	private EntityDTOMapper entityDTOMapper;
 
@@ -52,11 +55,12 @@ public class CustomerServiceImpl implements CustomerService {
 	@SuppressWarnings("unused")
 	@Override
 	@Transactional
-	public Customer addCustomer(CustomerInputDto customerDto) throws BusinessException {
+	public Customer addCustomer(CustomerInputDto customerDto, User user) throws BusinessException {
 		// add UID
 		Customer customer = entityDTOMapper.customerDtotoCustomer(customerDto);
 		UUID uuid = UUID.randomUUID();
 		customer.setUid(uuid.toString());
+		customer.setCompany(user.getCompany());
 		
 		try {
 			if (customer !=null) {
@@ -89,8 +93,10 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	@Transactional
-	public List<Customer> getAllCompanies() {
-		return customerRepository.findAll();
+	public List<Customer> getAllCustomers(Integer companyId) {
+		//return customerRepository.findAll();
+		List<Customer> customers = customerRepository.getAllCustomerByCompany(companyId);
+		return customers;
 	}
 
 	@Override

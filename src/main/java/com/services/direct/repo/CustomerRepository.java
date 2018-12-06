@@ -1,5 +1,7 @@
 package com.services.direct.repo;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +15,12 @@ import com.services.direct.bean.Customer;
 @Transactional
 public interface CustomerRepository extends JpaRepository<Customer, Integer>{
 
+	
+	@Query("SELECT customer FROM Customer customer " +
+			//"LEFT JOIN FETCH customer.company AS company " +
+			"WHERE customer.company.id=(:companyId)")
+	List<Customer> getAllCustomerByCompany(@Param("companyId") Integer companyId);
+	
 	@Query("SELECT customer FROM Customer customer WHERE customer.id=(:id)")
 	Customer getCustomerById(@Param("id") Integer customerId);
 	
