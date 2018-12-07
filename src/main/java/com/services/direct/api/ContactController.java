@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.services.direct.bean.Contact;
+import com.services.direct.bean.security.User;
 import com.services.direct.data.ContactInputDto;
 import com.services.direct.exception.BusinessException;
 import com.services.direct.service.ContactService;
@@ -27,7 +29,6 @@ import io.swagger.annotations.ApiOperation;
 public class ContactController {
 	
 	private ContactService contactService;
-	
 	 
 	@Autowired
 	public ContactController(final ContactService contactService){
@@ -43,8 +44,8 @@ public class ContactController {
 //    })
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<List<Contact>> getAllContacts() throws BusinessException {
-    	List<Contact> contacts = this.contactService.getAllContacts();
+	public ResponseEntity<List<Contact>> getAllContacts(@AuthenticationPrincipal User user) throws BusinessException {
+    	List<Contact> contacts = this.contactService.getAllContacts(user.getCompany().getId());
 		if (contacts != null && !contacts.isEmpty()) {
 			return new ResponseEntity<>(contacts, HttpStatus.OK);
 		} else {
@@ -62,12 +63,11 @@ public class ContactController {
 			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 		}	
 	}
-	
 	 
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<Contact> addContact(@RequestBody ContactInputDto contactDto) throws BusinessException{
-		Contact contact = this.contactService.addContact(contactDto);
+	public ResponseEntity<Contact> addContact(@RequestBody ContactInputDto contactDto, @AuthenticationPrincipal User user) throws BusinessException{
+		Contact contact = this.contactService.addContact(contactDto, user);
 		if (contact != null) {
 			return new ResponseEntity<>(contact, HttpStatus.CREATED);
 		} else {

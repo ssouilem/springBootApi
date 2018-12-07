@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.errors.ErrorDto;
 import com.services.direct.bean.Product;
+import com.services.direct.bean.security.User;
 import com.services.direct.data.ProductInputDto;
 import com.services.direct.exception.BusinessException;
 import com.services.direct.exception.ErrorMessage;
@@ -48,8 +50,8 @@ public class ProductController {
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	@CrossOrigin
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<Product> createProduct(@RequestBody ProductInputDto productDto) throws BusinessException {
-		Product product = this.productService.createProduct(productDto);
+	public ResponseEntity<Product> createProduct(@RequestBody ProductInputDto productDto, @AuthenticationPrincipal User user) throws BusinessException {
+		Product product = this.productService.createProduct(productDto, user);
 		if (product != null) {
 			return new ResponseEntity<>(product, HttpStatus.OK);
 		} else {
@@ -66,8 +68,8 @@ public class ProductController {
     })
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Product> getAllProducts() {
-		return this.productService.getAllProducts();
+	public List<Product> getAllProducts( @AuthenticationPrincipal User user) {
+		return this.productService.getAllProducts(user.getCompany().getId());
 	}
 
 	@RequestMapping(value = "/{UID}", method = RequestMethod.GET)

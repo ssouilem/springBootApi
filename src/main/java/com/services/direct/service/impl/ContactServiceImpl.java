@@ -2,6 +2,7 @@ package com.services.direct.service.impl;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,15 +10,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.services.direct.bean.Customer;
+import com.errors.ErrorDto;
 import com.services.direct.bean.Contact;
+import com.services.direct.bean.Customer;
+import com.services.direct.bean.security.User;
 import com.services.direct.data.ContactInputDto;
 import com.services.direct.exception.BusinessException;
 import com.services.direct.exception.ContactNotFoundException;
 import com.services.direct.exception.FileNotFoundException;
+import com.services.direct.exception.UserFoundException;
 import com.services.direct.mapping.EntityDTOMapper;
-import com.services.direct.repo.CustomerRepository;
 import com.services.direct.repo.ContactRepository;
+import com.services.direct.repo.CustomerRepository;
 import com.services.direct.service.ContactService;
 
 @Service("contactService")
@@ -57,10 +61,11 @@ public class ContactServiceImpl implements ContactService {
 
 	@Override
 	@Transactional
-	public Contact addContact(ContactInputDto contactDto) throws BusinessException {
+	public Contact addContact(ContactInputDto contactDto, User user) throws BusinessException {
 
 		// Convert Dto to @Entity Contact
 		Contact contact = entityDTOMapper.contactDtotoContact(contactDto);
+		
 		if (contact == null) {
 			throw new ContactNotFoundException("The resource contcat was not found", "CONTACT_NOT_FOUND");
 		}
@@ -69,13 +74,14 @@ public class ContactServiceImpl implements ContactService {
 		String customerUid = contactDto.getCustomer();
 		Customer customer = customerRepository.getCustomerByUID(customerUid);
 
-		// add customer to contact
-		if (customer != null) {
-			log.info("Customer already exist in DB : {}", customer.getName());
-			contact.setCustomer(customer);
-		} else {
-			throw new FileNotFoundException("The resource customer was not found BD", "FILE_NOT_FOUND");
+		// verify customer to USER authenticate
+		if (customer.getCompany() == null ||
+				!customer.getCompany().getUser().stream().filter(entity -> user.getUserId().equals(entity.getUserId())).findFirst().isPresent()) {
+			throw new UserFoundException("USER_NOT_FOUND")
+			.add(new ErrorDto("AUTH_USER_ERROR", "probleme d'autorisation"));
 		}
+		
+		contact.setCustomer(customer);
 		// add UID
 		UUID uuid = UUID.randomUUID();
 		contact.setUid(uuid.toString());
@@ -90,8 +96,8 @@ public class ContactServiceImpl implements ContactService {
 	 * 
 	 */
 	@Override
-	public List<Contact> getAllContacts() throws BusinessException {
-		List<Contact> contacts = contactRepository.findAll();
+	public List<Contact> getAllContacts(Integer companyId) throws BusinessException {
+		List<Contact> contacts = contactRepository.getAllContactsByCompany(companyId);
 		
 		if (contacts == null) {
 			throw new ContactNotFoundException("The resource contcat was not found", "CONTACT_NOT_FOUND");

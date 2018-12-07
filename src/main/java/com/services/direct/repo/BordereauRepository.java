@@ -1,6 +1,7 @@
 package com.services.direct.repo;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -29,5 +30,10 @@ public interface BordereauRepository extends JpaRepository<Bordereau, Integer>{
 	
 	@Query(Q_GET_ALL_BORDEREAUX)
 	Collection<Bordereau> getAllBordereaux();
+	
+	@Query("SELECT bordereau FROM Bordereau bordereau " +
+			"LEFT JOIN FETCH bordereau.customer AS customer " +
+			"WHERE customer.company.id=(:companyId)")
+	List<Bordereau> getAllBordereauxByCompany(@Param("companyId") Integer companyId);
 
 }

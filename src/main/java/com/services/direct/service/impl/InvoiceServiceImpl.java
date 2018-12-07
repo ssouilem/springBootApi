@@ -10,13 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.errors.ErrorDto;
 import com.google.common.collect.Sets;
 import com.services.direct.bean.Bordereau;
 import com.services.direct.bean.Customer;
 import com.services.direct.bean.Invoice;
+import com.services.direct.bean.security.User;
 import com.services.direct.data.InvoiceInputDto;
 import com.services.direct.exception.BusinessException;
 import com.services.direct.exception.FileNotFoundException;
+import com.services.direct.exception.UserFoundException;
 import com.services.direct.mapping.EntityDTOMapper;
 import com.services.direct.repo.BordereauRepository;
 import com.services.direct.repo.CustomerRepository;
@@ -57,38 +60,42 @@ public class InvoiceServiceImpl implements InvoiceService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public Invoice addInvoice(InvoiceInputDto invoiceDto) throws BusinessException {
+	public Invoice addInvoice(InvoiceInputDto invoiceDto, User user) throws BusinessException {
 		
 		log.info("addInvoice -> Invoice Number : {}" + invoiceDto.getNumber());
 		Invoice invoice = entityDTOMapper.invoiceDtotoInvoice(invoiceDto);
 		
-		// Associer la societe a votre bordereau
-//		if (!customerRepository.existsById(invoiceDto.getCustomer())) {
-//			throw new ResourceNotFoundException("CustomerId " + invoiceDto.getCustomer() + " not found");
-//		} else {
-
-			Customer customer = customerRepository.getCustomerByUID(invoiceDto.getCustomer());
+		Customer customer = customerRepository.getCustomerByUID(invoiceDto.getCustomer());
+		
+		// verify customer to USER authenticate
+		if (customer.getCompany() == null ||
+				!customer.getCompany().getUser().stream().filter(entity -> user.getUserId().equals(entity.getUserId())).findFirst().isPresent()) {
+			throw new UserFoundException("USER_NOT_FOUND")
+			.add(new ErrorDto("AUTH_USER_ERROR", "probleme d'autorisation"));
+		} else { 
+					
 			log.info("Customer already exist in DB : {}" + customer.getName());
 			invoice.setCustomer(customer);
+		}
+		
+		// controler et lister les bordereaux
+		if (invoiceDto.getBordereaux() == null || invoiceDto.getBordereaux().isEmpty()) {
+			throw new FileNotFoundException("Ressource bordereauList not found", "FILE_NOT_FOUND");
+		} else {
+			List<Bordereau> bordereaux = entityDTOMapper
+					.bordereauDtotoBordereauList(invoiceDto.getBordereaux(), invoice);
+			// add UID
+			UUID uuid = UUID.randomUUID();
+			invoice.setUid(uuid.toString());
 			
-			// controler et lister les bordereaux
-			if (invoiceDto.getBordereaux() == null || invoiceDto.getBordereaux().isEmpty()) {
-				throw new FileNotFoundException("Ressource bordereauList not found", "FILE_NOT_FOUND");
-			} else {
-				List<Bordereau> bordereaux = entityDTOMapper
-						.bordereauDtotoBordereauList(invoiceDto.getBordereaux(), invoice);
-				// add UID
-				UUID uuid = UUID.randomUUID();
-				invoice.setUid(uuid.toString());
-				
-				invoice.setBordereaux(Sets.newHashSet(bordereaux));
-				
-				// calulate InvoiceTotal
+			invoice.setBordereaux(Sets.newHashSet(bordereaux));
+			
+			// calulate InvoiceTotal
 
-				// save
-				invoiceRepository.save(invoice);
-			}
-		//}
+			// save
+			invoiceRepository.save(invoice);
+		}
+
 		return invoice;
 	}
 	
@@ -112,8 +119,8 @@ public class InvoiceServiceImpl implements InvoiceService {
 		}
 
 	@Override
-	public List<Invoice> getAllInvoices() {
-		List<Invoice> invoices = (List<Invoice>) invoiceRepository.findAll();
+	public List<Invoice> getAllInvoices(Integer companyId) {
+		List<Invoice> invoices = invoiceRepository.getAllInvoicesByCompany(companyId);
 		return invoices;
 	}
 

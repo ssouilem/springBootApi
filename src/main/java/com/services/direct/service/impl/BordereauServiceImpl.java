@@ -10,13 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.errors.ErrorDto;
 import com.services.direct.bean.Bordereau;
 import com.services.direct.bean.BordereauDetail;
 import com.services.direct.bean.Customer;
+import com.services.direct.bean.security.User;
 import com.services.direct.data.BordereauInputDto;
 import com.services.direct.data.output.BordereauDto;
 import com.services.direct.exception.BusinessException;
 import com.services.direct.exception.FileNotFoundException;
+import com.services.direct.exception.UserFoundException;
 import com.services.direct.mapping.EntityDTOMapper;
 import com.services.direct.repo.BordereauDetailRepository;
 import com.services.direct.repo.BordereauRepository;
@@ -58,7 +61,7 @@ public class BordereauServiceImpl implements BordereauService {
 
 	@Override
 	@Transactional
-	public Bordereau createBordereau(BordereauInputDto bordereauDto) throws BusinessException {
+	public Bordereau createBordereau(BordereauInputDto bordereauDto, User user) throws BusinessException {
 
 		log.info("bordereauDto -> dateStr : {}" + bordereauDto.getTreatmentDate());
 
@@ -71,6 +74,13 @@ public class BordereauServiceImpl implements BordereauService {
 
 			Customer customer = customerRepository.getCustomerByUID(bordereauDto.getCustomer());
 
+			// verify customer to USER authenticate
+			if (customer.getCompany() == null ||
+					!customer.getCompany().getUser().stream().filter(entity -> user.getUserId().equals(entity.getUserId())).findFirst().isPresent()) {
+				throw new UserFoundException("USER_NOT_FOUND")
+				.add(new ErrorDto("AUTH_USER_ERROR", "probleme d'autorisation"));
+			} 
+			
 			log.info("Customer already exist in DB : {}" + customer.getName());
 			bordereau.setCustomer(customer);
 			
@@ -133,20 +143,12 @@ public class BordereauServiceImpl implements BordereauService {
 
 	@Override
 	@Transactional
-	public List<BordereauDto> getAllBordereaux() {
-		List<Bordereau> bordereaux = (List<Bordereau>) bordereauRepository.findAll();
+	public List<BordereauDto> getAllBordereaux(Integer companyId) {
+		List<Bordereau> bordereaux = (List<Bordereau>) bordereauRepository.getAllBordereauxByCompany(companyId);
 		// 
 		return bordereaux.stream().map(entity -> entityDTOMapper.bordereauToBordereauDto(entity)).collect(Collectors.toList());
 	}
 	
-	private Bordereau findCustomerById(Bordereau bordereau) {
-		
-		// New UID
-		Customer customer = customerRepository.getCustomerById(bordereau.getCustomer().getId());
-		bordereau.setCustomer(customer);
-		return bordereau;
-	}
-
 	@Override
 	@Transactional
 	public void deleteBordereauByUID(String bordereauUid) {

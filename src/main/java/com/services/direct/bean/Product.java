@@ -12,6 +12,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -80,6 +82,13 @@ public class Product {
 	@JsonInclude(Include.NON_NULL)
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "product")
 	private BordereauDetail bordereaudetail;
+	
+	@ManyToOne
+	@JsonIgnore
+	@JoinColumn(name = "pr_company_id", nullable = true)
+	@JsonInclude(value=Include.NON_EMPTY, content=Include.NON_NULL)
+	private Company company;
+	
 
 	public Integer getId() {
 		return id;
@@ -179,6 +188,15 @@ public class Product {
 
 	public void setTva(float tva) {
 		this.tva = tva;
+	}
+
+	
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
 	}
 
 	@Override

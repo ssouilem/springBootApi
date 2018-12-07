@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.errors.ErrorDto;
 import com.services.direct.bean.Product;
+import com.services.direct.bean.security.User;
 import com.services.direct.data.ProductInputDto;
 import com.services.direct.exception.BusinessException;
 import com.services.direct.exception.DuplicateEntityException;
@@ -51,11 +52,13 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	@Transactional
-	public Product createProduct(ProductInputDto productDto) throws BusinessException {
+	public Product createProduct(ProductInputDto productDto, User user) throws BusinessException {
 		
 		Product product = entityDTOMapper.productDtotoProduct(productDto);
 		UUID uuid = UUID.randomUUID();
 		product.setUid(uuid.toString());
+		product.setCompany(user.getCompany());
+		
 		try {
 			if (product.getDescription().isEmpty()) {
 				throw new BusinessException("PRODUCT_ERROR")
@@ -120,8 +123,8 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	@Transactional
-	public List<Product> getAllProducts() {
-		List<Product> products = productRepository.getAllProducts();
+	public List<Product> getAllProducts(Integer companyId) {
+		List<Product> products = productRepository.getAllProductsByCompany(companyId);
 		return products;
 	}
 

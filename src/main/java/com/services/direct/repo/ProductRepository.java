@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.services.direct.bean.Customer;
 import com.services.direct.bean.Product;
 
 @Repository
@@ -31,6 +32,11 @@ public interface ProductRepository extends JpaRepository<Product, Integer>{
 	
 	@Query("SELECT product FROM Product product")
 	List<Product> getAllProducts();
+	
+	@Query("SELECT product FROM Product product " +
+			//"LEFT JOIN FETCH customer.company AS company " +
+			"WHERE product.company.id=(:companyId)")
+	List<Product> getAllProductsByCompany(@Param("companyId") Integer companyId);
 	
 	@Query("SELECT count(*) FROM Product product WHERE product.uid=(:uid)")
 	int isExistProductByUID(@Param("uid") String productUid);

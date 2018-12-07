@@ -2,8 +2,6 @@ package com.services.direct.service.impl;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.services.direct.bean.BordereauDetail;
 import com.services.direct.bean.Invoice;
 import com.services.direct.bean.Payment;
 import com.services.direct.bean.PaymentDetail;
+import com.services.direct.bean.security.User;
 import com.services.direct.data.PaymentInputDto;
 import com.services.direct.data.output.PaymentOutputDto;
 import com.services.direct.exception.BusinessException;
@@ -24,7 +22,6 @@ import com.services.direct.repo.InvoiceRepository;
 import com.services.direct.repo.PaymentDetailRepository;
 import com.services.direct.repo.PaymentRepository;
 import com.services.direct.service.PaymentService;
-import com.services.direct.utility.Util;
 
 
 @Service("paymentService")
@@ -62,7 +59,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 	@Override
 	@Transactional
-	public PaymentOutputDto addPayment(PaymentInputDto paymentDto) throws BusinessException {
+	public PaymentOutputDto addPayment(PaymentInputDto paymentDto, User user) throws BusinessException {
 		
 		// converture dto to entity
 		// Contact contact = contactMapper.contactDtoToContact(contactDto);
@@ -107,7 +104,7 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 
 	@Override
-	public List<Payment> getAllPayments() {
+	public List<Payment> getAllPayments(Integer companyId) {
 		List<Payment> contacts = (List<Payment>) paymentRepository.findAll();
 		return contacts;
 	}

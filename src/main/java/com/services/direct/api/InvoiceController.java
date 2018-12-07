@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.services.direct.bean.Invoice;
+import com.services.direct.bean.security.User;
 import com.services.direct.data.InvoiceInputDto;
 import com.services.direct.exception.BusinessException;
 import com.services.direct.service.InvoiceService;
@@ -46,8 +48,8 @@ public class InvoiceController {
     })
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Invoice> getAllInvoices() {
-		return this.invoiceService.getAllInvoices();
+	public List<Invoice> getAllInvoices(@AuthenticationPrincipal User user) {
+		return this.invoiceService.getAllInvoices(user.getCompany().getId());
 	}
 
 	@RequestMapping(value = "/{UID}", method = RequestMethod.GET)
@@ -59,8 +61,8 @@ public class InvoiceController {
 	 
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<Invoice> addInvoice(@RequestBody InvoiceInputDto contactDto) throws BusinessException{
-		Invoice invoice = this.invoiceService.addInvoice(contactDto);
+	public ResponseEntity<Invoice> addInvoice(@RequestBody InvoiceInputDto contactDto, @AuthenticationPrincipal User user) throws BusinessException{
+		Invoice invoice = this.invoiceService.addInvoice(contactDto, user);
 		if (invoice != null) {
 			return new ResponseEntity<>(invoice, HttpStatus.OK);
 		} else {
@@ -71,7 +73,7 @@ public class InvoiceController {
 	@ResponseBody
     @RequestMapping(value = "/{Id}/bordereau", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<Invoice> addBordereauToInvoice(@PathVariable("UID") Integer id, @RequestParam("bordereauId") Integer bordereauId ) {
+	public ResponseEntity<Invoice> addBordereauToInvoice(@PathVariable("UID") Integer id, @RequestParam("bordereauId") Integer bordereauId, @AuthenticationPrincipal User user ) {
 		Invoice invoice = invoiceService.addBordereauToInvoice(id, bordereauId);
 		if (invoice != null) {
 			return new ResponseEntity<>(invoice, HttpStatus.OK);
@@ -82,7 +84,7 @@ public class InvoiceController {
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-    public void deleteInvoiceByUID(@PathVariable("UID") String invoiceUid) {
+    public void deleteInvoiceByUID(@PathVariable("UID") String invoiceUid, @AuthenticationPrincipal User user) {
 		invoiceService.deleteInvoiceByUID(invoiceUid);
     }
 }

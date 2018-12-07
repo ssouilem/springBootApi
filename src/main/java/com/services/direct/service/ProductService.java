@@ -3,15 +3,16 @@ package com.services.direct.service;
 import java.util.List;
 
 import com.services.direct.bean.Product;
+import com.services.direct.bean.security.User;
 import com.services.direct.data.ProductInputDto;
 import com.services.direct.exception.BusinessException;
 import com.services.direct.exception.FileNotFoundException;
 
 public interface ProductService {
 
-	Product createProduct(ProductInputDto productDto) throws BusinessException;
+	Product createProduct(ProductInputDto productDto, User user) throws BusinessException;
 	
-	List<Product> getAllProducts();
+	List<Product> getAllProducts(Integer companyId);
 
 	Product getProductByUID(String productUid) throws FileNotFoundException;
 

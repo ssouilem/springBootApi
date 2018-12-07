@@ -64,9 +64,7 @@ public class CustomerController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<List<Customer>> getAllCustomers(@AuthenticationPrincipal User user) throws JsonProcessingException {
-// 		return this.customerService.getAllCompanies();
-    	ObjectMapper mapper = new ObjectMapper();
-    	String userString = mapper.writeValueAsString(user);
+
     	// Verifier si la company exist
     	
     	log.info("Auth user : {}", user.getCompany().getId());

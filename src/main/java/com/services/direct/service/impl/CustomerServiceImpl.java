@@ -7,9 +7,9 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import com.errors.ErrorDto;
 import com.services.direct.bean.Contract;
@@ -93,6 +93,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	@Transactional
+	@TransactionalEventListener
 	public List<Customer> getAllCustomers(Integer companyId) {
 		//return customerRepository.findAll();
 		List<Customer> customers = customerRepository.getAllCustomerByCompany(companyId);

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.services.direct.bean.Bordereau;
 import com.services.direct.bean.BordereauDetail;
+import com.services.direct.bean.security.User;
 import com.services.direct.data.BordereauDetailDto;
 import com.services.direct.data.BordereauInputDto;
 import com.services.direct.data.output.BordereauDto;
@@ -52,8 +54,8 @@ public class BordereauController {
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     })
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public @ResponseBody List<BordereauDto> getAllBordereaux() {
-		List<BordereauDto> bordereaux = this.bordereauService.getAllBordereaux();
+	public @ResponseBody List<BordereauDto> getAllBordereaux(@AuthenticationPrincipal User user) {
+		List<BordereauDto> bordereaux = this.bordereauService.getAllBordereaux(user.getCompany().getId());
 		return bordereaux;
 	}
 
@@ -66,8 +68,8 @@ public class BordereauController {
 	 
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<Bordereau> createBordereau(@RequestBody BordereauInputDto bordereauDto) throws BusinessException{
-		Bordereau bordereau = this.bordereauService.createBordereau(bordereauDto);
+	public ResponseEntity<Bordereau> createBordereau(@RequestBody BordereauInputDto bordereauDto, @AuthenticationPrincipal User user) throws BusinessException{
+		Bordereau bordereau = this.bordereauService.createBordereau(bordereauDto, user);
 		if (bordereau != null) {
 			return new ResponseEntity<>(bordereau, HttpStatus.OK);
 		} else {

@@ -23,6 +23,11 @@ public interface ContactRepository extends JpaRepository<Contact, Integer>{
 	
 	@Query("SELECT contact FROM Contact contact")
 	List<Contact> getAllContacts();
+	
+	@Query("SELECT contact FROM Contact contact " +
+			//"LEFT JOIN FETCH customer.company AS company " +
+			"WHERE contact.customer.company.id=(:companyId)")
+	List<Contact> getAllContactsByCompany(@Param("companyId") Integer companyId);
 
 	@Modifying
 	@Query("DELETE FROM Contact contact WHERE contact.uid=(:uid)")
