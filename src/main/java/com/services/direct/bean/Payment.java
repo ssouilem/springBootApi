@@ -18,6 +18,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotEmpty;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -41,8 +44,12 @@ public class Payment {
     @Column(name = "pay_uid", unique = true, length = 64)
     private String uid;
     
+    @JsonFormat(
+      shape = JsonFormat.Shape.STRING,
+      pattern = "YYYY-MM-dd")
+	@DateTimeFormat(pattern = "dd-MM-yyyy")
 	@Column(name="pay_created_date")
-	private Date createdDate;
+	private Date createdDate = new Date();
 	
 	@Column(name="pay_amount")
 	private Double amount;

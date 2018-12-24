@@ -45,8 +45,12 @@ public class Invoice {
 	@Column(name="inv_amount")
     private Double amount;
 	
+	@JsonFormat(
+      shape = JsonFormat.Shape.STRING,
+      pattern = "YYYY-MM-dd")
+	@DateTimeFormat(pattern = "dd-MM-yyyy")
 	@Column(name="inv_created_date")
-	private Date createdDate;
+	private Date createdDate = new Date();
 	
 	@JsonFormat(
 		      shape = JsonFormat.Shape.STRING,

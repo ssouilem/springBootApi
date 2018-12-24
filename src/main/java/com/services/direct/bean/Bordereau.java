@@ -54,6 +54,7 @@ public class Bordereau {
 	
 	@Temporal(TemporalType.DATE)
     @Column(name = "br_created_date")
+	@DateTimeFormat(pattern = "dd-MM-yyyy")
 	@JsonIgnore
     private Date createdDate = new Date();
 	

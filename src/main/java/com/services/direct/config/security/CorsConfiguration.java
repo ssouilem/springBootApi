@@ -20,11 +20,11 @@ public class CorsConfiguration {
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**").allowedMethods("*")
 				.allowedMethods("*")
-				.allowedHeaders("Access-Control-Allow-Origin", "*")
-				.allowCredentials(false)
+				.allowedHeaders("Access-Control-Allow-Origin", "http://localhost:8000/")
+				.allowCredentials(true)
 				.allowedHeaders("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-				.allowedHeaders("Access-Control-Allow-Headers", "origin, content-type, accept, x-requested-with")
-				.allowedHeaders("Authorization", "Cache-Control", "Content-Type")
+				.allowedHeaders("Access-Control-Allow-Headers", "*")
+				//.allowedHeaders("Authorization", "Cache-Control", "Content-Type")
 				.allowedHeaders("Access-Control-Max-Age", "3600")
 				.exposedHeaders(
 						"Access-Control-Allow-Methods", 

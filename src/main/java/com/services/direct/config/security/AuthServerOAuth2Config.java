@@ -1,6 +1,11 @@
 package com.services.direct.config.security;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -8,6 +13,7 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -26,6 +32,9 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import com.services.direct.security.CustomTokenEnhancer;
 
@@ -107,5 +116,26 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
     			 .tokenEnhancer(tokenEnhancerChain) // ajouter information sur l'utilisateur et la company
                  .accessTokenConverter(accessTokenConverter()) 
                  .authenticationManager(authenticationManager);
+    	endpoints.getFrameworkEndpointHandlerMapping().setCorsConfigurations(getCorsConfig());
+    }
+    
+    private Map<String, CorsConfiguration> getCorsConfig() {
+
+        List<String> methodsList = Stream.of("GET", "POST", "PUT", "DELETE", "OPTIONS").collect(Collectors.toList());
+        List<String> allowableOriginsList = Stream.of("*").collect(Collectors.toList());
+        List<String> allowableHeadersList =
+                Stream.of("Access-Control-Allow-Headers", "*")
+                .collect(Collectors.toList());
+
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.setAllowedOrigins(allowableOriginsList);
+        config.setAllowedMethods(methodsList);
+        config.setAllowedHeaders(allowableHeadersList);
+
+        Map<String, CorsConfiguration> corsConfigMap = new HashMap<>();
+        corsConfigMap.put("/oauth/token", config);
+
+        return corsConfigMap;
     }
 }

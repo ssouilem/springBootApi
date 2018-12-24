@@ -4,16 +4,22 @@ package com.services.direct.config.security;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -48,29 +54,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http.cors().and().csrf()
-//        		//.disable()
-//        		.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
-//                .authorizeRequests()
-//                .antMatchers("/token/*").permitAll()
-//                .antMatchers("/api-docs/**").permitAll()
-//                .antMatchers("/login").permitAll()
-//                .antMatchers("/logout").permitAll()
-//                .antMatchers("/swagger-ui.html", "/webjars/**", "/swagger-resources/**").permitAll()
-//                //.antMatchers("/users/**").access("hasAuthority('ROLE_ADMIN')")
-//                //.anyRequest().access("hasAuthority('ROLE_ADMIN')")
-//                //.anyRequest().permitAll()
-//                .and()
-//                // .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
-//                //.exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-//                //.and()
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//                //.and()
-//		        //.httpBasic();
-//        		
-//    }
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.cors().disable().csrf()
+        		//.disable()
+        		.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
+                .authorizeRequests()
+                .antMatchers("/oauth/token").permitAll()
+                //.antMatchers(HttpMethod.OPTIONS, "/oauth/token").permitAll()
+                .antMatchers("/api-docs/**").permitAll()
+                .antMatchers("/login").permitAll()
+                .antMatchers("/logout").permitAll()
+                .antMatchers("/swagger-ui.html", "/webjars/**", "/swagger-resources/**").permitAll()
+                //.antMatchers("/users/**").access("hasAuthority('ROLE_ADMIN')")
+                //.anyRequest().access("hasAuthority('ROLE_ADMIN')")
+                //.anyRequest().permitAll()
+                //.and()
+                // .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
+                //.exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+                //.and()
+                // .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .and()
+		        .httpBasic();
+        		
+    }
     
 /**
  * tokenStore bloc DataBase save token and autorise multi token
@@ -128,12 +135,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
           .antMatchers("/webjars/**")//
           .antMatchers("/public")
           .antMatchers("/beans/**")
-          
-          // Un-secure H2 Database (for testing purposes, H2 console shouldn't be unprotected in production)
-          .and()
-          .ignoring()
+          .antMatchers( HttpMethod.OPTIONS, "/**" )
           .antMatchers("/h2-console/**/**");
+          // Un-secure H2 Database (for testing purposes, H2 console shouldn't be unprotected in production)
+          
     }
+    
+
+//	@Bean
+//    public FilterRegistrationBean corsFilter() {
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        CorsConfiguration config = new CorsConfiguration();
+//        config.setAllowCredentials(true);
+//        config.addAllowedOrigin("*");
+//        config.addAllowedHeader("*");
+//        config.addAllowedMethod("*");
+//        source.registerCorsConfiguration("/**", config);
+//        FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
+//        bean.setOrder(0);
+//        return bean;
+//    }
+
 
 
 }

@@ -15,7 +15,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     private static final String SECURED_READ_SCOPE = "#oauth2.hasScope('read')";
     private static final String SECURED_WRITE_SCOPE = "#oauth2.hasScope('write')";
     private static final String SECURED_AUTORITY_ADMIN = "hasAuthority('ROLE_ADMIN')";
-    private static final String SECURED_PATTERN = "/customers/**";
+    private static final String SECURED_PATTERN = "/secured/**";
     
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) {
@@ -31,7 +31,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .antMatchers(HttpMethod.POST, SECURED_PATTERN).access(SECURED_WRITE_SCOPE)
                 .anyRequest().access(SECURED_READ_SCOPE)
                 .antMatchers("/swagger-ui.html", "/beans/**", "/webjars/**", "/swagger-resources/**").permitAll()
-                
+                .antMatchers("/oauth/token").permitAll()
                 //.antMatchers("/customers/**").authenticated()
                 .anyRequest().fullyAuthenticated();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

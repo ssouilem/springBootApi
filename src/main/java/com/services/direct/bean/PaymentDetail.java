@@ -34,9 +34,13 @@ public class PaymentDetail {
 	@Column(name="payd_id")
 	private Integer id;
 	
+	@JsonFormat(
+      shape = JsonFormat.Shape.STRING,
+      pattern = "YYYY-MM-dd")
+	@DateTimeFormat(pattern = "dd-MM-yyyy")
 	@Column(name="payd_created_date")
-	private Date createdDate;
-	
+	private Date createdDate = new Date();
+
 	@Enumerated(EnumType.STRING)
 	@Column(name="payd_type")
 	private PaymentType type;
