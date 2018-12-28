@@ -87,10 +87,11 @@ public class InvoiceServiceImpl implements InvoiceService {
 			// add UID
 			UUID uuid = UUID.randomUUID();
 			invoice.setUid(uuid.toString());
+			invoice.setAmountPending(invoice.getAmount());
 			
 			invoice.setBordereaux(Sets.newHashSet(bordereaux));
 			
-			// calulate InvoiceTotal
+			// @TODO verifier InvoiceTotal avec la liste de bordereau
 
 			// save
 			invoiceRepository.save(invoice);

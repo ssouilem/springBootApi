@@ -70,7 +70,7 @@ public class Payment {
 			mappedBy="payment")
 	private List<PaymentDetail> paymentDetails = new ArrayList<PaymentDetail>();
 	
-	@OneToOne
+	@OneToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "pay_inv_id", nullable = false)
 	private Invoice invoice;
 

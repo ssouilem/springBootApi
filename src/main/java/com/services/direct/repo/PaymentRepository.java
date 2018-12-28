@@ -22,9 +22,11 @@ public interface PaymentRepository extends JpaRepository<Payment, Integer>{
 	@Query("DELETE FROM Payment payment WHERE payment.uid=(:uid)")
 	void deletePaymentByUID(@Param("uid") String paymentUid);
 	
-//	@Query("SELECT payment FROM Payment payment" +
-//			"LEFT JOIN FETCH payment.invoice AS invoice " +
-//			"WHERE customer.company.id=(:companyId)")
-//	List<Payment> getAllPaymentsByCompany(@Param("companyId") Integer companyId);
+	@Query("SELECT payment FROM Payment payment " +
+			"LEFT JOIN FETCH payment.invoice AS invoice " +
+			"LEFT JOIN FETCH invoice.customer AS customer " +
+			"WHERE customer.company.id=(:companyId)")
+	List<Payment> getAllPaymentsByCompany(@Param("companyId") Integer companyId);
+	
 
 }

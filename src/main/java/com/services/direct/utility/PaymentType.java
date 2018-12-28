@@ -2,7 +2,7 @@ package com.services.direct.utility;
 
 public enum PaymentType {
 	CHEQUE,
-	ESPECE,
+	CASH,
 	VIREMENT,
 	CB,
 	MANDAT,

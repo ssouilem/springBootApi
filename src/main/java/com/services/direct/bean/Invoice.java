@@ -18,17 +18,15 @@ import javax.persistence.OneToOne;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@JsonIdentityInfo(
-		  generator = ObjectIdGenerators.PropertyGenerator.class, 
-		  property = "id")
+//@JsonIdentityInfo(
+//		  generator = ObjectIdGenerators.PropertyGenerator.class, 
+//		  property = "id") 
 public class Invoice {
 
 	@Id
@@ -44,6 +42,9 @@ public class Invoice {
 	
 	@Column(name="inv_amount")
     private Double amount;
+	
+	@Column(name="inv_amount_pending")
+	private Double amountPending;
 	
 	@JsonFormat(
       shape = JsonFormat.Shape.STRING,
@@ -111,6 +112,14 @@ public class Invoice {
 
 	public void setAmount(Double amount) {
 		this.amount = amount;
+	}
+
+	public Double getAmountPending() {
+		return amountPending;
+	}
+
+	public void setAmountPending(Double amountPending) {
+		this.amountPending = amountPending;
 	}
 
 	public Date getCreatedDate() {

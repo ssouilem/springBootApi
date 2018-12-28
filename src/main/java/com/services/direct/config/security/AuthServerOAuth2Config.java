@@ -129,6 +129,7 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
 
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
+        config.setAllowedOrigins(Arrays.asList("http://localhost:8081", "http://localhost:8080", "http://soft-team.org", "http://ec2-52-15-124-186.us-east-2.compute.amazonaws.com:8080", "http://soft-team.fr"));
         config.setAllowedOrigins(allowableOriginsList);
         config.setAllowedMethods(methodsList);
         config.setAllowedHeaders(allowableHeadersList);

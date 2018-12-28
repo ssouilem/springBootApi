@@ -66,6 +66,11 @@ public class PaymentServiceImpl implements PaymentService {
 		Payment payment = entityDTOMapper.paymentDtotoPayment(paymentDto);
 		
 		Invoice invoice = invoiceRepository.getInvoiceByUID(paymentDto.getInvoice());
+		// set amountPending
+		Double amountPending = invoice.getAmountPending() - payment.getAmount();
+		log.info("montant en attente : {} - {} = {}", invoice.getAmount(), payment.getAmount(), amountPending);
+		invoice.setAmountPending(amountPending);
+		// invoiceRepository.save(invoice);
 		// controler et lister les payments
 		if (paymentDto.getPaymentDetails() == null || paymentDto.getPaymentDetails().isEmpty()) {
 			throw new FileNotFoundException("PAIEMENT_NOT_FOUND");
@@ -105,8 +110,8 @@ public class PaymentServiceImpl implements PaymentService {
 
 	@Override
 	public List<Payment> getAllPayments(Integer companyId) {
-		List<Payment> contacts = (List<Payment>) paymentRepository.findAll();
-		return contacts;
+		List<Payment> payments = (List<Payment>) paymentRepository.getAllPaymentsByCompany(companyId);
+		return payments;
 	}
 
 	@Override
