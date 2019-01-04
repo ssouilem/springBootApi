@@ -107,6 +107,7 @@ public class ProductController {
     }
 	
     @ResponseBody
+    @CrossOrigin
     @RequestMapping(value = "/{UID}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Product> updateProduct(@PathVariable("UID") final String productUid, @RequestBody ProductInputDto productDto) throws BusinessException {

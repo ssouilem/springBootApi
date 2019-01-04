@@ -14,6 +14,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 import com.errors.ErrorDto;
 import com.services.direct.bean.Contract;
 import com.services.direct.bean.Customer;
+import com.services.direct.bean.Product;
 import com.services.direct.bean.security.User;
 import com.services.direct.data.CustomerInputDto;
 import com.services.direct.exception.BusinessException;
@@ -106,8 +107,16 @@ public class CustomerServiceImpl implements CustomerService {
 		Customer customer = customerRepository.getCustomerByUID(customerUid);
 		customer.setAddress(customerRequest.getAddress());
 		customer.setFaxNumber(customerRequest.getFaxNumber());
+		customer.setName(customerRequest.getName());
+		customer.setMail(customerRequest.getMail());
+		customer.setAdditionalAddress(customerRequest.getAdditionalAddress());
+		customer.setPostalCode(customerRequest.getPostalCode());
+		customer.setCity(customerRequest.getCity());
+		customer.setPhoneNumber(customerRequest.getPhoneNumber());
+		customer.setSiret(customerRequest.getSiret());
+		
 		return customerRepository.save(customer);
-
+		
 	}
 
 	@Override

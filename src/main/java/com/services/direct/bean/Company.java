@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.lang.Nullable;
@@ -18,8 +17,6 @@ import org.springframework.lang.Nullable;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.services.direct.bean.security.User;
 
@@ -57,10 +54,13 @@ public class Company implements Serializable {
 	private String additionalAddress;
 	
 	@Column(name="cmp_zipe_code")
-	private String zideCode;
+	private String postalCode;
 	
 	@Column(name="cmp_city")
 	private String city;
+	
+	@Column(name="cmp_country")
+	private String country;
 	
 	@Column(name="cmp_phone_number")
 	private String phoneNumber;
@@ -130,12 +130,12 @@ public class Company implements Serializable {
 		this.additionalAddress = additionalAddress;
 	}
 
-	public String getZideCode() {
-		return zideCode;
+	public String getPostalCode() {
+		return postalCode;
 	}
 
-	public void setZideCode(String zideCode) {
-		this.zideCode = zideCode;
+	public void setPostalCode(String zideCode) {
+		this.postalCode = zideCode;
 	}
 
 	public String getCity() {
@@ -144,6 +144,14 @@ public class Company implements Serializable {
 
 	public void setCity(String city) {
 		this.city = city;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
 	}
 
 	public String getPhoneNumber() {

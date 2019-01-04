@@ -61,6 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         		.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
                 .authorizeRequests()
                 .antMatchers("/oauth/token").permitAll()
+                .antMatchers(HttpMethod.OPTIONS, "/oauth/token").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/api-docs/**").permitAll()
                 .antMatchers("/login").permitAll()
@@ -135,6 +136,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
           .antMatchers("/webjars/**")//
           .antMatchers("/public")
           .antMatchers("/beans/**")
+          .antMatchers("/invoice/getpdf/**")
           .antMatchers( HttpMethod.OPTIONS, "/**" )
           .antMatchers("/h2-console/**/**");
           // Un-secure H2 Database (for testing purposes, H2 console shouldn't be unprotected in production)

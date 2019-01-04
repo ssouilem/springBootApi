@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
@@ -28,7 +31,7 @@ public class InvoiceServicePdf {
 
     Logger log = LogManager.getLogger(InvoiceServicePdf.class);
 
-    private static final String logo_path = "/jasper/images/stackextend-logo.png";
+    private static final String logo_path = "/jasper/images/logo3.png";
     private final String invoice_template = "/jasper/invoice_template.jrxml";
 
     public File generateInvoiceFor(OrderModel order, Locale locale) throws IOException {
@@ -64,10 +67,14 @@ public class InvoiceServicePdf {
         return pdfFile;
     }
     
-    public File generatePdfFor(com.stackextend.generatepdfdocument.model.OrderModel invoice, Locale locale) throws IOException {
+    public File generatePdfFor(String invoiceUid, com.stackextend.generatepdfdocument.model.OrderModel invoice, Locale locale) throws IOException {
 
-        File pdfFile = File.createTempFile("my-invoice", ".pdf");
-
+        // File pdfFile = File.createTempFile(invoiceUid, ".pdf");
+        Path pdf = Paths.get("C:\\Users\\ssouilem\\AppData\\Local\\Temp\\", invoiceUid + ".pdf");
+        Path newFilePath = Files.createFile(pdf);
+        
+        File pdfFile = newFilePath.toFile();
+        
         log.info(String.format("Invoice pdf path : %s", pdfFile.getAbsolutePath()));
 
         try(FileOutputStream pos = new FileOutputStream(pdfFile))

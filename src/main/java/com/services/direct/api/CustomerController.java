@@ -100,6 +100,7 @@ public class CustomerController {
 	
 	// Update a Customer
 	@PutMapping("/{UID}")
+	@CrossOrigin
 	public Customer updateNote(@PathVariable(value = "UID") String customerUid, @Valid @RequestBody Customer customer) {
 		return this.customerService.updateCustomer(customerUid, customer);
 	}

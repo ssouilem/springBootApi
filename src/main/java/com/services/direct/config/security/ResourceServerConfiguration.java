@@ -32,6 +32,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .anyRequest().access(SECURED_READ_SCOPE)
                 .antMatchers("/swagger-ui.html", "/beans/**", "/webjars/**", "/swagger-resources/**").permitAll()
                 .antMatchers("/oauth/token").permitAll()
+                .antMatchers("/invoice/getpdf/**").permitAll()
                 //.antMatchers("/customers/**").authenticated()
                 .anyRequest().fullyAuthenticated();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
