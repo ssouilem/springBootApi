@@ -24,6 +24,8 @@ public class InvoiceOutputDto {
 	private String uid;
 	
     private Double amount;
+    
+    private Double otherExpenses;
 	
 	@JsonFormat(
       shape = JsonFormat.Shape.STRING,
@@ -93,6 +95,14 @@ public class InvoiceOutputDto {
 
 	public void setPayDown(Boolean payDown) {
 		this.payDown = payDown;
+	}
+
+	public Double getOtherExpenses() {
+		return otherExpenses;
+	}
+
+	public void setOtherExpenses(Double otherExpenses) {
+		this.otherExpenses = otherExpenses;
 	}
 	
 }

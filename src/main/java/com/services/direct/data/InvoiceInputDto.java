@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -24,6 +25,8 @@ public class InvoiceInputDto {
 	@NotEmpty(message = "amount not empty")
     private Double amount;
 	
+	private Double otherExpenses;
+	
 	@JsonFormat(
 		      shape = JsonFormat.Shape.STRING,
 		      pattern = "YYYY-MM-dd")
@@ -41,6 +44,10 @@ public class InvoiceInputDto {
 	
 	private Boolean payDown;
 
+	private String remarks;
+	
+	private Boolean sumInLetter;
+	
 	public String getNumber() {
 		return number;
 	}
@@ -55,6 +62,14 @@ public class InvoiceInputDto {
 
 	public void setAmount(Double amount) {
 		this.amount = amount;
+	}
+
+	public Double getOtherExpenses() {
+		return otherExpenses;
+	}
+
+	public void setOtherExpenses(Double otherExpenses) {
+		this.otherExpenses = otherExpenses;
 	}
 
 	public String getIssueDate() {
@@ -101,5 +116,23 @@ public class InvoiceInputDto {
 	public void setPayDown(Boolean payDown) {
 		this.payDown = payDown;
 	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	public Boolean getSumInLetter() {
+		return sumInLetter;
+	}
+
+	public void setSumInLetter(Boolean sumInLetter) {
+		this.sumInLetter = sumInLetter;
+	}
+	
+	
 	
 }

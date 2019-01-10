@@ -3,6 +3,7 @@ package com.services.direct.service.impl;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.errors.ErrorDto;
 import com.google.common.collect.Sets;
 import com.services.direct.bean.Bordereau;
+import com.services.direct.bean.BordereauDetail;
 import com.services.direct.bean.Customer;
 import com.services.direct.bean.Invoice;
 import com.services.direct.bean.security.User;
+import com.services.direct.data.BordereauDetailDto;
+import com.services.direct.data.BordereauUidDto;
 import com.services.direct.data.InvoiceInputDto;
 import com.services.direct.exception.BusinessException;
 import com.services.direct.exception.FileNotFoundException;
@@ -99,6 +103,45 @@ public class InvoiceServiceImpl implements InvoiceService {
 
 		return invoice;
 	}
+	
+	
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public Invoice convertDtoEntity(InvoiceInputDto invoiceDto) throws BusinessException {
+		
+		log.info("addInvoice -> Invoice Number : {}" + invoiceDto.getNumber());
+		Invoice invoice = entityDTOMapper.invoiceDtotoInvoice(invoiceDto);
+		
+		Customer customer = customerRepository.getCustomerByUID(invoiceDto.getCustomer());
+		if (customer.getCompany() != null) {
+			invoice.setCustomer(customer);
+		}
+		
+		// controler et lister les bordereaux
+		if (invoiceDto.getBordereaux() == null || invoiceDto.getBordereaux().isEmpty()) {
+			throw new FileNotFoundException("Ressource bordereauList not found", "FILE_NOT_FOUND");
+		} else {
+			
+			List<Bordereau> bordereaux = invoiceDto.getBordereaux().stream().map(entity -> 
+			{
+				Bordereau bordereau = bordereauRepository.getBordereauByUID(entity.getBordereauUid());
+				invoice.addBordereau(bordereau); // @TODO to verify
+				return bordereau;
+			}).collect(Collectors.toList());
+			
+			
+			// add UID
+			UUID uuid = UUID.randomUUID();
+			invoice.setUid(uuid.toString());
+			invoice.setAmountPending(invoice.getAmount());
+			
+			// invoice.setBordereaux(Sets.newHashSet(bordereaux));
+		}
+
+		return invoice;
+	}
+	
 	
 	@Override
 	@Transactional

@@ -43,6 +43,9 @@ public class Invoice {
 	@Column(name="inv_amount")
     private Double amount;
 	
+	@Column(name="inv_other_expenses")
+	private Double otherExpenses;
+	
 	@Column(name="inv_amount_pending")
 	private Double amountPending;
 	
@@ -62,6 +65,12 @@ public class Invoice {
 	
 	@Column(name="inv_created_author")
 	private String createdAuthor;
+	
+	@Column(name="inv_remarks")
+	private String remarks;
+	
+	@Column(name="inv_sum_in_letter")
+	private Boolean sumInLetter;
 	
 	@ManyToOne
 	@JoinColumn(name = "inv_cus_id",  nullable = true)
@@ -112,6 +121,14 @@ public class Invoice {
 
 	public void setAmount(Double amount) {
 		this.amount = amount;
+	}
+
+	public Double getOtherExpenses() {
+		return otherExpenses;
+	}
+
+	public void setOtherExpenses(Double otherExpenses) {
+		this.otherExpenses = otherExpenses;
 	}
 
 	public Double getAmountPending() {
@@ -180,6 +197,22 @@ public class Invoice {
 
 	public void setPayDown(Boolean payDown) {
 		this.payDown = payDown;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	public Boolean getSumInLetter() {
+		return sumInLetter;
+	}
+
+	public void setSumInLetter(Boolean sumInLetter) {
+		this.sumInLetter = sumInLetter;
 	}
 	
 }

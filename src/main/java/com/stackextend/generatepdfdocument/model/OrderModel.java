@@ -1,10 +1,12 @@
 package com.stackextend.generatepdfdocument.model;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.NumberFormat;
 
 import com.services.direct.bean.BordereauDetail;
 import com.services.direct.bean.Company;
@@ -16,9 +18,18 @@ public class OrderModel {
     private Customer customer;
     private Company company;
     private Double amount;
+    @NumberFormat(pattern = "#.###")
+    private Double amountTVA;
+    private Double otherExpenses;
     private Date createdDate;
     private Date issueDate;
+    private String amountInLetter;
+    private Boolean diplayTotalInLetter;
+    private String remarks;
     
+//    DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+//    symbols.setDecimalSeparator('.');
+    private DecimalFormat df = new DecimalFormat("########.000"); 
     private SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 	
     private List<BordereauDetail> entries;
@@ -65,9 +76,42 @@ public class OrderModel {
 	public Double getAmount() {
 		return amount;
 	}
-
+	
 	public void setAmount(Double amount) {
 		this.amount = amount;
+		this.amountTVA = amount * 0.200;
+	}
+
+	public String getAmountTVAString() {
+		return df.format(amountTVA);
+		
+	}
+	public Double getAmountTVA() {
+		return amountTVA;
+		
+	}
+	
+	public String getAmountTTC() throws Exception {
+		
+		 DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+		 symbols.setDecimalSeparator('.');
+		 DecimalFormat df = new DecimalFormat("0.000", symbols); 
+		return df.format(amount + amountTVA + otherExpenses );
+	}
+	
+	public void setAmountTVA(Double amount) {
+		this.amountTVA = amount;
+	}
+	
+	public Double getOtherExpenses() {
+		return otherExpenses;
+	}
+	
+	public String getOtherExpensesString() {
+		DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+		symbols.setDecimalSeparator('.');
+		DecimalFormat df = new DecimalFormat("0.000", symbols); 
+		return df.format(otherExpenses);
 	}
 
 	public Date getCreatedDate() {
@@ -92,5 +136,33 @@ public class OrderModel {
 	public void setIssueDate(Date issueDate) {
 		this.issueDate = issueDate;
 	}
-    
+
+	public void setOtherExpenses(Double otherExpenses) {
+		this.otherExpenses = otherExpenses;
+	}
+
+	public String getAmountInLetter() {
+		return amountInLetter;
+	}
+
+	public void setAmountInLetter(String amountInLetter) {
+		this.amountInLetter = amountInLetter;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	public Boolean getDiplayTotalInLetter() {
+		return diplayTotalInLetter;
+	}
+
+	public void setDiplayTotalInLetter(Boolean diplayTotalInLetter) {
+		this.diplayTotalInLetter = diplayTotalInLetter;
+	}
+	
 }

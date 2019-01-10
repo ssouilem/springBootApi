@@ -18,5 +18,7 @@ public interface InvoiceService {
 	void deleteInvoiceByUID(String invoiceUid);
 
 	Invoice addBordereauToInvoice(Integer id, Integer bordereauId);
+
+	Invoice convertDtoEntity(InvoiceInputDto invoiceDto) throws BusinessException;
 	
 }

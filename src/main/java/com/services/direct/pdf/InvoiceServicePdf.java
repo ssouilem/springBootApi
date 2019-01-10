@@ -33,6 +33,7 @@ public class InvoiceServicePdf {
 
     private static final String logo_path = "/jasper/images/logo3.png";
     private final String invoice_template = "/jasper/invoice_template.jrxml";
+    private final String PDF_DIRECTORY = "C:\\Users\\ssouilem\\AppData\\Local\\Temp\\";
 
     public File generateInvoiceFor(OrderModel order, Locale locale) throws IOException {
 
@@ -67,46 +68,56 @@ public class InvoiceServicePdf {
         return pdfFile;
     }
     
-    public File generatePdfFor(String invoiceUid, com.stackextend.generatepdfdocument.model.OrderModel invoice, Locale locale) throws IOException {
+    public File generatePdfFor(String pdfName, com.stackextend.generatepdfdocument.model.OrderModel invoice, Locale locale) throws IOException {
 
         // File pdfFile = File.createTempFile(invoiceUid, ".pdf");
-        Path pdf = Paths.get("C:\\Users\\ssouilem\\AppData\\Local\\Temp\\", invoiceUid + ".pdf");
-        Path newFilePath = Files.createFile(pdf);
         
-        File pdfFile = newFilePath.toFile();
+        File file = new File(PDF_DIRECTORY + pdfName + ".pdf");
+
+        if (! file.exists()) {
+        	
+        	Path pdf = Paths.get(PDF_DIRECTORY, pdfName + ".pdf");
+        	Path newFilePath = Files.createFile(pdf);
         
-        log.info(String.format("Invoice pdf path : %s", pdfFile.getAbsolutePath()));
-
-        try(FileOutputStream pos = new FileOutputStream(pdfFile))
-        {
-            // Load invoice jrxml template.
-            
-            final InputStream reportInputStream = getClass().getResourceAsStream("/jasper/invoice_template.jrxml");
-            final JasperDesign jasperDesign = JRXmlLoader.load(reportInputStream);
-            final JasperReport report = JasperCompileManager.compileReport(jasperDesign);
-
-            // Create parameters map.
-            final Map<String, Object> parameters = new HashMap<>();
-            
-            
-
-            parameters.put("logo", getClass().getResourceAsStream(logo_path));
-            parameters.put("order",  invoice);
-            parameters.put("REPORT_LOCALE", locale);
-
-            // Create an empty datasource.
-            final JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(Collections.singletonList("Invoice"));
-  
-            // Render as PDF.
-            JasperReportsUtils.renderAsPdf(report, parameters, dataSource, pos);
-            
-
+	        File pdfFile = newFilePath.toFile();
+	        
+	        log.info(String.format("Invoice pdf path : %s", pdfFile.getAbsolutePath()));
+	
+	        try(FileOutputStream pos = new FileOutputStream(pdfFile))
+	        {
+	            // Load invoice jrxml template.
+	            
+	            final InputStream reportInputStream = getClass().getResourceAsStream(invoice_template);
+	            final JasperDesign jasperDesign = JRXmlLoader.load(reportInputStream);
+	            
+	            final JasperReport report = JasperCompileManager.compileReport(jasperDesign);
+	
+	            // Create parameters map.
+	            final Map<String, Object> parameters = new HashMap<>();
+	            
+	            
+	
+	            parameters.put("logo", getClass().getResourceAsStream(logo_path));
+	            parameters.put("order",  invoice);
+	            parameters.put("REPORT_LOCALE", locale);
+	
+	            // Create an empty datasource.
+	            final JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(Collections.singletonList("Invoice"));
+	  
+	            // Render as PDF.
+	            JasperReportsUtils.renderAsPdf(report, parameters, dataSource, pos);
+	            
+	
+	        }
+	        catch (final Exception e)
+	        {
+	            log.error(String.format("An error occured during PDF creation: %s", e));
+	        }
+	        return pdfFile;
+        } else {
+        	log.error(String.format("is exist PDF file : %s", file.getName()));
         }
-        catch (final Exception e)
-        {
-            log.error(String.format("An error occured during PDF creation: %s", e));
-        }
-        return pdfFile;
+        return file;
     }
 
 
