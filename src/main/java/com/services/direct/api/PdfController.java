@@ -136,6 +136,25 @@ public class PdfController {
 	    order.setCreatedDate(invoice.getCreatedDate());
 	    order.setIssueDate(invoice.getIssueDate());
 	   
+	    order.setOtherExpenses(invoice.getOtherExpenses());
+	    order.setRemarks(invoice.getRemarks());
+	    order.setDiplayTotalInLetter(invoice.getSumInLetter());
+	    
+	    try {
+		    String amountTTCString = order.getAmountTTC();
+		    Double amountTTC = Double.parseDouble(amountTTCString.toString());
+		    
+			String amountInLetter;
+			amountInLetter = Nombre.CALCULATE.getValue(amountTTC,".");
+			order.setAmountInLetter(amountInLetter);
+			System.out.println(amountTTC);
+			System.out.println(amountInLetter);
+			
+	    } catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
 	    UUID uuid = UUID.randomUUID();
 		invoice.setUid(uuid.toString());
 		String filenamePreview= uuid.toString().concat("-preview");

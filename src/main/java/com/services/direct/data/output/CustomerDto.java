@@ -11,6 +11,9 @@ import lombok.Data;
 public class CustomerDto {
 
 	@NotNull
+	private String uid;
+	
+	@NotNull
 	private String name;
 	
 	private String address;
@@ -25,6 +28,15 @@ public class CustomerDto {
 	private String mail;
     
     private String siret;
+
+    
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
 
 	public String getName() {
 		return name;
