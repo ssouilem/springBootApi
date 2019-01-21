@@ -8,7 +8,6 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.services.direct.bean.Customer;
 import com.services.direct.bean.security.User;
 import com.services.direct.data.CustomerInputDto;
@@ -65,8 +63,7 @@ public class CustomerController {
 	@ResponseBody
 	public ResponseEntity<List<Customer>> getAllCustomers(@AuthenticationPrincipal User user) throws JsonProcessingException {
 
-    	// Verifier si la company exist
-    	
+    	// @TODO Check , Company is exist
     	log.info("Auth user : {}", user.getCompany().getId());
 		return new ResponseEntity<>(customerService.getAllCustomers(user.getCompany().getId()), HttpStatus.OK);
 	}

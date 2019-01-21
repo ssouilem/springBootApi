@@ -1,6 +1,7 @@
 package com.services.direct.pdf;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,6 +25,8 @@ import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.engine.util.JRSaver;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 
 @Service
@@ -83,15 +86,44 @@ public class InvoiceServicePdf {
 	        
 	        log.info(String.format("Invoice pdf path : %s", pdfFile.getAbsolutePath()));
 	
-	        try(FileOutputStream pos = new FileOutputStream(pdfFile))
-	        {
+//	        try(FileOutputStream pos = new FileOutputStream(pdfFile))
+//	        {
+	        	FileOutputStream pos = new FileOutputStream(pdfFile);
 	            // Load invoice jrxml template.
 	            
+	        	 File initialFile = new File("C:\\workspace\\directAPI-spring\\direct\\src\\main\\resources\\jasper\\invoice_template.jrxml");
+	        	 InputStream targetStream = new FileInputStream(initialFile);
+	        	    
 	            final InputStream reportInputStream = getClass().getResourceAsStream(invoice_template);
-	            final JasperDesign jasperDesign = JRXmlLoader.load(reportInputStream);
+	            JasperDesign jasperDesign = null;
+	            try {
+					jasperDesign = JRXmlLoader.load(targetStream);
+				} catch (JRException e) {
+					log.info(String.format("JRException : %s", e));
+					e.printStackTrace();
+				}
 	            
-	            final JasperReport report = JasperCompileManager.compileReport(jasperDesign);
-	
+	            JasperReport report = null;
+				try {
+					report = JasperCompileManager.compileReport(jasperDesign);
+					JRSaver.saveObject(report, "C:\\workspace\\directAPI-spring\\direct\\src\\main\\resources\\jasper\\invoice_template2.jasper");
+				} catch (JRException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+	            
+	            InputStream jasperStream = getClass().getResourceAsStream("/jasper/invoice_template.jasper");
+	            // File initialJasperFile = new File("C:\\workspace\\directAPI-spring\\direct\\src\\main\\resources\\jasper\\invoice_template.jasper");
+	        	InputStream initJasperStream = new FileInputStream(initialFile);
+	            
+//	        	JasperReport report = null;
+//				try {
+//					report = (JasperReport) JRLoader.loadObject(jasperStream);
+//				} catch (JRException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+	            
 	            // Create parameters map.
 	            final Map<String, Object> parameters = new HashMap<>();
 	            
@@ -105,14 +137,19 @@ public class InvoiceServicePdf {
 	            final JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(Collections.singletonList("Invoice"));
 	  
 	            // Render as PDF.
-	            JasperReportsUtils.renderAsPdf(report, parameters, dataSource, pos);
+	            try {
+					JasperReportsUtils.renderAsPdf(report, parameters, dataSource, pos);
+				} catch (JRException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 	            
 	
-	        }
-	        catch (final Exception e)
-	        {
-	            log.error(String.format("An error occured during PDF creation: %s", e));
-	        }
+//	        }
+//	        catch (final Exception e)
+//	        {
+//	            log.error(String.format("An error occured during PDF creation: %s", e));
+//	        }
 	        return pdfFile;
         } else {
         	log.error(String.format("is exist PDF file : %s", file.getName()));

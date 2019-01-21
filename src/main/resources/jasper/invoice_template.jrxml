@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.2.0.final using JasperReports Library version 6.6.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="invoice_template" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" resourceBundle="jasper.localization.i18n" uuid="cd759d20-cfa9-48d7-9532-01dc8f55f04e">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report_invoice" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="01372a5b-27be-4834-a2f4-78b3f3e15e6a">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="58"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#FFFFFF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
@@ -48,7 +50,7 @@
 		<field name="qte" class="java.lang.Integer"/>
 		<field name="totalCommandLine" class="java.lang.Double"/>
 		<field name="percentage" class="java.lang.Integer"/>
-		<field name="product" class="com.services.direct.bean.Product"/>
+		<field name="price" class="java.math.BigDecimal"/>
 	</subDataset>
 	<parameter name="logo" class="java.io.InputStream"/>
 	<parameter name="order" class="com.stackextend.generatepdfdocument.model.OrderModel"/>
@@ -72,7 +74,7 @@
 				<textFieldExpression><![CDATA[$R{invoice.title.label} + ": " + $P{order}.getCode()]]></textFieldExpression>
 			</textField>
 			<frame>
-				<reportElement x="10" y="30" width="380" height="130" uuid="57cfddef-f245-4afa-8059-1ba7dda2561b"/>
+				<reportElement x="10" y="30" width="391" height="148" uuid="57cfddef-f245-4afa-8059-1ba7dda2561b"/>
 				<textField isBlankWhenNull="true">
 					<reportElement x="0" y="37" width="380" height="19" uuid="cd6aaf83-a6a0-4cc2-bee1-22f8ef0c9179"/>
 					<textElement verticalAlignment="Top">
@@ -109,7 +111,7 @@
 					<textFieldExpression><![CDATA[$P{order}.getCompany().getCountry()]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="-2" y="115" width="380" height="19" uuid="f20cb747-8349-4ca0-80d4-4c3c3f00e5d1"/>
+					<reportElement x="-2" y="116" width="362" height="14" uuid="f20cb747-8349-4ca0-80d4-4c3c3f00e5d1"/>
 					<textElement verticalAlignment="Top">
 						<font fontName="Arial" size="11" isBold="false"/>
 					</textElement>
@@ -280,7 +282,7 @@
 								<textElement textAlignment="Center">
 									<paragraph leftIndent="5"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{product}.getPrice()]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{price}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -525,7 +527,7 @@
 			<textField>
 				<reportElement x="18" y="13" width="526" height="30" uuid="133d827a-0f98-4725-bd6e-3de823146df8"/>
 				<textElement textAlignment="Center"/>
-				<textFieldExpression><![CDATA[$P{order}.getCompany().getName() + " " + $R{invoice.siren.label} + " : " + $P{order}.getCompany().getTvaNumber() + " - " + $R{invoice.TVA.number.label} + " : FR21524752481 \n" + $P{order}.getCompany().getAddress() + " " + $P{order}.getCompany().getAdditionalAddress() + " - " + $P{order}.getCompany().getPostalCode()  + " " + $P{order}.getCompany().getCity()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{order}.getCompany().getName() + " - " + $R{invoice.siren.label} + " : " + $P{order}.getCompany().getTvaNumber() + " - " + $R{invoice.TVA.number.label} + " : FR21524752481 \n" + $P{order}.getCompany().getAddress() + " " + $P{order}.getCompany().getAdditionalAddress() + " - " + $P{order}.getCompany().getPostalCode()  + " " + $P{order}.getCompany().getCity()]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>

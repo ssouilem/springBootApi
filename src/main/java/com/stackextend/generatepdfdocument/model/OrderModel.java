@@ -8,9 +8,9 @@ import java.util.List;
 
 import org.springframework.format.annotation.NumberFormat;
 
-import com.services.direct.bean.BordereauDetail;
 import com.services.direct.bean.Company;
 import com.services.direct.bean.Customer;
+import com.services.direct.data.BordereauDetailPdf;
 
 public class OrderModel {
 
@@ -32,13 +32,13 @@ public class OrderModel {
     private DecimalFormat df = new DecimalFormat("########.000"); 
     private SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 	
-    private List<BordereauDetail> entries;
+    private List<BordereauDetailPdf> entries;
 
-    public OrderModel(String code, Customer customer, Company company, List<BordereauDetail> entries) {
+    public OrderModel(String code, Customer customer, Company company, List<BordereauDetailPdf> bordereauDetails) {
         this.code = code;
         this.customer = customer;
         this.company = company;
-        this.entries = entries;
+        this.entries = bordereauDetails;
     }
 
     public String getCode() {
@@ -65,11 +65,11 @@ public class OrderModel {
 		this.company = company;
 	}
 
-	public List<BordereauDetail> getEntries() {
+	public List<BordereauDetailPdf> getEntries() {
         return entries;
     }
 
-    public void setEntries(List<BordereauDetail> entries) {
+    public void setEntries(List<BordereauDetailPdf> entries) {
         this.entries = entries;
     }
 

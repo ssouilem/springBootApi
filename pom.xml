@@ -19,18 +19,18 @@
 		<version>2.0.5.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-		<properties>
+	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 	</properties>
-	<repositories>
+	<!-- <repositories>
 	  <repository>
 	    <id>itext</id>
 	    <name>iText Repository - snapshots</name>
 	    <url>https://repo.itextsupport.com/snapshot/</url>
 	  </repository>
-	</repositories>
+	</repositories> -->
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -89,9 +89,13 @@
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
-			<version>6.6.0</version>
+			<version>6.7.0</version>
 		</dependency>
-
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-fonts</artifactId>
+			<version>6.0.0</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-support</artifactId>
@@ -175,5 +179,15 @@
 
 		</plugins>
 	</build>
+	<repositories>
+		<repository>
+			<id>jasperreports</id>
+			<url>http://jasperreports.sourceforge.net/maven2</url>
+		</repository>
+		<repository>
+			<id>jaspersoft-third-party</id>
+			<url>http://jaspersoft.artifactoryonline.com/jaspersoft/third-party-ce-artifacts/</url>
+		</repository>
+	</repositories>
 
 </project>

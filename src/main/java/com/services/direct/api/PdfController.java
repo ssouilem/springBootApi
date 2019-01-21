@@ -28,9 +28,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.services.direct.bean.BordereauDetail;
 import com.services.direct.bean.Invoice;
 import com.services.direct.bean.security.User;
+import com.services.direct.data.BordereauDetailPdf;
 import com.services.direct.data.InvoiceInputDto;
 import com.services.direct.data.output.PdfViwerOutput;
 import com.services.direct.exception.BusinessException;
@@ -64,12 +64,17 @@ public class PdfController {
 		Invoice invoice = this.invoiceService.getInvoiceByUID(invoiceUid);
 
        
-		 List<BordereauDetail> bordereauDetails = new ArrayList<BordereauDetail>();
-	        invoice.getBordereaux().forEach(bordereau -> {
-	        	bordereau.getBordereauDetails().forEach(details -> {
-	        		bordereauDetails.add(details);
-	        	});
-	        });
+		List<BordereauDetailPdf> bordereauDetails = new ArrayList<BordereauDetailPdf>();
+        invoice.getBordereaux().forEach(bordereau -> {
+        	bordereau.getBordereauDetails().forEach(details -> {
+        		BordereauDetailPdf bdDetail = new BordereauDetailPdf(details.getPercentage(), 
+        															 details.getDescription(), 
+        															 details.getQte(), 
+        															 details.getProduct().getPrice(), 
+        															 details.getTotalCommandLine());
+        		bordereauDetails.add(bdDetail);
+        	});
+        });
 
 	        
 	    OrderModel order = new OrderModel(invoice.getNumber(), invoice.getCustomer(), user.getCompany(), bordereauDetails);
@@ -120,13 +125,18 @@ public class PdfController {
 	@RequestMapping(value = "/preview", method = RequestMethod.POST) //, produces = MediaType.APPLICATION_PDF_VALUE)
 	public ResponseEntity<PdfViwerOutput> pdfPreview(@RequestBody InvoiceInputDto previewDto,  Authentication authentication, @AuthenticationPrincipal User user) throws IOException, BusinessException {
 
-		log.info("Auth user : {}", user.getCompany().getId());
+		log.info("Auth user : {}", user);
 		Invoice invoice = this.invoiceService.convertDtoEntity(previewDto);
 		
-		List<BordereauDetail> bordereauDetails = new ArrayList<BordereauDetail>();
+		List<BordereauDetailPdf> bordereauDetails = new ArrayList<BordereauDetailPdf>();
         invoice.getBordereaux().forEach(bordereau -> {
         	bordereau.getBordereauDetails().forEach(details -> {
-        		bordereauDetails.add(details);
+        		BordereauDetailPdf bdDetail = new BordereauDetailPdf(details.getPercentage(), 
+        															 details.getDescription(), 
+        															 details.getQte(), 
+        															 details.getProduct().getPrice(), 
+        															 details.getTotalCommandLine());
+        		bordereauDetails.add(bdDetail);
         	});
         });
 

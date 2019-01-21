@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.services.direct.bean.Customer;
 import com.services.direct.bean.Product;
 
 @Repository
