@@ -23,6 +23,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+		<jasperReport.version>6.6.0</jasperReport.version>
 	</properties>
 	<!-- <repositories>
 	  <repository>
@@ -89,7 +90,7 @@
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
-			<version>6.7.0</version>
+			<version>${jasperReport.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
@@ -159,9 +160,20 @@
 						</goals>
 					</execution>
 				</executions> 
+				 <dependencies>
+		        <!--note this must be repeated here to pick up correct xml validation -->
+		        <dependency>
+		          <groupId>net.sf.jasperreports</groupId>
+		          <artifactId>jasperreports</artifactId>
+		          <version>${jasperReport.version}</version>
+		        </dependency>
+		      </dependencies>
 					<configuration>
 				        <classifier>exec</classifier>
-				      </configuration>
+				        <!-- <defaultOutputDirectory>
+						${project.build.directory}/generated-sources
+						</defaultOutputDirectory> -->
+				     </configuration>
 				<!-- <configuration>
 					<defaultOutputDirectory>
 						${project.build.directory}/generated-sources
@@ -176,18 +188,29 @@
 	          <artifactId>maven-surefire-plugin</artifactId>
 	          <version>2.19.1</version>
 	        </plugin>
-
+	        <!-- <plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-compiler-plugin</artifactId>
+			    <configuration>
+			        <source>1.8</source>
+			        <target>1.8</target>
+			    </configuration>
+			</plugin> -->
 		</plugins>
 	</build>
-	<repositories>
+	<!-- <repositories>
 		<repository>
 			<id>jasperreports</id>
-			<url>http://jasperreports.sourceforge.net/maven2</url>
+			<url>http://repository.jboss.org/nexus/content/groups/public-jboss/net/sf/jasperreports/</url>
 		</repository>
 		<repository>
 			<id>jaspersoft-third-party</id>
 			<url>http://jaspersoft.artifactoryonline.com/jaspersoft/third-party-ce-artifacts/</url>
 		</repository>
-	</repositories>
+		<repository>
+		    <id>jr-ce-releases</id>
+		    <url>http://jaspersoft.artifactoryonline.com/jaspersoft/jr-ce-releases</url>
+		</repository>
+	</repositories> -->
 
 </project>

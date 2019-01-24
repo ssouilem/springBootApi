@@ -28,17 +28,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.services.direct.bean.Company;
 import com.services.direct.bean.Invoice;
 import com.services.direct.bean.security.User;
 import com.services.direct.data.BordereauDetailPdf;
 import com.services.direct.data.InvoiceInputDto;
 import com.services.direct.data.output.PdfViwerOutput;
-import com.services.direct.exception.BusinessException;
 import com.services.direct.pdf.InvoiceServicePdf;
 import com.services.direct.service.ICityService;
 import com.services.direct.service.InvoiceService;
 import com.services.direct.utility.Nombre;
 import com.stackextend.generatepdfdocument.model.OrderModel;
+
 
 
 @RestController
@@ -58,7 +59,7 @@ public class PdfController {
 
 	@CrossOrigin
 	@RequestMapping(value = "/{UID}/pdfreport", method = RequestMethod.GET, produces = "application/pdf") //, produces = MediaType.APPLICATION_PDF_VALUE)
-	public ResponseEntity<InputStreamResource> citiesReport(@PathVariable("UID") final String invoiceUid, Authentication authentication, @AuthenticationPrincipal User user) throws IOException {
+	public ResponseEntity<InputStreamResource> citiesReport(@PathVariable("UID") final String invoiceUid, Authentication authentication, @AuthenticationPrincipal User user) throws Exception {
 
 		log.info("Auth user : {}", user.getCompany().getId());
 		Invoice invoice = this.invoiceService.getInvoiceByUID(invoiceUid);
@@ -123,9 +124,20 @@ public class PdfController {
 	
 	@CrossOrigin
 	@RequestMapping(value = "/preview", method = RequestMethod.POST) //, produces = MediaType.APPLICATION_PDF_VALUE)
-	public ResponseEntity<PdfViwerOutput> pdfPreview(@RequestBody InvoiceInputDto previewDto,  Authentication authentication, @AuthenticationPrincipal User user) throws IOException, BusinessException {
+	public ResponseEntity<PdfViwerOutput> pdfPreview(@RequestBody InvoiceInputDto previewDto) throws IOException, Exception {
 
-		log.info("Auth user : {}", user);
+		
+		Company myCompany = new Company();
+		myCompany.setName("DIRECT PLAST");
+		myCompany.setAddress("66 AVENUE JEAN MOULIN");
+		myCompany.setAdditionalAddress("D1");
+		myCompany.setCountry("FRANCE");
+		myCompany.setCity("VLG");
+		myCompany.setPostalCode("92390");
+		myCompany.setMail("ss@yahoo.fr");
+		myCompany.setTvaNumber("TVAD125364875TN");
+		
+			
 		Invoice invoice = this.invoiceService.convertDtoEntity(previewDto);
 		
 		List<BordereauDetailPdf> bordereauDetails = new ArrayList<BordereauDetailPdf>();
@@ -141,7 +153,7 @@ public class PdfController {
         });
 
 	        
-	    OrderModel order = new OrderModel(invoice.getNumber(), invoice.getCustomer(), user.getCompany(), bordereauDetails);
+	    OrderModel order = new OrderModel(invoice.getNumber(), invoice.getCustomer(), myCompany, bordereauDetails);
 	    order.setAmount(invoice.getAmount());
 	    order.setCreatedDate(invoice.getCreatedDate());
 	    order.setIssueDate(invoice.getIssueDate());

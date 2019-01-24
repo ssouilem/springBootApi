@@ -137,6 +137,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
           .antMatchers("/public")
           .antMatchers("/beans/**")
           .antMatchers("/invoice/getpdf/**")
+          .antMatchers("/invoice/**")
           .antMatchers( HttpMethod.OPTIONS, "/**" )
           .antMatchers("/h2-console/**/**");
           // Un-secure H2 Database (for testing purposes, H2 console shouldn't be unprotected in production)
