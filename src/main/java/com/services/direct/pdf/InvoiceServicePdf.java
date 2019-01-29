@@ -82,7 +82,13 @@ public class InvoiceServicePdf {
         
 	        File pdfFile = newFilePath.toFile();
 	        
-	        log.info(String.format("Invoice pdf path : %s", pdfFile.getAbsolutePath()));
+	        InvoiceGenerator generateInvoice = new InvoiceGenerator();
+
+			generateInvoice.createPDF(pdfFile.toString());
+			
+			/*
+			// @Todo utilisation jasperrapport
+			log.info(String.format("Invoice pdf path : %s", pdfFile.getAbsolutePath()));
         	
 	        
 	        try(FileOutputStream pos = new FileOutputStream(pdfFile))
@@ -117,6 +123,8 @@ public class InvoiceServicePdf {
 	            log.error(String.format("An error occured during PDF creation: %s", e));
 	            e.printStackTrace();
 	        }
+	        
+	        */
 //	        
 //	        
 //	        

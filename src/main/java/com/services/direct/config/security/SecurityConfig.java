@@ -136,6 +136,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
           .antMatchers("/webjars/**")//
           .antMatchers("/public")
           .antMatchers("/beans/**")
+          // .antMatchers("/resources/**")
           .antMatchers("/invoice/getpdf/**")
           .antMatchers("/invoice/**")
           .antMatchers( HttpMethod.OPTIONS, "/**" )
